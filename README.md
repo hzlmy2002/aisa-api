@@ -1,12 +1,29 @@
-# AIsa API · 本地 stdio MCP
+# AIsa API · Local stdio MCP
 
-把 AIsa 已有 API 和任务 workflows 带到 Codex、Claude Code、Hermes。采用 TypeScript / Node.js，通过 npm 分发；本地运行 MCP，HTTP 请求直接发送到 `api.aisa.one`，认证与计费仍由 AIsa 网关处理。
+Bring AIsa APIs and task workflows to Codex, Claude Code, and Hermes. Built with TypeScript and Node.js and distributed through npm, this package runs the MCP server locally and sends HTTP requests directly to `api.aisa.one`. The AIsa gateway handles authentication and billing.
 
-当前迁移包含 **26 个 server、571 个原子 API 工具、4 个组合工具、27 份 skills、3 份参考资源**。API 范围以 aisa-mcp 已支持的 operation 为准；不包含 docs 中尚未由 aisa-mcp 暴露的其他接口。
+The package includes **26 server definitions, 571 atomic API tools, 4 composed tools, 27 skills, and 3 migrated reference resources**. API coverage matches the operations supported by aisa-mcp; it does not include additional endpoints documented in docs but not exposed by that MCP.
 
-## 开发版使用
+## Installation
 
-兼容 Node.js 20.6.0 或更新版本；新安装推荐使用仍受维护的 Node.js 22/24 LTS。Node 18 虽通过当前执行测试，但依赖要求 Node ≥20，不列为支持版本。以下命令从源码构建和安装；npm 接入命令见下方。
+Requires **Node.js 20.6.0 or newer**. Node.js 22/24 LTS is recommended for new installations. Node 18 passes the current execution tests, but a dependency requires Node >=20, so Node 18 is not supported.
+
+Install from npm:
+
+```sh
+npx -y @hzlmy2002/aisa-api@0.1.2 setup
+```
+
+Without `--client`, setup detects and configures existing Codex, Claude Code, and Hermes installations. To select one client or start the server directly:
+
+```sh
+npx -y @hzlmy2002/aisa-api@0.1.2 setup --client codex
+npx -y @hzlmy2002/aisa-api@0.1.2 serve
+```
+
+`setup` guides you through OAuth sign-in and also supports `--auth key`. Restart or refresh the configured clients after installation to load the MCP server and skills. You can also provide `AISA_API_KEY` in the server's launch environment. Do not put credentials in source files or conversation history.
+
+The versioned npm commands require that release to be available in the registry. For development, build and install from source:
 
 ```sh
 npm ci
@@ -15,52 +32,42 @@ npm run build
 node dist/cli.js setup --client codex
 ```
 
-`setup` 引导 OAuth 登录，也支持 `--auth key`。省略 `--client` 会检测并配置已存在的 Codex、Claude Code 和 Hermes。安装后重启或刷新客户端以加载 MCP 和 skills。
+## Tools and skills
 
-也可以在启动环境提供 `AISA_API_KEY`，直接执行 `node dist/cli.js serve`。凭据不要写进源码或聊天记录。
+Version `0.1.2` includes directory-based discovery, broader skill descriptions, creator outreach and recent-topic research workflows, and Node.js >=20.6.0 compatibility.
 
-标准 npm 接入命令：
-
-```sh
-npx -y @hzlmy2002/aisa-api@0.1.2 setup
-npx -y @hzlmy2002/aisa-api@0.1.2 setup --client codex
-npx -y @hzlmy2002/aisa-api@0.1.2 serve
-```
-
-## 工具与 skills
-
-`0.1.2` 包含目录优先模式、更广的 skill 触发描述、达人拓展和近期话题研究 workflows，并支持 Node.js ≥20.6.0。上面的 npm 命令需在 `0.1.2` 发布后使用，发布前可按源码构建方式安装。
-
-默认展示 4 个工具。[aisa-api/SKILL.md](skills/aisa-api/SKILL.md) 是简短入口，按分类链接到 26 份 server 索引；每份索引再链接到所需接口的完整本地详情。575 份详情保留原描述、输入/输出 schema、默认值和 annotations，直接读取后即可调用 `use`，无需额外调用 `get_details`。
+The server exposes four tools by default. The short [aisa-api/SKILL.md](skills/aisa-api/SKILL.md) entry links to 26 server indexes grouped by category. Each index links to complete local operation details. These 575 detail files preserve descriptions, input/output schemas, defaults, and annotations. Read the relevant contract and call `use` without an extra `get_details` request.
 
 ```text
 skills/aisa-api/
-  SKILL.md                          简短入口
+  SKILL.md                          Short navigation entry
   references/
-    servers/<server>.md             按服务浏览接口
-    operations/<operation_id>.md    每个接口的完整契约
-    workflows.md                    任务 workflows 索引
-    directory.md                    可选全量目录
+    servers/<server>.md             Operations grouped by server
+    operations/<operation_id>.md    Complete operation contracts
+    workflows.md                    Task workflow index
+    directory.md                    Optional full directory
 ```
 
-匹配到 workflow 时，直接读该 skill 链接的接口详情，不必经过全局目录。完整目录保留用于全局浏览，不默认整份加载。静态详情与运行中的服务不一致、文件缺失，或参数校验提示版本差异时，再调用 `get_details`；运行中服务的 schema 优先。静态文件不提供实时价格、余额或可用性承诺。
+When a workflow matches the task, read its linked operation details directly. The full directory is available for global browsing but should not be loaded in full by default. Use `get_details` when files are missing, local details differ from the running server, or argument validation suggests a version mismatch. The running server's schema takes precedence. Static files do not promise live pricing, balance, or availability.
 
-| 工具 | 用途 |
+| Tool | Purpose |
 | --- | --- |
-| `search` | 目录无法明确定位接口时的发现兜底 |
-| `get_details` | 本地详情缺失或版本不一致时获取运行中的契约 |
-| `use` | 使用原 operation ID 和参数执行任意已支持操作 |
-| `batch_use` | 最多 20 个独立操作，最多 5 个操作并发 |
+| `search` | Discover an operation when the directory does not identify it clearly |
+| `get_details` | Retrieve the running contract when local details are missing or outdated |
+| `use` | Execute any supported operation using its original ID and arguments |
+| `batch_use` | Execute up to 20 independent operations, with at most 5 running concurrently |
 
-`search_skills`、`list_categories`、`list_resources`、`read_resource` 默认不展示；需要兼容旧流程时通过 `serve --discovery-tools` 或 `setup --discovery-tools` 开启。MCP 原生 resources/list、resources/read 始终可用，入口 URI 为 `skill://aisa-api/SKILL.md`。索引和详情支持 `skill://aisa-api/references/servers/<server>.md`、`skill://aisa-api/references/operations/<operation_id>.md`。详情可按 URI 读取，不会将数百项文件塞进默认 resource 列表。
+`search_skills`, `list_categories`, `list_resources`, and `read_resource` are hidden by default. Enable them for legacy workflows with `serve --discovery-tools` or `setup --discovery-tools`. Native MCP `resources/list` and `resources/read` remain available. The entry URI is `skill://aisa-api/SKILL.md`; server indexes and operation details use `skill://aisa-api/references/servers/<server>.md` and `skill://aisa-api/references/operations/<operation_id>.md`. Details can be read by URI without adding hundreds of files to the default resource listing.
 
-`account` 是额外的辅助操作，可通过 `use` 读取余额、订阅钱包和近期用量。
+`account` is an additional helper operation available through `use` for reading balance, subscription wallet, and recent usage.
+
+Example arguments for `use`:
 
 ```json
 {"operation_id":"get_coingecko_simple_price","arguments":{"ids":"bitcoin","vs_currencies":"usd"},"max_price_usd":0.01}
 ```
 
-可以固定展示部分或全部工具，`setup` 会将这些参数保存在客户端配置中：
+You can explicitly expose selected API tools, or all of them. `setup` saves these options in the client configuration. The following examples use a source build:
 
 ```sh
 node dist/cli.js setup --client codex --modules seo,gtm
@@ -69,36 +76,36 @@ node dist/cli.js serve --modules seo-all
 node dist/cli.js serve --all-tools
 ```
 
-`--server` 和 `--modules` 控制直接列出的工具，全量 API 仍能通过 `use` 调用。未固定展示的工具不能直接用工具名调用。
+`--server` and `--modules` control which API tools appear directly in the tool list. All supported operations remain available through `use`. Operations that are not exposed directly cannot be called by tool name.
 
-新增达人拓展名单和最近 30 天话题研究两个分层 workflow；17 个原 workflow prompts 已转为 skills，保留输入默认值、步骤、停止条件和 `uses` 工具引用；另提供 6 个分类 skill、GTM skill 和 AIsa 入口 skill。安装目录：
+The skills include 17 migrated workflow prompts, preserving their input defaults, steps, stopping conditions, and `uses` references; two additional layered workflows for creator outreach and recent-topic research; six category skills; a GTM skill; and the AIsa entry skill.
 
-| 客户端 | skills | MCP 配置 |
+| Client | Skills location | MCP configuration |
 | --- | --- | --- |
 | Codex | `~/.agents/skills/aisa-*` | `~/.codex/config.toml` |
 | Claude Code | `~/.claude/skills/aisa-*` | `~/.claude.json` |
 | Hermes | `~/.hermes/skills/aisa-*` | `~/.hermes/config.yaml` |
 
-本地 OAuth 和安装所有权记录存储在 `~/.aisa/aisa-api/`，不读取或清除 scene-agent 的共享 OAuth 文件。安装/升级/卸载会保留其他 MCP 配置，并在文件被用户修改时停止覆盖。
+Local OAuth credentials and installation ownership records live in `~/.aisa/aisa-api/`. This package does not read or clear scene-agent's shared OAuth file. Installation, upgrades, and uninstallation preserve unrelated MCP configuration and stop before overwriting user-modified managed files.
 
 ```sh
-node dist/cli.js status
-node dist/cli.js uninstall --client codex
+npx -y @hzlmy2002/aisa-api@0.1.2 status
+npx -y @hzlmy2002/aisa-api@0.1.2 uninstall --client codex
 ```
 
-## API 行为
+## API behavior
 
-- 工具名称、描述、输入 schema、annotations 从原 MCP 的实际工具表迁入；路由来自 docs OpenAPI。
-- 49 个 AgentMail 工具的原 schema 含必填 `Authorization`；本地版从有效工具参数中移除该字段，由配置凭据统一注入。原始快照不改动，适配清单记录在 `catalog/adaptations.json`。
-- JSON 对象请求体保持原 MCP 的平铺参数；DataForSEO 等数组请求体使用 `body: [...]`。
-- `$ref` 生成的参数和同名参数位置映射来自原 MCP 快照，不另写一套近似 schema。
-- 返回上游 JSON，不强制第三方响应通过 output schema；顶层数组在 MCP `structuredContent` 中放入 `result`。文本响应保留为 `text` 和 `content_type`。
-- HTTP 200 中的 provider 错误字段原样保留，不被伪装成正常数据；调用方应检查 provider 状态。
-- 继承 server 的超时设置；不自动重试可能已计费的请求。
-- `max_price_usd` 传为 `X-AISA-Max-Price-USD`，是**每笔上游请求**的上限，包括组合工具的每个子请求，不是整个任务的总预算。直接固定展示的 API 参数保持原 schema；需要价格帽时通过 `use` / `batch_use` 执行。
-- 本地 `get_details` 的价格为 unknown，实际价格和可用性由网关决定。工具搜索为本地词项匹配，不依赖服务端 tool-router。
+- Tool names, descriptions, input schemas, and annotations come from the original MCP's registered tool contracts. Routes come from the docs OpenAPI specifications.
+- The original schemas for 49 AgentMail tools require `Authorization`. This package removes that field from effective tool arguments and injects configured credentials through the transport. Original snapshots remain unchanged; adaptations are recorded in `catalog/adaptations.json`.
+- JSON object bodies retain the original MCP's flat arguments. Array bodies, including DataForSEO requests, use `body: [...]`.
+- Parameters derived from `$ref` and mappings for parameters with identical names come from the original MCP snapshot rather than a separately approximated schema.
+- Upstream JSON is returned without forcing third-party responses to validate against the output schema. Top-level arrays appear under `result` in MCP `structuredContent`. Text responses retain `text` and `content_type`.
+- Provider error fields inside HTTP 200 responses are preserved. Callers should inspect provider status rather than assuming every HTTP 200 response contains successful data.
+- Operations inherit their server timeout settings. Requests that may already have been billed are not automatically retried.
+- `max_price_usd` is sent as `X-AISA-Max-Price-USD`. It limits **each upstream request**, including every subrequest of composed tools, rather than the total workflow budget. Directly exposed API tools retain their original schemas; use `use` or `batch_use` when a price cap is needed.
+- `get_details` reports pricing as unknown; the gateway determines actual pricing and availability. Tool search uses local term matching and does not depend on the hosted tool router.
 
-## 构建与验证
+## Building and verification
 
 ```sh
 npm run generate
@@ -107,20 +114,20 @@ npm test
 npm pack
 ```
 
-OAuth 测试需要允许监听临时 loopback 端口，其余测试使用 mock/隔离目录，不读取开发者真实凭据。`npm pack` 会重新生成目录并编译，产物包含 JS、工具目录和 skills，不要求用户安装 Python，也不依赖旁边的 scene-agent、aisa-mcp 或 docs 源码目录。
+OAuth tests require permission to listen on temporary loopback ports. Other tests use mocks and isolated directories; they do not read the developer's real credentials. `npm pack` regenerates the catalogs and compiles the code. The package includes JavaScript, tool catalogs, skills, and references. End users do not need Python or adjacent scene-agent, aisa-mcp, or docs source directories.
 
-可选真实验证：将临时 key 注入 `AISA_API_KEY` 后运行 `node scripts/live-smoke.mjs`。固定使用三个只读 API，不调用 Similarweb，不自动重试。默认单笔价格帽 `$0.01`，可用 `AISA_SMOKE_MAX_PRICE_USD` 调整，脚本最高允许 `$0.05`；结果仅记录状态和返回字段名称，不保存 key 或完整数据。
+For optional live verification, provide a temporary key through `AISA_API_KEY` and run `node scripts/live-smoke.mjs`. It calls three fixed read-only APIs, does not call Similarweb, and does not retry automatically. The default per-request price cap is `$0.01`, configurable with `AISA_SMOKE_MAX_PRICE_USD` up to `$0.05`. Results record only status and response field names, not the key or complete response data.
 
-## 来源与更新
+## Sources and updates
 
-- `upstream/servers`：原 MCP 的支持清单与 server 信息。
-- `upstream/specs`：docs 中对应的 33 份 OpenAPI。
-- `upstream/tool-contracts.json`：原 FastMCP 实际注册的 575 份工具契约和参数位置映射。
-- `upstream/prompts`、`upstream/modules.yaml`、`upstream/resources`：workflow、分类和参考内容。
-- `upstream/snapshot.json`：来源 commit 与内容校验值。
+- `upstream/servers`: Original MCP coverage and server metadata.
+- `upstream/specs`: The 33 corresponding OpenAPI specifications from docs.
+- `upstream/tool-contracts.json`: The 575 registered FastMCP tool contracts and parameter location mappings.
+- `upstream/prompts`, `upstream/modules.yaml`, and `upstream/resources`: Workflows, categories, and reference content.
+- `upstream/snapshot.json`: Source commits and content checksums.
 
-`scripts/generate-catalog.mjs` 和 `scripts/generate-skills.mjs` 在 Node.js 中生成发行数据。源文件变化会触发校验失败，更新时需一起审查操作覆盖、工具契约、参数映射和快照，避免生成出新路由配旧 schema 的版本。运行时不下载 specs。
+`scripts/generate-catalog.mjs` and `scripts/generate-skills.mjs` generate release data using Node.js. Changes to pinned source files fail checksum validation. When updating sources, review operation coverage, tool contracts, parameter mappings, and snapshots together to avoid pairing new routes with old schemas. Specifications are not downloaded at runtime.
 
-发布使用 `npm publish --access public`；执行前应确认 npm 账号具有 `@hzlmy2002` scope 的发布权限。
+Publish with `npm publish --access public` after confirming that the npm account has publishing permission for the `@hzlmy2002` scope.
 
-本地扩展的源文件位于 `workflows/`，入口只链接按需读取的流程参考与接口契约。来源与改造说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+Local workflow extension sources live in `workflows/`. Their entries link to task-specific references and operation contracts for on-demand reading. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for attribution and adaptation notes.
