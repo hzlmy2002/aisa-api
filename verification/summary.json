@@ -18,7 +18,11 @@
     "file": "artifacts/hzlmy2002-aisa-api-0.1.0.tgz",
     "sha256": "70e6872c3dd44d7228aa2ab3098924d2b53bc618b5c0f7348307e17d6d6f71af",
     "bytes": 394211,
-    "published": false
+    "published": true,
+    "registry": "https://registry.npmjs.org/",
+    "npm_url": "https://www.npmjs.com/package/@hzlmy2002/aisa-api",
+    "publish_status": "registry accepted (HTTP 200)",
+    "published_at": "2026-09-07T04:20:57.225Z"
   },
   "live": {
     "successful_operations": [
@@ -31,5 +35,9 @@
     "all_apis_live_tested": false
   },
   "real_client_configs_modified": false,
-  "reference_projects_modified": false
+  "reference_projects_modified": false,
+  "repository": {
+    "url": "https://github.com/hzlmy2002/aisa-api",
+    "visibility": "private"
+  }
 }
