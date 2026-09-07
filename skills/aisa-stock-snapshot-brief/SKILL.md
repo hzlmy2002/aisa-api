@@ -1,13 +1,13 @@
 ---
 name: aisa-stock-snapshot-brief
-description: Price, valuation, latest earnings, what analysts expect, who inside
-  is buying or selling, and the news behind it — six calls, one page. Sets the
-  order and where to stop; it does not give investment advice. Use when asked
-  for a concise current company brief covering price, valuation, earnings,
-  insiders and news. 汇总单只股票的最新股价、估值、财报预期、内部交易和新闻。
+description: "Use when asked for a concise current company brief covering price,
+  valuation, earnings, insiders and news. 汇总单只股票的最新股价、估值、财报预期、内部交易和新闻。 Related
+  requests: 股票简报, 个股快照, 股票概况, stock brief. Sources: financial-datasets."
 ---
 
 # A one-page brief on a listed company, today
+
+Price, valuation, latest earnings, what analysts expect, who inside is buying or selling, and the news behind it — six calls, one page. Sets the order and where to stop; it does not give investment advice.
 
 ## Inputs
 

@@ -1,8 +1,11 @@
 ---
 name: aisa-finance
-description: "Market and company data: prices, fundamentals, filings, insider
-  trades, crypto markets, prediction markets, and a scene agent that aligns what
-  X is saying about tickers with how they are trading."
+description: Retrieve financial and market data for company research, stock
+  screening and comparisons, quotes and price history, valuation, financial
+  statements, earnings, analyst estimates, insider trades, filings and news;
+  crypto prices, trends and liquidity; prediction-market events and odds; and
+  stock discussion on X. Covers Financial Datasets, CoinGecko, Polymarket and
+  Kalshi. 股票行情、美股财报、公司基本面、估值、内部交易、监管披露、投资研究、币价、加密市场、预测市场、事件概率、股票舆情。
 ---
 
 # AIsa Finance

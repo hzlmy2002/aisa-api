@@ -1,11 +1,12 @@
 ---
 name: aisa-gtm
-description: "Go-to-market data in one set: people and company search (Apollo),
-  creator discovery, X/Twitter, Instagram, Reddit, Pinterest and YouTube,
-  Similarweb market intelligence, plus the Semrush, Ahrefs, Oxylabs and
-  DataForSEO YouTube operations. Mirrors the Hive GTM Growth subscription: every
-  operation here is subscription-only on the gateway, so a key without the plan
-  gets 402 on all of them."
+description: Find go-to-market data for prospecting, customer and market
+  research, competitor analysis, creator discovery, social listening and
+  acquisition research. Covers Apollo people and companies, Similarweb website
+  traffic and audiences, X/Twitter, Instagram, Reddit, Pinterest, YouTube,
+  Semrush, Ahrefs, Oxylabs and DataForSEO YouTube operations.
+  GTM、市场进入、获客、增长研究、销售线索、目标客户、联系人、竞品流量、受众分析、达人营销、社交舆情、搜索营销。 Use also for AIsa
+  Hive GTM Growth coverage questions.
 ---
 
 # AIsa GTM

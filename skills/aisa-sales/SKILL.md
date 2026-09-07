@@ -1,8 +1,11 @@
 ---
 name: aisa-sales
-description: "People and company search, enrichment, sequences and CRM objects
-  through Apollo, creator discovery, and Similarweb market intelligence: any
-  domain's traffic, audience, rankings and search rivals."
+description: Find companies, employees, decision makers, creators and business
+  contact details; enrich lead lists and company profiles; work with Apollo CRM
+  contacts, accounts and sequences; or research prospect websites using
+  Similarweb traffic, audience and competitors. Use for prospecting, lead
+  generation, account research and creator discovery.
+  找客户、找公司、找高管、工作邮箱、联系人查询、销售线索、客户资料补全、潜客调研、CRM、外联序列、达人发现、网站流量与竞品分析。
 ---
 
 # AIsa Sales

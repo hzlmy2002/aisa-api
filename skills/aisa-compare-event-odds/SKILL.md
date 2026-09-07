@@ -1,14 +1,13 @@
 ---
 name: aisa-compare-event-odds
-description: Look up what prediction markets currently imply about an event,
-  checking Polymarket against Kalshi so a single venue's pricing is never the
-  only evidence. Handles the two venues' incompatible identifiers and filters,
-  and says plainly when only one side has a market. Use when asked to compare
-  the market-implied odds of the same event across prediction markets.
-  对比同一事件在不同预测市场上的概率、赔率和成交情况。
+description: "Use when asked to compare the market-implied odds of the same
+  event across prediction markets. 对比同一事件在不同预测市场上的概率、赔率和成交情况。 Related requests:
+  预测市场, 事件赔率, 概率对比, prediction odds. Sources: polymarket, kalshi."
 ---
 
 # Compare market-implied odds across Polymarket and Kalshi
+
+Look up what prediction markets currently imply about an event, checking Polymarket against Kalshi so a single venue's pricing is never the only evidence. Handles the two venues' incompatible identifiers and filters, and says plainly when only one side has a market.
 
 ## Inputs
 

@@ -1,13 +1,13 @@
 ---
 name: aisa-seo-keyword-opportunity
-description: "Decide whether a keyword is worth going after: volume and
-  difficulty, the related terms that are easier, and what is actually on page
-  one now. Sets the call order and the stopping rules; it does not write the
-  content. Use when asked to assess a keyword opportunity or find easier related
-  search terms. 研究关键词搜索量、竞争难度和相关长尾词，寻找自然搜索机会。"
+description: "Use when asked to assess a keyword opportunity or find easier
+  related search terms. 研究关键词搜索量、竞争难度和相关长尾词，寻找自然搜索机会。 Related requests: 关键词机会,
+  关键词研究, 搜索量, 难度, keyword research. Sources: semrush, dataforseo."
 ---
 
 # Size a keyword and find the openings around it
+
+Decide whether a keyword is worth going after: volume and difficulty, the related terms that are easier, and what is actually on page one now. Sets the call order and the stopping rules; it does not write the content.
 
 ## Inputs
 

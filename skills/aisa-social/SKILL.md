@@ -1,7 +1,10 @@
 ---
 name: aisa-social
-description: "Public social data: X/Twitter users, posts, search and trends;
-  Instagram, Reddit and Pinterest profiles and content; YouTube search."
+description: Find public social profiles, posts, comments, discussions, trends
+  and videos on X/Twitter, Instagram, Reddit, Pinterest and YouTube. Use for
+  topic or post search, brand mentions, customer feedback, audience and creator
+  research, recent account activity, community discussions and video discovery.
+  社交媒体搜索、推特推文、热点追踪、品牌舆情、用户反馈、网红达人、账号画像、粉丝与内容、Reddit讨论、Instagram帖子、Pinterest图片、YouTube油管视频搜索。
 ---
 
 # AIsa Social

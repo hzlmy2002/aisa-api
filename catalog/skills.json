@@ -3,7 +3,7 @@
   "skills": [
     {
       "name": "aisa-api",
-      "description": "Find AIsa APIs by category and provider, read local operation details, and execute through the AIsa MCP. AIsa 接口索引、本地参数详情与任务 workflows。",
+      "description": "Find and use AIsa APIs for web research, page extraction, website traffic and competitors, SEO and AI visibility, social posts and creators, company and contact enrichment, stocks, crypto, prediction markets and AgentMail email. Use for related data requests even when AIsa is not named, requests naming a supported provider, or questions about API coverage. 联网搜索、网页抓取、竞品流量、市场调研、关键词、排名、外链、GEO、社交舆情、网红、销售线索、公司财报、股票币价、事件赔率、收发邮件。 If coverage is uncertain, inspect the directory or search the local API catalog.",
       "uri": "skill://aisa-api/SKILL.md",
       "path": "skills/aisa-api/SKILL.md",
       "aliases": [
@@ -22,7 +22,7 @@
     },
     {
       "name": "aisa-brand-mentions-across-social",
-      "description": "One pass over the three public social sources for a brand, product or topic: the recent posts, where the conversation is, and what is missing. Sets the source order, the page budget and when to stop; it does not score sentiment for you. Use when asked to collect brand or product mentions across X, Reddit and Instagram. 跨多个社交平台收集品牌或产品提及，对比各平台反馈。",
+      "description": "Use when asked to collect brand or product mentions across X, Reddit and Instagram. 跨多个社交平台收集品牌或产品提及，对比各平台反馈。 Related requests: 品牌舆情, 社交平台提及, 跨平台舆情, brand monitoring. Sources: twitter, reddit, instagram, tavily.",
       "uri": "skill://aisa-brand-mentions-across-social/SKILL.md",
       "path": "skills/aisa-brand-mentions-across-social/SKILL.md",
       "aliases": [
@@ -72,7 +72,7 @@
     },
     {
       "name": "aisa-company-fundamentals",
-      "description": "Resolve a company, then pull the slices of its financial record that the question actually needs — price, statements, ratios, earnings, insiders, filings — without dragging back everything. Encodes the two things that reliably go wrong here: half these tools refuse to answer without a period argument, and several pairs look interchangeable but differ by an order of magnitude in how much they return. Use when asked to assemble financial statements, metrics or filings for a US-listed company. 研究美股公司基本面，整理财务报表、估值指标和监管披露。",
+      "description": "Use when asked to assemble financial statements, metrics or filings for a US-listed company. 研究美股公司基本面，整理财务报表、估值指标和监管披露。 Related requests: 公司基本面, 财务报表, 美股财报, company financials. Sources: financial-datasets.",
       "uri": "skill://aisa-company-fundamentals/SKILL.md",
       "path": "skills/aisa-company-fundamentals/SKILL.md",
       "aliases": [
@@ -133,7 +133,7 @@
     },
     {
       "name": "aisa-compare-event-odds",
-      "description": "Look up what prediction markets currently imply about an event, checking Polymarket against Kalshi so a single venue's pricing is never the only evidence. Handles the two venues' incompatible identifiers and filters, and says plainly when only one side has a market. Use when asked to compare the market-implied odds of the same event across prediction markets. 对比同一事件在不同预测市场上的概率、赔率和成交情况。",
+      "description": "Use when asked to compare the market-implied odds of the same event across prediction markets. 对比同一事件在不同预测市场上的概率、赔率和成交情况。 Related requests: 预测市场, 事件赔率, 概率对比, prediction odds. Sources: polymarket, kalshi.",
       "uri": "skill://aisa-compare-event-odds/SKILL.md",
       "path": "skills/aisa-compare-event-odds/SKILL.md",
       "aliases": [
@@ -181,7 +181,7 @@
     },
     {
       "name": "aisa-competitor-teardown",
-      "description": "From one domain to a market map: how big its traffic is, which sites compete for the same audience, where that audience lives, who the search-side rivals are (often a different list — say so), and how the top competitors measure on the same yardstick. Sets the call order, the budget and the data-vintage rules; the judgement stays with the reader. Use when asked to analyze a competitor or map a market starting from a domain. 从域名分析竞争对手的网站流量、受众地域、相似网站和竞争格局。",
+      "description": "Use when asked to analyze a competitor or map a market starting from a domain. 从域名分析竞争对手的网站流量、受众地域、相似网站和竞争格局。 Related requests: 竞品分析, 竞争对手, 市场分析, 流量对比, competitor traffic, market map. Sources: similarweb, semrush, dataforseo.",
       "uri": "skill://aisa-competitor-teardown/SKILL.md",
       "path": "skills/aisa-competitor-teardown/SKILL.md",
       "aliases": [
@@ -234,7 +234,7 @@
     },
     {
       "name": "aisa-creator-profile-snapshot",
-      "description": "Audience, activity and recent content of one person or brand account on X and Instagram, from the compact digests first and the raw feeds only when needed. Sets the order and the page budget; it does not judge brand fit. Use when asked for an audience and recent-content snapshot of a creator or public account. 分析创作者或公开账号的个人资料、受众和最近发布的内容。",
+      "description": "Use when asked for an audience and recent-content snapshot of a creator or public account. 分析创作者或公开账号的个人资料、受众和最近发布的内容。 Related requests: 创作者画像, 网红分析, 账号画像, influencer profile. Sources: twitter, instagram, tavily.",
       "uri": "skill://aisa-creator-profile-snapshot/SKILL.md",
       "path": "skills/aisa-creator-profile-snapshot/SKILL.md",
       "aliases": [
@@ -285,7 +285,7 @@
     },
     {
       "name": "aisa-crypto-market-health",
-      "description": "Market-wide read: the largest coins and their moves, what is trending, which sectors are up, and how Bitcoin traded over the last week. Sets the order and the size of each call; it does not predict. Use when asked for a market-wide crypto overview covering large coins, sectors, attention and Bitcoin history. 查看加密市场整体行情、热门币种、板块表现和比特币历史走势。",
+      "description": "Use when asked for a market-wide crypto overview covering large coins, sectors, attention and Bitcoin history. 查看加密市场整体行情、热门币种、板块表现和比特币历史走势。 Related requests: 加密市场概况, 币市行情, 加密货币大盘, crypto overview. Sources: coingecko.",
       "uri": "skill://aisa-crypto-market-health/SKILL.md",
       "path": "skills/aisa-crypto-market-health/SKILL.md",
       "aliases": [
@@ -332,7 +332,7 @@
     },
     {
       "name": "aisa-enrich-lead-list",
-      "description": "Turn a list of emails or names into people with titles, companies and verified contact details, plus the company facts behind them — using the bulk endpoints so one call does ten. Sets the batch size and the credit rules; it does not write anything back to Apollo. Use when given a list of leads to enrich with contact and company details in bulk. 批量补全销售线索的联系人、工作邮箱和公司资料。",
+      "description": "Use when given a list of leads to enrich with contact and company details in bulk. 批量补全销售线索的联系人、工作邮箱和公司资料。 Related requests: 线索补全, 批量联系人, 客户资料补全, lead enrichment. Sources: apollo.",
       "uri": "skill://aisa-enrich-lead-list/SKILL.md",
       "path": "skills/aisa-enrich-lead-list/SKILL.md",
       "aliases": [
@@ -377,7 +377,7 @@
     },
     {
       "name": "aisa-finance",
-      "description": "Market and company data: prices, fundamentals, filings, insider trades, crypto markets, prediction markets, and a scene agent that aligns what X is saying about tickers with how they are trading.",
+      "description": "Retrieve financial and market data for company research, stock screening and comparisons, quotes and price history, valuation, financial statements, earnings, analyst estimates, insider trades, filings and news; crypto prices, trends and liquidity; prediction-market events and odds; and stock discussion on X. Covers Financial Datasets, CoinGecko, Polymarket and Kalshi. 股票行情、美股财报、公司基本面、估值、内部交易、监管披露、投资研究、币价、加密市场、预测市场、事件概率、股票舆情。",
       "uri": "skill://aisa-finance/SKILL.md",
       "path": "skills/aisa-finance/SKILL.md",
       "aliases": [
@@ -457,7 +457,7 @@
     },
     {
       "name": "aisa-find-people-at-company",
-      "description": "From a company domain to a shortlist of named people with verified work emails: enrich the company, search people by title, then match each shortlisted person for contact details. Sets the order and the credit budget; it does not write to Apollo (no contacts, no sequences). Use when asked to find people in specific roles at a company and retrieve their work contact details. 按公司和职位寻找决策人、高管及其工作联系方式。",
+      "description": "Use when asked to find people in specific roles at a company and retrieve their work contact details. 按公司和职位寻找决策人、高管及其工作联系方式。 Related requests: 找联系人, 公司高管, 寻找CTO, 销售线索, find decision makers. Sources: apollo.",
       "uri": "skill://aisa-find-people-at-company/SKILL.md",
       "path": "skills/aisa-find-people-at-company/SKILL.md",
       "aliases": [
@@ -509,7 +509,7 @@
     },
     {
       "name": "aisa-gtm",
-      "description": "Go-to-market data in one set: people and company search (Apollo), creator discovery, X/Twitter, Instagram, Reddit, Pinterest and YouTube, Similarweb market intelligence, plus the Semrush, Ahrefs, Oxylabs and DataForSEO YouTube operations. Mirrors the Hive GTM Growth subscription: every operation here is subscription-only on the gateway, so a key without the plan gets 402 on all of them.",
+      "description": "Find go-to-market data for prospecting, customer and market research, competitor analysis, creator discovery, social listening and acquisition research. Covers Apollo people and companies, Similarweb website traffic and audiences, X/Twitter, Instagram, Reddit, Pinterest, YouTube, Semrush, Ahrefs, Oxylabs and DataForSEO YouTube operations. GTM、市场进入、获客、增长研究、销售线索、目标客户、联系人、竞品流量、受众分析、达人营销、社交舆情、搜索营销。 Use also for AIsa Hive GTM Growth coverage questions.",
       "uri": "skill://aisa-gtm/SKILL.md",
       "path": "skills/aisa-gtm/SKILL.md",
       "aliases": [
@@ -707,7 +707,7 @@
     },
     {
       "name": "aisa-look-up-token-market",
-      "description": "Resolve an ambiguous ticker, name or contract address into a single CoinGecko asset, then pull its current numbers and — only if asked — history and venue liquidity. Handles the two traps that make CoinGecko answers wrong rather than merely incomplete: ticker symbols are not unique, and half the endpoints want a CoinGecko id while the other half want a chain plus a contract address. Use when asked to identify a coin or token and retrieve its price, market history or venue liquidity. 通过币名或合约地址识别代币，查询价格、历史走势和交易所流动性。",
+      "description": "Use when asked to identify a coin or token and retrieve its price, market history or venue liquidity. 通过币名或合约地址识别代币，查询价格、历史走势和交易所流动性。 Related requests: 代币行情, 币价查询, 加密货币价格, token price, coin lookup. Sources: coingecko.",
       "uri": "skill://aisa-look-up-token-market/SKILL.md",
       "path": "skills/aisa-look-up-token-market/SKILL.md",
       "aliases": [
@@ -761,7 +761,7 @@
     },
     {
       "name": "aisa-mail",
-      "description": "Inboxes, threads, drafts and sending for agents through AgentMail.",
+      "description": "Use AgentMail for agent email: create and manage inboxes, list or read messages and threads, find attachments, prepare and manage drafts, send or reply to messages, and manage email resources. Use when asked to work with AgentMail or an agent inbox, or when an email task needs a programmatic mailbox. 代理邮箱、创建邮箱、收件箱、查邮件、读邮件、会话、附件、邮件草稿、发邮件、回复邮件、邮件自动化。",
       "uri": "skill://aisa-mail/SKILL.md",
       "path": "skills/aisa-mail/SKILL.md",
       "aliases": [
@@ -838,7 +838,7 @@
     },
     {
       "name": "aisa-research-brief",
-      "description": "A sourced answer to one question: two complementary searches, the full text of the few pages that matter, and a short brief with citations. Sets the order, the page budget and when a synthesis model is worth its price; it does not replace reading the sources. Use when asked to research one question on the open web and produce a short sourced brief. 围绕一个问题进行公开网页研究，交叉核实资料，撰写带引用的简报。",
+      "description": "Use when asked to research one question on the open web and produce a short sourced brief. 围绕一个问题进行公开网页研究，交叉核实资料，撰写带引用的简报。 Related requests: 网络研究, 资料搜索, 研究简报, 网页调研, web research. Sources: tavily, exa, perplexity.",
       "uri": "skill://aisa-research-brief/SKILL.md",
       "path": "skills/aisa-research-brief/SKILL.md",
       "aliases": [
@@ -887,7 +887,7 @@
     },
     {
       "name": "aisa-sales",
-      "description": "People and company search, enrichment, sequences and CRM objects through Apollo, creator discovery, and Similarweb market intelligence: any domain's traffic, audience, rankings and search rivals.",
+      "description": "Find companies, employees, decision makers, creators and business contact details; enrich lead lists and company profiles; work with Apollo CRM contacts, accounts and sequences; or research prospect websites using Similarweb traffic, audience and competitors. Use for prospecting, lead generation, account research and creator discovery. 找客户、找公司、找高管、工作邮箱、联系人查询、销售线索、客户资料补全、潜客调研、CRM、外联序列、达人发现、网站流量与竞品分析。",
       "uri": "skill://aisa-sales/SKILL.md",
       "path": "skills/aisa-sales/SKILL.md",
       "aliases": [
@@ -996,7 +996,7 @@
     },
     {
       "name": "aisa-search",
-      "description": "Web search, page extraction, crawling and grounded research through Tavily, Firecrawl, Exa, Perplexity, Oxylabs, txyz, and Anthropic/OpenAI grounded search.",
+      "description": "Search the web, retrieve page text, extract structured content, crawl websites and gather cited sources with Tavily, Firecrawl, Exa, Perplexity, Oxylabs, txyz and Anthropic/OpenAI grounded search. Use to look up facts, find recent information, research a topic or company, discover sources, read URLs or collect website content. 联网搜索、查资料、事实核查、最新信息、新闻检索、网页阅读、全文提取、结构化提取、网站抓取、爬虫、论文资料、带引用的研究简报。",
       "uri": "skill://aisa-search/SKILL.md",
       "path": "skills/aisa-search/SKILL.md",
       "aliases": [
@@ -1051,7 +1051,7 @@
     },
     {
       "name": "aisa-search-youtube-deliberately",
-      "description": "Run a YouTube search where the locale and the filter token are chosen on purpose rather than left to chance, and report the result set in a way the reader can audit. Covers the two parameters that quietly change what comes back. Use when asked to search YouTube with deliberate locale or filter choices and report the returned results. 按语言、地区和筛选条件搜索 YouTube 视频，整理搜索结果。",
+      "description": "Use when asked to search YouTube with deliberate locale or filter choices and report the returned results. 按语言、地区和筛选条件搜索 YouTube 视频，整理搜索结果。 Related requests: YouTube搜索, 视频搜索, 油管搜索, youtube search. Sources: youtube.",
       "uri": "skill://aisa-search-youtube-deliberately/SKILL.md",
       "path": "skills/aisa-search-youtube-deliberately/SKILL.md",
       "aliases": [
@@ -1094,7 +1094,7 @@
     },
     {
       "name": "aisa-seo",
-      "description": "Search and AI-answer visibility: rankings, keywords, backlinks, site health, app and marketplace listings, local business data, and how a brand shows up in ChatGPT, Claude, Gemini and Perplexity answers. DataForSEO, Semrush and Ahrefs together.",
+      "description": "Find SEO and AI-search data with DataForSEO, Semrush and Ahrefs. Use for keyword research, search volume and difficulty, SERPs and rankings, organic or paid competitors, backlinks, domain authority, site audits and page speed, content opportunities, local businesses, app and marketplace listings, or brand mentions and citations in AI answers. SEO优化、关键词挖掘、长尾词、搜索排名、外链分析、网站诊断、竞品研究、本地商家、应用商店、GEO、生成式搜索优化、AI品牌可见度。",
       "uri": "skill://aisa-seo/SKILL.md",
       "path": "skills/aisa-seo/SKILL.md",
       "aliases": [
@@ -1449,7 +1449,7 @@
     },
     {
       "name": "aisa-seo-ai-visibility",
-      "description": "Measure a brand or domain's presence in ChatGPT, Gemini and Perplexity answers: how often it is mentioned, on which prompts, which sources the models cite instead, and what the models say today when asked directly. Sets the call order and the budget; it does not write the positioning. Use when asked how a brand appears in AI answers or which sources those answers cite. 检查品牌在 AI 回答中的可见度、提及情况和引用来源。",
+      "description": "Use when asked how a brand appears in AI answers or which sources those answers cite. 检查品牌在 AI 回答中的可见度、提及情况和引用来源。 Related requests: AI可见度, 品牌提及, 生成式搜索优化, GEO, AI visibility. Sources: dataforseo.",
       "uri": "skill://aisa-seo-ai-visibility/SKILL.md",
       "path": "skills/aisa-seo-ai-visibility/SKILL.md",
       "aliases": [
@@ -1504,7 +1504,7 @@
     },
     {
       "name": "aisa-seo-keyword-opportunity",
-      "description": "Decide whether a keyword is worth going after: volume and difficulty, the related terms that are easier, and what is actually on page one now. Sets the call order and the stopping rules; it does not write the content. Use when asked to assess a keyword opportunity or find easier related search terms. 研究关键词搜索量、竞争难度和相关长尾词，寻找自然搜索机会。",
+      "description": "Use when asked to assess a keyword opportunity or find easier related search terms. 研究关键词搜索量、竞争难度和相关长尾词，寻找自然搜索机会。 Related requests: 关键词机会, 关键词研究, 搜索量, 难度, keyword research. Sources: semrush, dataforseo.",
       "uri": "skill://aisa-seo-keyword-opportunity/SKILL.md",
       "path": "skills/aisa-seo-keyword-opportunity/SKILL.md",
       "aliases": [
@@ -1558,7 +1558,7 @@
     },
     {
       "name": "aisa-seo-site-audit",
-      "description": "A defensible first-pass SEO health check of one domain: authority, organic footprint, backlink profile, top competitors and page speed. Sets the call order, when to cross-check two providers and when to stop; it does not decide what to fix first. Use when asked to audit the SEO health of a website, including authority, backlinks and page speed. 审计网站 SEO 健康情况，检查权威度、外链、关键词排名和页面速度。",
+      "description": "Use when asked to audit the SEO health of a website, including authority, backlinks and page speed. 审计网站 SEO 健康情况，检查权威度、外链、关键词排名和页面速度。 Related requests: SEO审计, 网站诊断, 网站体检, 外链检查, site health, SEO audit. Sources: semrush, ahrefs, dataforseo.",
       "uri": "skill://aisa-seo-site-audit/SKILL.md",
       "path": "skills/aisa-seo-site-audit/SKILL.md",
       "aliases": [
@@ -1618,7 +1618,7 @@
     },
     {
       "name": "aisa-social",
-      "description": "Public social data: X/Twitter users, posts, search and trends; Instagram, Reddit and Pinterest profiles and content; YouTube search.",
+      "description": "Find public social profiles, posts, comments, discussions, trends and videos on X/Twitter, Instagram, Reddit, Pinterest and YouTube. Use for topic or post search, brand mentions, customer feedback, audience and creator research, recent account activity, community discussions and video discovery. 社交媒体搜索、推特推文、热点追踪、品牌舆情、用户反馈、网红达人、账号画像、粉丝与内容、Reddit讨论、Instagram帖子、Pinterest图片、YouTube油管视频搜索。",
       "uri": "skill://aisa-social/SKILL.md",
       "path": "skills/aisa-social/SKILL.md",
       "aliases": [
@@ -1706,7 +1706,7 @@
     },
     {
       "name": "aisa-stock-chatter-workflow",
-      "description": "Decide between the one-call bundle and the underlying atomic tools when looking at what X/Twitter is saying about stocks, then read the result honestly — including which sources failed and what the mention counts do and do not mean. Use when asked what X is saying about stocks together with the market data behind those mentions. 分析股票相关社交舆情，结合行情和新闻核对热门股票讨论。",
+      "description": "Use when asked what X is saying about stocks together with the market data behind those mentions. 分析股票相关社交舆情，结合行情和新闻核对热门股票讨论。 Related requests: 股票舆情, 股市讨论, 股票热议, stock chatter. Sources: twitter, financial-datasets.",
       "uri": "skill://aisa-stock-chatter-workflow/SKILL.md",
       "path": "skills/aisa-stock-chatter-workflow/SKILL.md",
       "aliases": [
@@ -1754,7 +1754,7 @@
     },
     {
       "name": "aisa-stock-snapshot-brief",
-      "description": "Price, valuation, latest earnings, what analysts expect, who inside is buying or selling, and the news behind it — six calls, one page. Sets the order and where to stop; it does not give investment advice. Use when asked for a concise current company brief covering price, valuation, earnings, insiders and news. 汇总单只股票的最新股价、估值、财报预期、内部交易和新闻。",
+      "description": "Use when asked for a concise current company brief covering price, valuation, earnings, insiders and news. 汇总单只股票的最新股价、估值、财报预期、内部交易和新闻。 Related requests: 股票简报, 个股快照, 股票概况, stock brief. Sources: financial-datasets.",
       "uri": "skill://aisa-stock-snapshot-brief/SKILL.md",
       "path": "skills/aisa-stock-snapshot-brief/SKILL.md",
       "aliases": [
@@ -1796,7 +1796,7 @@
     },
     {
       "name": "aisa-track-topic-on-x",
-      "description": "Assemble a defensible picture of what X/Twitter is saying about a topic: which posts, from whom, how the conversation is shaped, and what is missing. Sets the call order and the stopping conditions; it does not decide what the chatter means. Use when asked to investigate posts, authors or discussions about a topic on X/Twitter. 追踪 X、Twitter、推特上的话题讨论，分析发帖作者、关注点和回复，整理带来源的报告。",
+      "description": "Use when asked to investigate posts, authors or discussions about a topic on X/Twitter. 追踪 X、Twitter、推特上的话题讨论，分析发帖作者、关注点和回复，整理带来源的报告。 Related requests: 推特话题, X话题, 推文搜索, 话题追踪, twitter topic. Sources: twitter.",
       "uri": "skill://aisa-track-topic-on-x/SKILL.md",
       "path": "skills/aisa-track-topic-on-x/SKILL.md",
       "aliases": [
@@ -6702,47 +6702,47 @@
     "skills/aisa-api/references/stock-pulse/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
     "skills/aisa-api/references/twitter-api/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
     "skills/aisa-api/references/workflows.md": "56ecd2e4ae6e3e1e5cb7d34f5b692bcbac0c62a876147d36acc7d3aa235b9723",
-    "skills/aisa-api/SKILL.md": "5dd0aba4ab4ca014217e380fdb41c8d38cd1c27d838d964f95366cbc635a2eda",
+    "skills/aisa-api/SKILL.md": "83d088f5437ff894f6b98561784d667708a89c9bc142ce57d905f13507d88278",
     "skills/aisa-brand-mentions-across-social/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
     "skills/aisa-brand-mentions-across-social/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
-    "skills/aisa-brand-mentions-across-social/SKILL.md": "d0ba63d3d42d1f013c39ffe8f2a9cd6a518cdc3ecbafffa18a9f1adff3be1fbf",
+    "skills/aisa-brand-mentions-across-social/SKILL.md": "bf581553792af5a5bceeb592f3b8def22c9c25183f3d40d5caa6f58f9a354040",
     "skills/aisa-company-fundamentals/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
-    "skills/aisa-company-fundamentals/SKILL.md": "d676e62a1724e75b6835157cb504d0f7a9288838d005349460a8c8bc5d709a36",
+    "skills/aisa-company-fundamentals/SKILL.md": "cb77869e767372aa9738aa467c224d5e87e7a643f3f4417c7f20f5f45e755f29",
     "skills/aisa-compare-event-odds/references/aisa-venue-field-map.md": "88b1d4ed788bc10df52a607bb9ae46f81e944be4d5646dbff2a145e9826f9392",
-    "skills/aisa-compare-event-odds/SKILL.md": "94478a155d0458c2d456f050ee4270770ddec6e1be096d09a3c1cb95923c14f8",
-    "skills/aisa-competitor-teardown/SKILL.md": "da8e4219e3c15fa3bca6171d8d27b59e98321f34834e8966784efc040b92bb11",
+    "skills/aisa-compare-event-odds/SKILL.md": "6ae1c89ec725a31ab6a7c067ee9719b7e6cb3ab9b51b8ddbcd978fc1317e08db",
+    "skills/aisa-competitor-teardown/SKILL.md": "3d0ce4285c0397393086581ff309434393a8981ab1f8a6cbf33e1078ab0184ab",
     "skills/aisa-creator-profile-snapshot/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
-    "skills/aisa-creator-profile-snapshot/SKILL.md": "6e9de47457fce1613fdeb45a728138133e21329697105a38d978e94554b15b64",
-    "skills/aisa-crypto-market-health/SKILL.md": "6170672a4ab66225c3e33ae9164d84ac9d9ceb80598015de99bdd96ca19e7e04",
-    "skills/aisa-enrich-lead-list/SKILL.md": "79e52e613b481bea9449a0e5bb94882307a0d0ba9145e7481f83a3799d89b996",
+    "skills/aisa-creator-profile-snapshot/SKILL.md": "fcde5b250550ce55ae4309cc3b88b4e4c5b05cbc9c71adc1b2824a6cb8f9c5eb",
+    "skills/aisa-crypto-market-health/SKILL.md": "a3493cbeddda092de74b454cd50eed33334ac4a069a6e4d14746c6917d3a696a",
+    "skills/aisa-enrich-lead-list/SKILL.md": "7f6cecb96210d0ff261e4cdfa830011ea246f3aea0c889f86f20c1d3a142d8cc",
     "skills/aisa-finance/references/operations.md": "ff8f7652c48ac3bd18fcd609335ebed5e0232fe039d421ff2020fb0a8ffb6e9a",
-    "skills/aisa-finance/SKILL.md": "e28fe682cb580ad7790884856ab98e2ba3cdbb9de2802bd7c04e1cd135ced337",
-    "skills/aisa-find-people-at-company/SKILL.md": "65962bc4cfe961bebec4cdc69bfdb3acddde521f878c91484e61cba2ac3e774c",
+    "skills/aisa-finance/SKILL.md": "155276b5b7363f611b87047fa2bbc80309ee89e483c616edc032d4891ebbea7a",
+    "skills/aisa-find-people-at-company/SKILL.md": "99f8ad9123523951d7936d92a4aadb237d59f53bfe96dfdb7f76a333bd64572c",
     "skills/aisa-gtm/references/operations.md": "3ee527949b801ae7617ce6873ab6865d16256dff4870171f1e3f1e0c3d55ae45",
-    "skills/aisa-gtm/SKILL.md": "afd728fe323679deab90fa78e52a6e7af3917813b8fe0679e7ede3447378a102",
-    "skills/aisa-look-up-token-market/SKILL.md": "a38e54799fa8930ce2d4c508984e5889e3fe805ddfe7423270dfc8e1da749ff1",
+    "skills/aisa-gtm/SKILL.md": "468add788574b155586944a0d20d87dbe8b2e45227d5c36f6fbe3aa87432591b",
+    "skills/aisa-look-up-token-market/SKILL.md": "ec86bf1b0a1190c4686f4604a75f8796e97ab0a2561e5e24db383d294cfb974b",
     "skills/aisa-mail/references/operations.md": "8740aeb8ef6b417389d5200047b0aee754601c6e6e36fed427a918acefade9a3",
-    "skills/aisa-mail/SKILL.md": "800011ec47ae6c988221d80eb4fc35b87303ab7e9276d111a8b3f6053c1611cc",
-    "skills/aisa-research-brief/SKILL.md": "5e9b96c5f40cedfe556d347110ded189ea8516081069490a39d9045672fa4b46",
+    "skills/aisa-mail/SKILL.md": "5c952b2d6caa6cf94dd564806a01cfbb20fd8448575643123621457564cf5b60",
+    "skills/aisa-research-brief/SKILL.md": "40f44f0126a5298167ec7a94a78ff866e8c7adc32c2324ac1863eadc077384f2",
     "skills/aisa-sales/references/operations.md": "6ce0bec24e6d983038af2c036eafbb7feb088cc27041f06d776600d08e7d3257",
-    "skills/aisa-sales/SKILL.md": "fab39d9ac1744ecd26f806c0a6afd9e0dc1b7a5e56ba5fd323fd933df04d6235",
-    "skills/aisa-search-youtube-deliberately/SKILL.md": "f6efc8088767e9b689aad9ee6559fc2bc8f3a34ec66a5957b4a59b875a730048",
+    "skills/aisa-sales/SKILL.md": "4ff585bb7bffe1343332c1b4c714bebc20533eac6d734ce214667e46e28e6f63",
+    "skills/aisa-search-youtube-deliberately/SKILL.md": "91b8267bc10c6c8894de5d1dc405732471969fe44283685edce863875ce4c9e6",
     "skills/aisa-search/references/operations.md": "c81fe4de54a0a1ab021218c7ebed8735b6cb09655e206c204a56107c277e0fe9",
-    "skills/aisa-search/SKILL.md": "18f453ec7112d2d81ffb879b0dd53e0737789a857706437b7f6bc08841f49e30",
-    "skills/aisa-seo-ai-visibility/SKILL.md": "ee61ed04a89ebbfd9e1fcfc576aede73971134a9dc859e1b295970cf0b18e2c8",
-    "skills/aisa-seo-keyword-opportunity/SKILL.md": "006313e21de13b11d973550767fd9a7c2196e07c69ea2525fcc5e8d576109f03",
-    "skills/aisa-seo-site-audit/SKILL.md": "b604e3074362fb46d44c335ebf1b196c19b207d731c3a168681836f43631b10a",
+    "skills/aisa-search/SKILL.md": "c881222cb2492a3aefd0140bc7ec7bd3340a189200f88050b908329c582c33ad",
+    "skills/aisa-seo-ai-visibility/SKILL.md": "413108b556e130e58840fdb1f67aa7ff7a594ec92fdcdb4abbf3b2c7e35f14fb",
+    "skills/aisa-seo-keyword-opportunity/SKILL.md": "e2706b1fc70e223c6c70c88ac0201be0b09aa4a9bfd757bf1e9583f4530d1de7",
+    "skills/aisa-seo-site-audit/SKILL.md": "da7e0b57c7c724745674c7cbe8b3cf018abde8afaf66ad4830f1ab9e41f15391",
     "skills/aisa-seo/references/operations.md": "f65c693f7f3904b80b0aad59d9f2b736e9513a6181ca2e6867c30ac69aad91d7",
-    "skills/aisa-seo/SKILL.md": "8ad99b43ae0dacda501af0e69831f54c7a95c771e26fb9ea3cbe188d6943c926",
+    "skills/aisa-seo/SKILL.md": "afa9081fb733490a531f782f119624f2c4e36ea61c121581b40dc9451d03463e",
     "skills/aisa-social/references/operations.md": "36b75707172893df59fd1831cb3998966d73af377fe74eb5d6109ad5b46f3975",
-    "skills/aisa-social/SKILL.md": "fa645751dfedcc1cbc673266213eb6692e31dc91efd0120eb62857ce9858bdbd",
+    "skills/aisa-social/SKILL.md": "3d686c4c957ff28610e0ec28ea4894f4f2959eb4252f45238214ef6edbdb589e",
     "skills/aisa-stock-chatter-workflow/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
     "skills/aisa-stock-chatter-workflow/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
-    "skills/aisa-stock-chatter-workflow/SKILL.md": "8858ae41d658921869b6cdf3d7e01cb708b3dc8ff52cd48bf24b0bae2380f752",
+    "skills/aisa-stock-chatter-workflow/SKILL.md": "724d7d6efacf6408b64258e56998ac699aef19928603090b137a9b6371336e94",
     "skills/aisa-stock-snapshot-brief/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
-    "skills/aisa-stock-snapshot-brief/SKILL.md": "3925bed750f12e2deb08d06198eda6a444816dd6d06477510cfe0e0ab22130d0",
+    "skills/aisa-stock-snapshot-brief/SKILL.md": "12e628e44cb8642f2ace84d211752947762a873e44e82ffc358580f319838206",
     "skills/aisa-track-topic-on-x/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
     "skills/aisa-track-topic-on-x/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
-    "skills/aisa-track-topic-on-x/SKILL.md": "51bf5ed2ac6bfec82165b83ce5ab1d59b06118aa5264e3fbbe994658dfb1f3d1"
+    "skills/aisa-track-topic-on-x/SKILL.md": "f108076e1b9341a7425ae1e97cdf61c8738f3c20d7e2a15282815b3e7313c1c6"
   }
 }

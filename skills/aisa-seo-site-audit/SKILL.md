@@ -1,14 +1,14 @@
 ---
 name: aisa-seo-site-audit
-description: "A defensible first-pass SEO health check of one domain: authority,
-  organic footprint, backlink profile, top competitors and page speed. Sets the
-  call order, when to cross-check two providers and when to stop; it does not
-  decide what to fix first. Use when asked to audit the SEO health of a website,
-  including authority, backlinks and page speed. 审计网站 SEO
-  健康情况，检查权威度、外链、关键词排名和页面速度。"
+description: "Use when asked to audit the SEO health of a website, including
+  authority, backlinks and page speed. 审计网站 SEO 健康情况，检查权威度、外链、关键词排名和页面速度。
+  Related requests: SEO审计, 网站诊断, 网站体检, 外链检查, site health, SEO audit. Sources:
+  semrush, ahrefs, dataforseo."
 ---
 
 # Audit a site's SEO health in one pass
+
+A defensible first-pass SEO health check of one domain: authority, organic footprint, backlink profile, top competitors and page speed. Sets the call order, when to cross-check two providers and when to stop; it does not decide what to fix first.
 
 ## Inputs
 

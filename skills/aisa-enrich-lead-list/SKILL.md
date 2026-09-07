@@ -1,13 +1,13 @@
 ---
 name: aisa-enrich-lead-list
-description: Turn a list of emails or names into people with titles, companies
-  and verified contact details, plus the company facts behind them — using the
-  bulk endpoints so one call does ten. Sets the batch size and the credit rules;
-  it does not write anything back to Apollo. Use when given a list of leads to
-  enrich with contact and company details in bulk. 批量补全销售线索的联系人、工作邮箱和公司资料。
+description: "Use when given a list of leads to enrich with contact and company
+  details in bulk. 批量补全销售线索的联系人、工作邮箱和公司资料。 Related requests: 线索补全, 批量联系人,
+  客户资料补全, lead enrichment. Sources: apollo."
 ---
 
 # Enrich a list of leads and their companies in bulk
+
+Turn a list of emails or names into people with titles, companies and verified contact details, plus the company facts behind them — using the bulk endpoints so one call does ten. Sets the batch size and the credit rules; it does not write anything back to Apollo.
 
 ## Inputs
 

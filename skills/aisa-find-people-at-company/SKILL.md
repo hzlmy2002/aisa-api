@@ -1,14 +1,13 @@
 ---
 name: aisa-find-people-at-company
-description: "From a company domain to a shortlist of named people with verified
-  work emails: enrich the company, search people by title, then match each
-  shortlisted person for contact details. Sets the order and the credit budget;
-  it does not write to Apollo (no contacts, no sequences). Use when asked to
-  find people in specific roles at a company and retrieve their work contact
-  details. 按公司和职位寻找决策人、高管及其工作联系方式。"
+description: "Use when asked to find people in specific roles at a company and
+  retrieve their work contact details. 按公司和职位寻找决策人、高管及其工作联系方式。 Related requests:
+  找联系人, 公司高管, 寻找CTO, 销售线索, find decision makers. Sources: apollo."
 ---
 
 # Find the right people at one company and get their work emails
+
+From a company domain to a shortlist of named people with verified work emails: enrich the company, search people by title, then match each shortlisted person for contact details. Sets the order and the credit budget; it does not write to Apollo (no contacts, no sequences).
 
 ## Inputs
 

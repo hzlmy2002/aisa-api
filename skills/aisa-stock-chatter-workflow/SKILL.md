@@ -1,13 +1,14 @@
 ---
 name: aisa-stock-chatter-workflow
-description: Decide between the one-call bundle and the underlying atomic tools
-  when looking at what X/Twitter is saying about stocks, then read the result
-  honestly — including which sources failed and what the mention counts do and
-  do not mean. Use when asked what X is saying about stocks together with the
-  market data behind those mentions. 分析股票相关社交舆情，结合行情和新闻核对热门股票讨论。
+description: "Use when asked what X is saying about stocks together with the
+  market data behind those mentions. 分析股票相关社交舆情，结合行情和新闻核对热门股票讨论。 Related
+  requests: 股票舆情, 股市讨论, 股票热议, stock chatter. Sources: twitter,
+  financial-datasets."
 ---
 
 # Work through stock chatter on X, with the market data behind it
+
+Decide between the one-call bundle and the underlying atomic tools when looking at what X/Twitter is saying about stocks, then read the result honestly — including which sources failed and what the mention counts do and do not mean.
 
 ## Inputs
 

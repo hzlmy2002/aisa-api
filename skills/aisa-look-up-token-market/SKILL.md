@@ -1,15 +1,13 @@
 ---
 name: aisa-look-up-token-market
-description: "Resolve an ambiguous ticker, name or contract address into a
-  single CoinGecko asset, then pull its current numbers and — only if asked —
-  history and venue liquidity. Handles the two traps that make CoinGecko answers
-  wrong rather than merely incomplete: ticker symbols are not unique, and half
-  the endpoints want a CoinGecko id while the other half want a chain plus a
-  contract address. Use when asked to identify a coin or token and retrieve its
-  price, market history or venue liquidity. 通过币名或合约地址识别代币，查询价格、历史走势和交易所流动性。"
+description: "Use when asked to identify a coin or token and retrieve its price,
+  market history or venue liquidity. 通过币名或合约地址识别代币，查询价格、历史走势和交易所流动性。 Related
+  requests: 代币行情, 币价查询, 加密货币价格, token price, coin lookup. Sources: coingecko."
 ---
 
 # Look up a coin or token's market picture on CoinGecko
+
+Resolve an ambiguous ticker, name or contract address into a single CoinGecko asset, then pull its current numbers and — only if asked — history and venue liquidity. Handles the two traps that make CoinGecko answers wrong rather than merely incomplete: ticker symbols are not unique, and half the endpoints want a CoinGecko id while the other half want a chain plus a contract address.
 
 ## Inputs
 

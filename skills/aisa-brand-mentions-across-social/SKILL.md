@@ -1,13 +1,13 @@
 ---
 name: aisa-brand-mentions-across-social
-description: "One pass over the three public social sources for a brand, product
-  or topic: the recent posts, where the conversation is, and what is missing.
-  Sets the source order, the page budget and when to stop; it does not score
-  sentiment for you. Use when asked to collect brand or product mentions across
-  X, Reddit and Instagram. 跨多个社交平台收集品牌或产品提及，对比各平台反馈。"
+description: "Use when asked to collect brand or product mentions across X,
+  Reddit and Instagram. 跨多个社交平台收集品牌或产品提及，对比各平台反馈。 Related requests: 品牌舆情,
+  社交平台提及, 跨平台舆情, brand monitoring. Sources: twitter, reddit, instagram, tavily."
 ---
 
 # What people are saying about a brand across X, Reddit and Instagram
+
+One pass over the three public social sources for a brand, product or topic: the recent posts, where the conversation is, and what is missing. Sets the source order, the page budget and when to stop; it does not score sentiment for you.
 
 ## Inputs
 

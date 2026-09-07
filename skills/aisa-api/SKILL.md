@@ -1,7 +1,12 @@
 ---
 name: aisa-api
-description: Find AIsa APIs by category and provider, read local operation
-  details, and execute through the AIsa MCP. AIsa 接口索引、本地参数详情与任务 workflows。
+description: Find and use AIsa APIs for web research, page extraction, website
+  traffic and competitors, SEO and AI visibility, social posts and creators,
+  company and contact enrichment, stocks, crypto, prediction markets and
+  AgentMail email. Use for related data requests even when AIsa is not named,
+  requests naming a supported provider, or questions about API coverage.
+  联网搜索、网页抓取、竞品流量、市场调研、关键词、排名、外链、GEO、社交舆情、网红、销售线索、公司财报、股票币价、事件赔率、收发邮件。 If
+  coverage is uncertain, inspect the directory or search the local API catalog.
 ---
 
 # AIsa API

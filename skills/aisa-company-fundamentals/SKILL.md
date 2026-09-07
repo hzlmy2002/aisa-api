@@ -1,16 +1,13 @@
 ---
 name: aisa-company-fundamentals
-description: "Resolve a company, then pull the slices of its financial record
-  that the question actually needs — price, statements, ratios, earnings,
-  insiders, filings — without dragging back everything. Encodes the two things
-  that reliably go wrong here: half these tools refuse to answer without a
-  period argument, and several pairs look interchangeable but differ by an order
-  of magnitude in how much they return. Use when asked to assemble financial
-  statements, metrics or filings for a US-listed company.
-  研究美股公司基本面，整理财务报表、估值指标和监管披露。"
+description: "Use when asked to assemble financial statements, metrics or
+  filings for a US-listed company. 研究美股公司基本面，整理财务报表、估值指标和监管披露。 Related requests:
+  公司基本面, 财务报表, 美股财报, company financials. Sources: financial-datasets."
 ---
 
 # Assemble the fundamentals picture for a US-listed company
+
+Resolve a company, then pull the slices of its financial record that the question actually needs — price, statements, ratios, earnings, insiders, filings — without dragging back everything. Encodes the two things that reliably go wrong here: half these tools refuse to answer without a period argument, and several pairs look interchangeable but differ by an order of magnitude in how much they return.
 
 ## Inputs
 

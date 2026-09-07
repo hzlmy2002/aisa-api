@@ -1,13 +1,13 @@
 ---
 name: aisa-search-youtube-deliberately
-description: Run a YouTube search where the locale and the filter token are
-  chosen on purpose rather than left to chance, and report the result set in a
-  way the reader can audit. Covers the two parameters that quietly change what
-  comes back. Use when asked to search YouTube with deliberate locale or filter
+description: "Use when asked to search YouTube with deliberate locale or filter
   choices and report the returned results. 按语言、地区和筛选条件搜索 YouTube 视频，整理搜索结果。
+  Related requests: YouTube搜索, 视频搜索, 油管搜索, youtube search. Sources: youtube."
 ---
 
 # Search YouTube without silently getting the wrong slice
+
+Run a YouTube search where the locale and the filter token are chosen on purpose rather than left to chance, and report the result set in a way the reader can audit. Covers the two parameters that quietly change what comes back.
 
 ## Inputs
 

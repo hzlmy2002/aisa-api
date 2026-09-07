@@ -1,14 +1,13 @@
 ---
 name: aisa-track-topic-on-x
-description: "Assemble a defensible picture of what X/Twitter is saying about a
-  topic: which posts, from whom, how the conversation is shaped, and what is
-  missing. Sets the call order and the stopping conditions; it does not decide
-  what the chatter means. Use when asked to investigate posts, authors or
-  discussions about a topic on X/Twitter. 追踪
-  X、Twitter、推特上的话题讨论，分析发帖作者、关注点和回复，整理带来源的报告。"
+description: "Use when asked to investigate posts, authors or discussions about
+  a topic on X/Twitter. 追踪 X、Twitter、推特上的话题讨论，分析发帖作者、关注点和回复，整理带来源的报告。 Related
+  requests: 推特话题, X话题, 推文搜索, 话题追踪, twitter topic. Sources: twitter."
 ---
 
 # Track what X/Twitter is saying about a topic
+
+Assemble a defensible picture of what X/Twitter is saying about a topic: which posts, from whom, how the conversation is shaped, and what is missing. Sets the call order and the stopping conditions; it does not decide what the chatter means.
 
 ## Inputs
 

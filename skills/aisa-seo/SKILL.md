@@ -1,9 +1,11 @@
 ---
 name: aisa-seo
-description: "Search and AI-answer visibility: rankings, keywords, backlinks,
-  site health, app and marketplace listings, local business data, and how a
-  brand shows up in ChatGPT, Claude, Gemini and Perplexity answers. DataForSEO,
-  Semrush and Ahrefs together."
+description: Find SEO and AI-search data with DataForSEO, Semrush and Ahrefs.
+  Use for keyword research, search volume and difficulty, SERPs and rankings,
+  organic or paid competitors, backlinks, domain authority, site audits and page
+  speed, content opportunities, local businesses, app and marketplace listings,
+  or brand mentions and citations in AI answers.
+  SEO优化、关键词挖掘、长尾词、搜索排名、外链分析、网站诊断、竞品研究、本地商家、应用商店、GEO、生成式搜索优化、AI品牌可见度。
 ---
 
 # AIsa SEO & AI Visibility

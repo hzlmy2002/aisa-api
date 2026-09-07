@@ -1,6 +1,10 @@
 ---
 name: aisa-mail
-description: Inboxes, threads, drafts and sending for agents through AgentMail.
+description: "Use AgentMail for agent email: create and manage inboxes, list or
+  read messages and threads, find attachments, prepare and manage drafts, send
+  or reply to messages, and manage email resources. Use when asked to work with
+  AgentMail or an agent inbox, or when an email task needs a programmatic
+  mailbox. 代理邮箱、创建邮箱、收件箱、查邮件、读邮件、会话、附件、邮件草稿、发邮件、回复邮件、邮件自动化。"
 ---
 
 # AIsa Agent Mail

@@ -104,6 +104,18 @@ function validateWorkflow(cfg, operations) {
   return { name, body, args };
 }
 
+// Discovery descriptions favor task coverage; execution guidance stays in the body.
+const discoveryDescriptions = {
+  api: 'Find and use AIsa APIs for web research, page extraction, website traffic and competitors, SEO and AI visibility, social posts and creators, company and contact enrichment, stocks, crypto, prediction markets and AgentMail email. Use for related data requests even when AIsa is not named, requests naming a supported provider, or questions about API coverage. 联网搜索、网页抓取、竞品流量、市场调研、关键词、排名、外链、GEO、社交舆情、网红、销售线索、公司财报、股票币价、事件赔率、收发邮件。 If coverage is uncertain, inspect the directory or search the local API catalog.',
+  seo: 'Find SEO and AI-search data with DataForSEO, Semrush and Ahrefs. Use for keyword research, search volume and difficulty, SERPs and rankings, organic or paid competitors, backlinks, domain authority, site audits and page speed, content opportunities, local businesses, app and marketplace listings, or brand mentions and citations in AI answers. SEO优化、关键词挖掘、长尾词、搜索排名、外链分析、网站诊断、竞品研究、本地商家、应用商店、GEO、生成式搜索优化、AI品牌可见度。',
+  finance: 'Retrieve financial and market data for company research, stock screening and comparisons, quotes and price history, valuation, financial statements, earnings, analyst estimates, insider trades, filings and news; crypto prices, trends and liquidity; prediction-market events and odds; and stock discussion on X. Covers Financial Datasets, CoinGecko, Polymarket and Kalshi. 股票行情、美股财报、公司基本面、估值、内部交易、监管披露、投资研究、币价、加密市场、预测市场、事件概率、股票舆情。',
+  social: 'Find public social profiles, posts, comments, discussions, trends and videos on X/Twitter, Instagram, Reddit, Pinterest and YouTube. Use for topic or post search, brand mentions, customer feedback, audience and creator research, recent account activity, community discussions and video discovery. 社交媒体搜索、推特推文、热点追踪、品牌舆情、用户反馈、网红达人、账号画像、粉丝与内容、Reddit讨论、Instagram帖子、Pinterest图片、YouTube油管视频搜索。',
+  search: 'Search the web, retrieve page text, extract structured content, crawl websites and gather cited sources with Tavily, Firecrawl, Exa, Perplexity, Oxylabs, txyz and Anthropic/OpenAI grounded search. Use to look up facts, find recent information, research a topic or company, discover sources, read URLs or collect website content. 联网搜索、查资料、事实核查、最新信息、新闻检索、网页阅读、全文提取、结构化提取、网站抓取、爬虫、论文资料、带引用的研究简报。',
+  sales: 'Find companies, employees, decision makers, creators and business contact details; enrich lead lists and company profiles; work with Apollo CRM contacts, accounts and sequences; or research prospect websites using Similarweb traffic, audience and competitors. Use for prospecting, lead generation, account research and creator discovery. 找客户、找公司、找高管、工作邮箱、联系人查询、销售线索、客户资料补全、潜客调研、CRM、外联序列、达人发现、网站流量与竞品分析。',
+  mail: 'Use AgentMail for agent email: create and manage inboxes, list or read messages and threads, find attachments, prepare and manage drafts, send or reply to messages, and manage email resources. Use when asked to work with AgentMail or an agent inbox, or when an email task needs a programmatic mailbox. 代理邮箱、创建邮箱、收件箱、查邮件、读邮件、会话、附件、邮件草稿、发邮件、回复邮件、邮件自动化。',
+  gtm: 'Find go-to-market data for prospecting, customer and market research, competitor analysis, creator discovery, social listening and acquisition research. Covers Apollo people and companies, Similarweb website traffic and audiences, X/Twitter, Instagram, Reddit, Pinterest, YouTube, Semrush, Ahrefs, Oxylabs and DataForSEO YouTube operations. GTM、市场进入、获客、增长研究、销售线索、目标客户、联系人、竞品流量、受众分析、达人营销、社交舆情、搜索营销。 Use also for AIsa Hive GTM Growth coverage questions.',
+};
+
 const toolAccess = `Use the local MCP server named \`aisa-api\`. Read the linked local operation details for its full description, input schema, defaults and annotations; then execute with \`use({operation_id: "<id>", arguments: {...}})\`. You do not need to call get_details when the installed details already provide the contract. Use \`get_details({operation_id: "<id>"})\` if local details are missing or the installed skills and running server differ; the running server's schema takes precedence. Prices and live availability are enforced by the AIsa gateway, not these static files.
 
 Include \`max_price_usd\` when needed: it applies to each upstream request, including composed fan-outs, not the workflow total. Use \`batch_use\` for up to 20 independent calls; keep dependent steps sequential. If the exact operation is pinned, it can also be called directly with its schema.
@@ -306,7 +318,7 @@ export async function generateSkills({ root = projectRoot } = {}) {
   };
   for (const workflow of workflows) {
     const { cfg, name, args, server } = workflow;
-    const entry = entryFor(name, `${compact(cfg.description)} ${compact(cfg.skill.when_to_use)}`, {
+    const entry = entryFor(name, `${compact(cfg.skill.when_to_use)} Related requests: ${cfg.skill.aliases.join(", ")}. Sources: ${cfg.skill.providers.join(", ")}.`, {
       when_to_use: cfg.skill.when_to_use, tags: cfg.skill.tags, providers: cfg.skill.providers, examples: cfg.skill.examples,
       aliases: [...new Set([cfg.name, name.slice(5), ...cfg.skill.aliases])], uses: cfg.uses, arguments: args, kind: 'workflow',
     });
@@ -323,7 +335,7 @@ export async function generateSkills({ root = projectRoot } = {}) {
       body = body.replaceAll(uri, `references/${resource.filename}`);
     }
     const inputs = args.map((arg) => `- \`${arg.name}\` (${arg.required ? 'required' : `optional; default ${JSON.stringify(arg.default ?? '')}`}): ${compact(arg.description)}`).join('\n');
-    add(entry, cfg.title || name, `## Inputs\n\nExtract inputs from the request and conversation. Apply optional defaults exactly; ask for required inputs only when they cannot be inferred. In the workflow, <input: NAME> means the resolved input, not a literal API argument.\n\n${inputs || 'No template inputs.'}\n\n## Tool access\n\n${toolAccess}\n\n${cfg.uses.map((id) => `- [${id}](../aisa-api/references/operations/${id}.md)`).join('\n')}\n\n${links.length ? `## Supporting resources\n\nRead when relevant to interpreting the returned data:\n\n${links.join('\n')}\n\n` : ''}## Workflow\n\n${body}`);
+    add(entry, cfg.title || name, `${compact(cfg.description)}\n\n## Inputs\n\nExtract inputs from the request and conversation. Apply optional defaults exactly; ask for required inputs only when they cannot be inferred. In the workflow, <input: NAME> means the resolved input, not a literal API argument.\n\n${inputs || 'No template inputs.'}\n\n## Tool access\n\n${toolAccess}\n\n${cfg.uses.map((id) => `- [${id}](../aisa-api/references/operations/${id}.md)`).join('\n')}\n\n${links.length ? `## Supporting resources\n\nRead when relevant to interpreting the returned data:\n\n${links.join('\n')}\n\n` : ''}## Workflow\n\n${body}`);
   }
   const groups = [...Object.entries(modules.categories), ...Object.entries(modules.modules ?? {}).filter(([, group]) => group.prompt === true)];
   for (const [slug, group] of groups) {
@@ -337,13 +349,13 @@ export async function generateSkills({ root = projectRoot } = {}) {
     const uses = catalog.operations.filter((op) => op.servers.some((server) => group.servers.includes(server)) || (group.tools ?? []).includes(op.name)).map((op) => op.name).sort();
     requireValue(uses.length > 0, `${name}: no operations in category`);
     for (const id of group.default_tools ?? []) requireValue(uses.includes(id), `${name}: default operation outside category: ${id}`);
-    const entry = entryFor(name, compact(group.description), { aliases: [slug, group.name], tags: [slug], providers: group.servers, uses, kind: 'category', arguments: [{ name: 'task', description: 'What you want to find out.', required: false, default: '' }] });
+    const entry = entryFor(name, discoveryDescriptions[slug] ?? compact(group.description), { aliases: [slug, group.name], tags: [slug], providers: group.servers, uses, kind: 'category', arguments: [{ name: 'task', description: 'What you want to find out.', required: false, default: '' }] });
     const reference = `skills/${name}/references/operations.md`;
     files.set(reference, `# ${group.name} operations\n\n${group.default_tools?.length ? `## Curated operations\n\n${operationList(group.default_tools, operations)}\n\n` : ''}## Full coverage\n\n${operationList(uses, operations)}\n`);
     const related = entries.filter((item) => item.kind === 'workflow' && item.uses.some((id) => uses.includes(id)));
     add(entry, group.name, `${compact(group.description)}\n\nOptional input: \`task\` (default \`""\`) — what you want to find out.\n\n${uses.length} operations across these servers: ${group.servers.map((server) => `\`${server}\``).join(', ')}. Read [operation coverage](references/operations.md) to select an operation, then read its schema.\n\n${toolAccess}\n\nPlan the minimal call set; use a tool's list input instead of looping when available. Label unavailable sources and any substitutes.\n\n${related.length ? `Relevant installed workflow skills:\n\n${related.map((item) => `- \`${item.name}\` — ${item.when_to_use}`).join('\n')}` : ''}`);
   }
-  const rootEntry = entryFor('aisa-api', 'Find AIsa APIs by category and provider, read local operation details, and execute through the AIsa MCP. AIsa 接口索引、本地参数详情与任务 workflows。', { aliases: ['aisa', 'API directory', '接口目录'], tags: ['aisa', 'directory'], kind: 'entry' });
+  const rootEntry = entryFor('aisa-api', discoveryDescriptions.api, { aliases: ['aisa', 'API directory', '接口目录'], tags: ['aisa', 'directory'], kind: 'entry' });
   const workflowLinks = entries.filter(item => item.kind === 'workflow').map(item => `- [${item.name}](../../${item.name}/SKILL.md) — ${compact(item.when_to_use)}`).join('\n');
   reference('workflows.md', `# Task workflows\n\nChoose a matching workflow; it links directly to its operation details.\n\n${workflowLinks}`, 'workflows', 'Task workflow index');
   const serverLinks = Object.entries(modules.categories).map(([slug, group]) => `### ${slug} — ${group.name}\n\n${group.servers.map(name => `- [${name}](references/servers/${name}.md)`).join('\n')}`).join('\n\n');

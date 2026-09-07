@@ -1,14 +1,13 @@
 ---
 name: aisa-seo-ai-visibility
-description: "Measure a brand or domain's presence in ChatGPT, Gemini and
-  Perplexity answers: how often it is mentioned, on which prompts, which sources
-  the models cite instead, and what the models say today when asked directly.
-  Sets the call order and the budget; it does not write the positioning. Use
-  when asked how a brand appears in AI answers or which sources those answers
-  cite. 检查品牌在 AI 回答中的可见度、提及情况和引用来源。"
+description: "Use when asked how a brand appears in AI answers or which sources
+  those answers cite. 检查品牌在 AI 回答中的可见度、提及情况和引用来源。 Related requests: AI可见度, 品牌提及,
+  生成式搜索优化, GEO, AI visibility. Sources: dataforseo."
 ---
 
 # How a brand shows up in AI answers
+
+Measure a brand or domain's presence in ChatGPT, Gemini and Perplexity answers: how often it is mentioned, on which prompts, which sources the models cite instead, and what the models say today when asked directly. Sets the call order and the budget; it does not write the positioning.
 
 ## Inputs
 

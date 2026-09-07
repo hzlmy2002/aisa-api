@@ -1,14 +1,14 @@
 ---
 name: aisa-research-brief
-description: "A sourced answer to one question: two complementary searches, the
-  full text of the few pages that matter, and a short brief with citations. Sets
-  the order, the page budget and when a synthesis model is worth its price; it
-  does not replace reading the sources. Use when asked to research one question
-  on the open web and produce a short sourced brief.
-  围绕一个问题进行公开网页研究，交叉核实资料，撰写带引用的简报。"
+description: "Use when asked to research one question on the open web and
+  produce a short sourced brief. 围绕一个问题进行公开网页研究，交叉核实资料，撰写带引用的简报。 Related
+  requests: 网络研究, 资料搜索, 研究简报, 网页调研, web research. Sources: tavily, exa,
+  perplexity."
 ---
 
 # Research a question from the open web, with sources
+
+A sourced answer to one question: two complementary searches, the full text of the few pages that matter, and a short brief with citations. Sets the order, the page budget and when a synthesis model is worth its price; it does not replace reading the sources.
 
 ## Inputs
 

@@ -1,8 +1,11 @@
 ---
 name: aisa-search
-description: Web search, page extraction, crawling and grounded research through
-  Tavily, Firecrawl, Exa, Perplexity, Oxylabs, txyz, and Anthropic/OpenAI
-  grounded search.
+description: Search the web, retrieve page text, extract structured content,
+  crawl websites and gather cited sources with Tavily, Firecrawl, Exa,
+  Perplexity, Oxylabs, txyz and Anthropic/OpenAI grounded search. Use to look up
+  facts, find recent information, research a topic or company, discover sources,
+  read URLs or collect website content.
+  联网搜索、查资料、事实核查、最新信息、新闻检索、网页阅读、全文提取、结构化提取、网站抓取、爬虫、论文资料、带引用的研究简报。
 ---
 
 # AIsa Web Search & Research

@@ -1,15 +1,14 @@
 ---
 name: aisa-competitor-teardown
-description: "From one domain to a market map: how big its traffic is, which
-  sites compete for the same audience, where that audience lives, who the
-  search-side rivals are (often a different list — say so), and how the top
-  competitors measure on the same yardstick. Sets the call order, the budget and
-  the data-vintage rules; the judgement stays with the reader. Use when asked to
-  analyze a competitor or map a market starting from a domain.
-  从域名分析竞争对手的网站流量、受众地域、相似网站和竞争格局。"
+description: "Use when asked to analyze a competitor or map a market starting
+  from a domain. 从域名分析竞争对手的网站流量、受众地域、相似网站和竞争格局。 Related requests: 竞品分析, 竞争对手,
+  市场分析, 流量对比, competitor traffic, market map. Sources: similarweb, semrush,
+  dataforseo."
 ---
 
 # Tear down a competitor or market from one domain
+
+From one domain to a market map: how big its traffic is, which sites compete for the same audience, where that audience lives, who the search-side rivals are (often a different list — say so), and how the top competitors measure on the same yardstick. Sets the call order, the budget and the data-vintage rules; the judgement stays with the reader.
 
 ## Inputs
 

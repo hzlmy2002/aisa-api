@@ -1,13 +1,13 @@
 ---
 name: aisa-creator-profile-snapshot
-description: Audience, activity and recent content of one person or brand
-  account on X and Instagram, from the compact digests first and the raw feeds
-  only when needed. Sets the order and the page budget; it does not judge brand
-  fit. Use when asked for an audience and recent-content snapshot of a creator
-  or public account. 分析创作者或公开账号的个人资料、受众和最近发布的内容。
+description: "Use when asked for an audience and recent-content snapshot of a
+  creator or public account. 分析创作者或公开账号的个人资料、受众和最近发布的内容。 Related requests:
+  创作者画像, 网红分析, 账号画像, influencer profile. Sources: twitter, instagram, tavily."
 ---
 
 # Size up a creator or public account across X and Instagram
+
+Audience, activity and recent content of one person or brand account on X and Instagram, from the compact digests first and the raw feeds only when needed. Sets the order and the page budget; it does not judge brand fit.
 
 ## Inputs
 
