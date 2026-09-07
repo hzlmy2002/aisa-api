@@ -30,6 +30,7 @@ const meta = [
 ].map(t => ({...t, annotations: t.annotations ?? readOnly}));
 const ajv = new Ajv({strict: false, useDefaults: true});
 const metaValidators = new Map(meta.map(t => [t.name, ajv.compile(t.inputSchema)]));
+const coreToolNames = new Set(['get_details', 'use', 'batch_use']);
 const unknownPrice = {currency: 'USD', amount: null, model: 'unknown', source: 'local'};
 const wire = (data: any, isError = false) => ({content: [{type: 'text' as const, text: JSON.stringify(data)}], structuredContent: data !== null && typeof data === 'object' && !Array.isArray(data) ? data : {result: data}, ...(isError ? {isError: true} : {})});
 function readResource(uri: string) {
@@ -63,9 +64,10 @@ async function fetchAccount(api: ApiClient, signal?: AbortSignal) {
   else out.errors.push(errorResult(calls[1].reason));
   return out;
 }
-export interface ServerOptions {modules?: string[]; server?: string; allTools?: boolean; api?: Transport}
+export interface ServerOptions {modules?: string[]; server?: string; allTools?: boolean; discoveryTools?: boolean; api?: Transport}
 export function createServer(options: ServerOptions = {}) {
   const api = options.api ?? new ApiClient();
+  const visibleMeta = meta.filter(t => options.discoveryTools || coreToolNames.has(t.name));
   if (options.server && !catalog.servers.some(s => s.slug === options.server)) throw Error(`Unknown server: ${options.server}`);
   const pinned = new Map<string, Operation>();
   if (options.allTools) for (const op of catalog.operations) pinned.set(op.name, op);
@@ -75,7 +77,7 @@ export function createServer(options: ServerOptions = {}) {
     for (const op of moduleOperations(module)) pinned.set(op.name, op);
   }
   const server = new Server({name: 'aisa-api', version: VERSION}, {capabilities: {tools: {}, resources: {}}, instructions:
-    'AIsa APIs run through this local stdio server and use your AIsa credentials. Use installed AIsa skills or search_skills/read_resource for task workflows. search finds operations; get_details gives original schemas; use executes them. Pinned tools can be called directly. All supported APIs remain reachable through use. Search and skill reads are local and free; API calls may be billed or write to external services. max_price_usd limits each upstream request, not a workflow total. Setup installs workflow skills into your client. If authentication fails, run aisa-api setup in a terminal; never request keys or OAuth callback URLs in conversation.'});
+    'AIsa APIs run through this local stdio server and use your AIsa credentials. Read the installed aisa-api skill for the complete API directory and workflow links, or use native resources/read with skill://aisa-api/SKILL.md. Select an operation ID from the directory; get_details gives its schema; use executes it. The default tools are get_details, use and batch_use. Pinned tools can be called directly. All supported APIs remain reachable through use. Directory and schema reads are local and free; API calls may be billed or write to external services. max_price_usd limits each upstream request, not a workflow total. Setup installs workflow skills into your client. If authentication fails, run aisa-api setup in a terminal; never request keys or OAuth callback URLs in conversation.'});
   const execute = async (name: string, input: Json, capValue?: number, signal?: AbortSignal): Promise<any> => {
     validateCap(capValue);
     if (signal?.aborted) throw new ApiError('cancelled', 'Request cancelled before execution.');
@@ -99,7 +101,7 @@ export function createServer(options: ServerOptions = {}) {
     try {return {call_id: callId, operation_id: name, successful: true, data: await execute(name, args, capValue, signal)};}
     catch (e) {return {call_id: callId, operation_id: name, successful: false, error: errorResult(e)};}
   };
-  server.setRequestHandler(ListToolsRequestSchema, async () => ({tools: [...meta, ...[...pinned.values()].map(op => ({name: op.name, title: op.title ?? undefined, description: op.description, inputSchema: op.inputSchema as any, annotations: op.annotations}))]}));
+  server.setRequestHandler(ListToolsRequestSchema, async () => ({tools: [...visibleMeta, ...[...pinned.values()].map(op => ({name: op.name, title: op.title ?? undefined, description: op.description, inputSchema: op.inputSchema as any, annotations: op.annotations}))]}));
   server.setRequestHandler(ListResourcesRequestSchema, async () => ({resources: resources.map(r => ({uri: r.uri, name: r.name, description: r.description, mimeType: r.mimeType ?? 'text/markdown'}))}));
   server.setRequestHandler(ReadResourceRequestSchema, async request => {
     try {return readResource(request.params.uri);}
@@ -109,6 +111,7 @@ export function createServer(options: ServerOptions = {}) {
     const {name} = request.params;
     const args: Json = structuredClone(request.params.arguments ?? {});
     try {
+      if (metaValidators.has(name) && !visibleMeta.some(t => t.name === name)) throw new ApiError('unknown_tool', 'Read the aisa-api directory skill, or restart with --discovery-tools to enable legacy discovery helpers.', 404);
       const validator = metaValidators.get(name);
       if (validator && !validator(args)) throw new ApiError('invalid_input', ajv.errorsText(validator.errors), 400);
       if (!validator) {

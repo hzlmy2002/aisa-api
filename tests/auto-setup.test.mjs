@@ -61,10 +61,10 @@ test('CLI setup persists explicit surface options and rejects empty pins',()=>pr
  const module=Object.keys(catalog.modules.categories)[0];
  const server=catalog.servers[0].slug;
  const modules=`${module},${module}-all,account`;
- const result=setup(home,['--client','claude-code','--modules',modules,'--server',server,'--all-tools']);
+ const result=setup(home,['--client','claude-code','--modules',modules,'--server',server,'--all-tools','--discovery-tools']);
  assert.equal(result.status,0,result.stderr);
  const cfg=JSON.parse(await fs.readFile(path.join(home,'.claude.json'),'utf8'));
- assert.deepEqual(cfg.mcpServers['aisa-api'].args.slice(-5),['--modules',modules,'--server',server,'--all-tools']);
+ assert.deepEqual(cfg.mcpServers['aisa-api'].args.slice(-6),['--modules',modules,'--server',server,'--all-tools','--discovery-tools']);
  const before=await fs.readFile(path.join(home,'.claude.json'),'utf8');
  assert.equal(setup(home,['--client','claude-code','--modules','search,,finance']).status,1);
  assert.equal(await fs.readFile(path.join(home,'.claude.json'),'utf8'),before);

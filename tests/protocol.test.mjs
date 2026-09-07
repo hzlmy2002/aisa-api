@@ -22,7 +22,7 @@ const decode = result => {
   return data;
 };
 async function connect(t, options = {}) {
-  const server = createServer({api: forbiddenApi, ...options});
+  const server = createServer({api: forbiddenApi, discoveryTools: true, ...options});
   const client = new Client({name: 'aisa-integration-test', version: '1.0.0'});
   t.after(async () => {await client.close(); await server.close();});
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
@@ -32,7 +32,22 @@ async function connect(t, options = {}) {
 }
 const call = (client, name, args = {}, options) => client.callTool({name, arguments: args}, undefined, options);
 
-test('default MCP surface, search, details and category metadata are local and faithful', async t => {
+test('default directory flow needs only three tools and executes a catalog-selected operation', async t => {
+  const invoked = [];
+  const client = await connect(t, {discoveryTools: false, api: {execute: async (name,args) => {invoked.push(name); return {ok: true};}}});
+  assert.deepEqual((await client.listTools()).tools.map(t => t.name), ['get_details', 'use', 'batch_use']);
+  const directory = await client.readResource({uri: 'skill://aisa-api/SKILL.md'});
+  const names = [...directory.contents[0].text.matchAll(/^\| `([^`]+)` \|/gm)].map(r => r[1]);
+  assert.deepEqual(names.sort(), catalog.operations.map(op => op.name).sort());
+  const id = names.find(name => name === operation);
+  assert.equal(decode(await call(client, 'get_details', {operation_id: id})).operation_id, id);
+  assert.equal(decode(await call(client, 'use', {operation_id: id})).successful, true);
+  assert.deepEqual(invoked, [id]);
+  assert.equal((await call(client, 'search', {query: 'anything'})).isError, true);
+  assert.equal((await call(client, 'search_skills', {query: 'anything'})).isError, true);
+});
+
+test('optional legacy discovery surface, search, details and category metadata are local and faithful', async t => {
   const client = await connect(t);
   assert.equal(client.getServerVersion().name, 'aisa-api');
   assert.ok(client.getServerCapabilities().resources);
@@ -234,7 +249,8 @@ test('real stdio child completes SDK handshake, discovery, resource reads and sh
   await client.connect(transport);
   const {tools} = await client.listTools();
   assert.ok(tools.some(t => t.name === operation));
-  assert.equal(decode(await call(client, 'search', {query: operation, limit: 1})).candidates[0].operation_id, operation);
+  assert.ok(!tools.some(t => t.name === 'search'));
+  assert.equal(decode(await call(client, 'get_details', {operation_id: operation})).operation_id, operation);
   const {resources} = await client.listResources();
   assert.ok((await client.readResource({uri: resources[0].uri})).contents[0].text.length > 0);
   // Invalid arguments exercise the execution boundary without ever reaching auth/fetch.

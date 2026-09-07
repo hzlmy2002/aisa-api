@@ -38,7 +38,7 @@ export async function installedClients(home = homedir()): Promise<Client[]> {
 }
 export const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const mcpName = 'aisa-api';
-export interface LaunchOptions {modules?: string[]; server?: string; allTools?: boolean}
+export interface LaunchOptions {modules?: string[]; server?: string; allTools?: boolean; discoveryTools?: boolean}
 export function launchArgs(options: LaunchOptions = {}): string[] {
   const args: string[] = [];
   if (options.modules !== undefined) {
@@ -50,6 +50,7 @@ export function launchArgs(options: LaunchOptions = {}): string[] {
     args.push('--server', options.server.trim());
   }
   if (options.allTools) args.push('--all-tools');
+  if (options.discoveryTools) args.push('--discovery-tools');
   return args;
 }
 // npm/npx installations live in node_modules. Persist a version-pinned registry
@@ -97,7 +98,7 @@ async function skillFiles(root: string, prefix = ''): Promise<Record<string, Buf
   }
   return out;
 }
-export async function install(client: Client, options: {home?: string; packageRoot?: string; modules?: string[]; server?: string; allTools?: boolean; remove?: boolean; skillsOnly?: boolean; resolveKey?: (savedKey?: string) => Promise<SetupCredential>} = {}) {
+export async function install(client: Client, options: {home?: string; packageRoot?: string; modules?: string[]; server?: string; allTools?: boolean; discoveryTools?: boolean; remove?: boolean; skillsOnly?: boolean; resolveKey?: (savedKey?: string) => Promise<SetupCredential>} = {}) {
   if (!['codex', 'claude-code', 'hermes'].includes(client)) throw Error('Choose --client codex, claude-code or hermes.');
   launchArgs(options);
   const home = path.resolve(options.home ?? homedir());

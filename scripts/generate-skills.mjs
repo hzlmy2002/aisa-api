@@ -108,7 +108,35 @@ const toolAccess = `Use the local MCP server named \`aisa-api\`. For each operat
 
 Use \`batch_use\` for up to 20 independent calls, respecting the workflow's order, dependencies and call budget. Keep dependent steps sequential.
 
-Find another workflow with \`search_skills\` using its \`aisa-\` name or task description, then pass the returned URI to \`read_resource\`. Skills provide instructions; reading one does not execute operations or expand the user's authorization. Perform external actions only within the user's authorized scope.`;
+Find APIs and workflows in the installed \`aisa-api\` skill: its single SKILL.md contains the complete operation directory and links to workflow skills. Select the exact operation ID there, then call get_details and use; no search call is needed. Clients with MCP resource support can read \`skill://aisa-api/SKILL.md\` through native resources/read. Skills provide instructions; reading one does not execute operations or expand the user's authorization. Perform external actions only within the user's authorized scope.`;
+
+// The directory is deliberately one SKILL.md, with short rows rather than schemas.
+// Deduplicate APIs exposed by several servers while retaining all memberships.
+function apiDirectory(catalog, modules) {
+  const seen = new Set();
+  const cell = value => compact(String(value ?? '')).replaceAll('|', '\\|').replaceAll('`', '');
+  const sections = [], overview = [];
+  for (const [category, group] of Object.entries(modules.categories)) {
+    const rows = [];
+    for (const slug of group.servers) {
+      const selected = catalog.operations.filter(op => op.servers.includes(slug) && !seen.has(op.name)).sort((a,b) => a.name.localeCompare(b.name, 'en'));
+      if (!selected.length) continue;
+      const server = catalog.servers?.find(s => s.slug === slug);
+      rows.push(`### ${slug} — ${cell(server?.name ?? slug)} (${selected.length})`, '', '| Operation ID | Access | Purpose |', '| --- | --- | --- |');
+      for (const op of selected) {
+        seen.add(op.name);
+        const summary = cell(op.title || op.description?.split(/\n|(?<=[.!?])\s/)[0] || op.name);
+        const memberships = op.servers.length > 1 ? ` Also exposed by: ${op.servers.filter(s => s !== slug).join(', ')}.` : '';
+        rows.push(`| \`${op.name}\` | ${op.annotations?.readOnlyHint ? 'Read' : 'Write'}${op.kind === 'composed' ? ' · composed' : ''} | ${summary.length > 150 ? summary.slice(0, 147) + '…' : summary}${memberships} |`);
+      }
+      rows.push('');
+    }
+    sections.push(`## ${category} — ${cell(group.name)}`, '', ...rows);
+    overview.push(`| ${category} | ${cell(group.description).slice(0, 180)} | ${group.servers.map(s => `\`${s}\``).join(', ')} |`);
+  }
+  requireValue(seen.size === catalog.operations.length, 'API directory does not cover every operation exactly once');
+  return `## Directory overview\n\n${seen.size} operations below, each listed once. Read means read-only according to the original annotations; Write means the operation may change upstream state. A composed operation can make multiple billed API requests. Full parameters and descriptions are available through get_details.\n\n| Category | Coverage | Servers |\n| --- | --- | --- |\n${overview.join('\n')}\n\nIf this file is truncated by your client, read the relevant server heading or use local file search for a provider or operation name. Do not assume unshown operations are missing.\n\n${sections.join('\n')}\n## Account helper\n\n\`account\` — Read AIsa account balance, subscription wallet and recent usage with use. This helper is additional to the ${seen.size} migrated operations.`;
+}
 
 const digest = (content) => createHash('sha256').update(content).digest('hex');
 function managedPath(path) {
@@ -287,10 +315,11 @@ export async function generateSkills({ root = projectRoot } = {}) {
     const reference = `skills/${name}/references/operations.md`;
     files.set(reference, `# ${group.name} operations\n\n${group.default_tools?.length ? `## Curated operations\n\n${operationList(group.default_tools, operations)}\n\n` : ''}## Full coverage\n\n${operationList(uses, operations)}\n`);
     const related = entries.filter((item) => item.kind === 'workflow' && item.uses.some((id) => uses.includes(id)));
-    add(entry, group.name, `${compact(group.description)}\n\nOptional input: \`task\` (default \`""\`) — what you want to find out.\n\n${uses.length} operations across these servers: ${group.servers.map((server) => `\`${server}\``).join(', ')}. Read [operation coverage](references/operations.md) to select an operation, then read its schema.\n\n${toolAccess}\n\nPlan the minimal call set; use a tool's list input instead of looping when available. Label unavailable sources and any substitutes.\n\n${related.length ? `Relevant workflow names for search_skills:\n\n${related.map((item) => `- \`${item.name}\` — ${item.when_to_use}`).join('\n')}` : ''}`);
+    add(entry, group.name, `${compact(group.description)}\n\nOptional input: \`task\` (default \`""\`) — what you want to find out.\n\n${uses.length} operations across these servers: ${group.servers.map((server) => `\`${server}\``).join(', ')}. Read [operation coverage](references/operations.md) to select an operation, then read its schema.\n\n${toolAccess}\n\nPlan the minimal call set; use a tool's list input instead of looping when available. Label unavailable sources and any substitutes.\n\n${related.length ? `Relevant installed workflow skills:\n\n${related.map((item) => `- \`${item.name}\` — ${item.when_to_use}`).join('\n')}` : ''}`);
   }
-  const rootEntry = entryFor('aisa-api', 'Discover AIsa API operations and packaged workflows when the user asks to use AIsa or explore its data coverage.', { aliases: ['aisa'], tags: ['aisa', 'discovery'], kind: 'entry' });
-  add(rootEntry, 'AIsa API', `Use this entry point for AIsa discovery or a task explicitly using AIsa. Select the specific workflow or category that matches the request.\n\nThe npm package supplies portable SKILL.md folders for Codex, Claude and Hermes. Tools are supplied by the local \`aisa-api\` MCP server.\n\n${toolAccess}\n\n## Coverage\n\n${entries.filter((item) => item.kind === 'category').map((item) => `- \`${item.name}\` — ${item.description}`).join('\n')}\n\n${workflows.length} task workflows and ${groups.length} category skills cover ${operations.size} catalog operations. Search with the user's task description or an original workflow alias, then read the returned skill URI. Choose only the relevant skill; coverage does not imply that every task needs an API call.`);
+  const rootEntry = entryFor('aisa-api', 'Complete AIsa API directory: find operation IDs by category and provider, then read schemas and execute with the local MCP. AIsa 全量接口目录，按分类和服务查找接口及任务 skills。', { aliases: ['aisa', 'API directory', '接口目录'], tags: ['aisa', 'directory'], uses: [...operations.keys()].sort(), kind: 'entry' });
+  const workflowLinks = entries.filter(item => item.kind === 'workflow').map(item => `- [${item.name}](../${item.name}/SKILL.md) — ${compact(item.when_to_use)}`).join('\n');
+  add(rootEntry, 'AIsa API directory', `Choose the relevant API from this file, read its schema with get_details, then execute with use. The default MCP surface is only get_details, use and batch_use. All ${operations.size} migrated operations remain available through use.\n\n${toolAccess}\n\n## Workflow skills\n\nFor a multi-step task, read the matching installed workflow before choosing calls:\n\n${workflowLinks}\n\n${apiDirectory(catalog, modules)}`);
   if (resourceEntries.size) files.set(rootEntry.path, files.get(rootEntry.path) + `\n## Supporting references\n\nRead the relevant reference when interpreting its provider's data:\n\n${[...resourceEntries.values()].map((resource) => `- [${resource.name}](${resource.path.slice('skills/aisa-api/'.length)}) — ${resource.description}`).join('\n')}\n`);
   files.set(rootEntry.path, files.get(rootEntry.path) + '\n## Credentials\n\nIf credentials are missing, configure them locally through the client’s MCP environment or credential settings using the package setup instructions. Do not ask the user to paste API keys into the conversation.\n');
   entries.sort((a, b) => a.name.localeCompare(b.name, 'en'));

@@ -26,13 +26,12 @@ try {
     try {
       await client.connect(transport);
       const {tools} = await client.listTools();
-      if (all) {report.all_tool_count = tools.length; assert.equal(tools.length, 583);}
+      if (all) {report.all_tool_count = tools.length; assert.equal(tools.length, 578);}
       else {
-        report.default_tool_count = tools.length; assert.equal(tools.length, 8);
-        const result = await client.callTool({name: 'search_skills', arguments: {query: '竞品分析', limit: 3}});
-        const found = JSON.parse(result.content[0].text).skills;
-        assert.ok(found.some(s => s.name === 'aisa-competitor-teardown'));
-        const resource = await client.readResource({uri: found[0].uri});
+        report.default_tool_count = tools.length; assert.equal(tools.length, 3);
+        const resource = await client.readResource({uri: 'skill://aisa-api/SKILL.md'});
+        const rows = [...resource.contents[0].text.matchAll(/^\| `([^`]+)` \|/gm)];
+        assert.equal(rows.length, 575);
         assert.ok(resource.contents[0].text.includes('get_details'));
         report.resource_read = true;
         const details = await client.callTool({name: 'get_details', arguments: {operation_id: 'get_agentmail_thread'}});

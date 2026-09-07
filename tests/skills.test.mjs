@@ -91,6 +91,26 @@ test('all original workflows retain instructions, input defaults, metadata and e
   assert.ok(composed.uses.includes('twitter_stock_pulse'));
 });
 
+test('single directory skill covers every operation once with access flags and workflow links', async t => {
+  const root = await fixture(t);
+  await generateSkills({root});
+  const {operations} = await json(join(root, 'catalog/operations.json'));
+  const {skills} = await json(join(root, 'catalog/skills.json'));
+  const directory = skills.find(s => s.name === 'aisa-api');
+  const body = await readFile(join(root, directory.path), 'utf8');
+  const rows = [...body.matchAll(/^\| `([^`]+)` \| (Read|Write)(?: · composed)? \| (.+) \|$/gm)];
+  assert.equal(rows.length, operations.length);
+  assert.deepEqual(rows.map(r => r[1]).sort(), operations.map(o => o.name).sort());
+  for (const [, name, access, description] of rows) {
+    const op = operations.find(o => o.name === name);
+    assert.equal(access, op.annotations.readOnlyHint ? 'Read' : 'Write', name);
+    assert.ok(description.trim(), name);
+  }
+  for (const skill of skills.filter(s => s.kind === 'workflow')) assert.ok(body.includes(`](../${skill.name}/SKILL.md)`));
+  assert.deepEqual(directory.uses, operations.map(o => o.name).sort());
+  assert.ok(body.includes('account'));
+});
+
 test('category coverage includes whole servers and explicit cross-category tools', async (t) => {
   const root = await fixture(t);
   await generateSkills({ root });

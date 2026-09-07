@@ -29,18 +29,17 @@ npx -y @hzlmy2002/aisa-api@0.1.0 serve
 
 ## 工具与 skills
 
-默认只展示 8 个工具，避免把数百个 API schema 常驻上下文：
+以下目录优先模式已在当前源码中实现，尚未发布新版 npm 包；已发布的 `0.1.0` 保持原有默认工具列表。要现在使用目录模式，请按上面的源码构建方式安装。
+
+默认只展示 3 个执行工具。完整的 575 个接口目录写在一份 [aisa-api/SKILL.md](skills/aisa-api/SKILL.md) 中，按分类和 server 分组，每项给出 operation ID、简短用途和读写标记。先读目录选接口，再按需读取参数，无需调用 search。
 
 | 工具 | 用途 |
 | --- | --- |
-| `search` | 按任务、provider 或 operation ID 搜索 API |
 | `get_details` | 查看原 MCP 描述、参数 schema、annotations 和路由 |
 | `use` | 使用原 operation ID 和参数执行任意已支持操作 |
 | `batch_use` | 最多 20 个独立操作，最多 5 个操作并发 |
-| `list_categories` | 浏览分类与 server 清单 |
-| `search_skills` | 用中英文任务描述查找 workflow |
-| `list_resources` | 列出 skills 和参考资源 |
-| `read_resource` | 读取指定 skill 或参考资源 |
+
+原来的 `search`、`search_skills`、`list_categories`、`list_resources`、`read_resource` 默认不展示；需要兼容旧流程时通过 `serve --discovery-tools` 或 `setup --discovery-tools` 开启。MCP 原生 resources/list、resources/read 始终可用，目录 URI 为 `skill://aisa-api/SKILL.md`。目录同时链接到 17 个 workflow skills。
 
 `account` 是额外的辅助操作，可通过 `use` 读取余额、订阅钱包和近期用量。
 
