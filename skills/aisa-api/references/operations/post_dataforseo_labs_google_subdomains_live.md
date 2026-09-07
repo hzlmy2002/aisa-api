@@ -1,0 +1,124 @@
+# post_dataforseo_labs_google_subdomains_live
+
+Installed API contract. Read arguments_schema, construct the arguments object, then call use with this operation_id. get_details is optional if this installed contract matches the running server. Credentials come from local setup; do not pass Authorization. Prices and availability here are unknown; the gateway enforces them. response_schema documents the original MCP output and is not enforced on provider responses.
+
+## Contract
+
+```json
+{
+  "operation_id": "post_dataforseo_labs_google_subdomains_live",
+  "successful": true,
+  "description": "The subdomains of a `target` and the search footprint of each. Pages with `limit`, `offset` and `offset_token`; use the token past the first pages. 💰 Measured at $0.01212 upstream, essentially the flat rate billed. **This family is the one to reach for by default**: the google_ads endpoints in seo-keywords answer similar questions at $0.09 - seven times more - and return megabytes with no way to cap them, where this one takes a `limit`. Wrapped in DataForSEO's envelope: data in `tasks[0].result`, outcome in `tasks[0].status_code` - a rejected request still returns HTTP 200. Useful when a domain's traffic is concentrated somewhere other than www - a docs or blog subdomain carrying the site is invisible in `post_dataforseo_labs_google_domain_rank_overview_live`.",
+  "provider": "dataforseo",
+  "method": "POST",
+  "path": "/apis/v1/dataforseo/dataforseo_labs/google/subdomains/live",
+  "arguments_schema": {
+    "type": "object",
+    "properties": {
+      "body": {
+        "type": "array",
+        "items": {
+          "required": [
+            "target"
+          ],
+          "type": "object",
+          "properties": {
+            "target": {
+              "type": "string",
+              "description": "domain required field the domain name of the target website the domain should be specified without https:// and www."
+            },
+            "location_name": {
+              "type": "string",
+              "description": "full name of the location optional field if you use this field, you don’t need to specify location_code you can receive the list of available locations with their location_name by making a separate request to the https://api.dataforseo.com/v3/dataforseo_labs/locations_and_languages ignore this field to get the results for all available locations example: United Kingdom"
+            },
+            "location_code": {
+              "type": "integer",
+              "description": "location code optional field if you use this field, you don’t need to specify location_name you can receive the list of available locations with their location_code by making a separate request to the https://api.dataforseo.com/v3/dataforseo_labs/locations_and_languages ignore this field to get the results for all available locations example: 2840"
+            },
+            "language_name": {
+              "type": "string",
+              "description": "full name of the language optional field if you use this field, you don’t need to specify language_code you can receive the list of available languages with their language_name by making a separate request to the https://api.dataforseo.com/v3/dataforseo_labs/locations_and_languages ignore this field to get the results for all available languages example: English"
+            },
+            "language_code": {
+              "type": "string",
+              "description": "language code optional field if you use this field, you don’t need to specify language_name you can receive the list of available languages with their language_code by making a separate request to the https://api.dataforseo.com/v3/dataforseo_labs/locations_and_languages ignore this field to get the results for all available languages example: en"
+            },
+            "item_types": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "display results by item type optional field indicates the type of search results included in the response Note: if the item_types array contains item types that are different from organic, the results will be ordered by the first item type in the array; you will not be able to sort and filter results by the types of search results not included in the response; possible values: [\"organic\", \"paid\", \"featured_snippet\", \"local_pack\"] default value: [\"organic\", \"paid\"]"
+            },
+            "include_clickstream_data": {
+              "type": "boolean",
+              "description": "include or exclude data from clickstream-based metrics in the result optional field if the parameter is set to true, you will receive clickstream_etv, clickstream_gender_distribution, and clickstream_age_distribution fields with clickstream data in the response default value: false with this parameter enabled, you will be charged double the price for the request learn more about how clickstream-based metrics are calculated in this help center article"
+            },
+            "historical_serp_mode": {
+              "type": "string",
+              "description": "data collection mode optional field you can use this field to filter the results; possible types of filtering: live — return metrics for SERPs in which the specified target currently has ranking results; lost — return metrics for SERPs in which the specified target had previously had ranking results, but didn’t have them during the last check; all — return metrics for both types of SERPs. default value: live"
+            },
+            "ignore_synonyms": {
+              "type": "boolean",
+              "description": "ignore highly similar keywords optional field if set to true, only core keywords will be returned, all highly similar keywords will be excluded; default value: false"
+            },
+            "filters": {
+              "type": "array",
+              "items": {},
+              "description": "array of results filtering parameters optional field you can add several filters at once (8 filters maximum) you should set a logical operator and, or between the conditions the following operators are supported: regex, not_regex, , , >, >=, =, , in, not_in example: [\"metrics.paid.count\",\">\",0] [[\"metrics.paid.count\",\">\",0],\"and\",[\"metrics.paid.etv\",\">\",\"50\"]] [[\"metrics.organic.count\",\">\",\"10\"], \"and\", [[\"metrics.organic.pos_1\",\"\",0],\"or\",[\"metrics.organic.pos_2_3\",\"\",0]]] for more information about filters, please refer to Dataforseo Labs – Filters or this help center guide"
+            },
+            "order_by": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "results sorting rules optional field you can use the same values as in the filters array to sort the results possible sorting types: asc – results will be sorted in the ascending order desc – results will be sorted in the descending order you should use a comma to specify a sorting type example: [\"metrics.paid.etv,asc\"] Note: you can set no more than three sorting rules in a single request you should use a comma to separate several sorting rules example: [\"metrics.organic.etv,desc\",\"metrics.paid.count,asc\"] default rule: [\"metrics.organic.count,desc\"] Note: if the item_types array contains item types that are different from organic, the results will be ordered by the first item type in the array"
+            },
+            "limit": {
+              "type": "integer",
+              "description": "the maximum number of returned keywords optional field default value: 100 maximum value: 1000"
+            },
+            "offset": {
+              "type": "integer",
+              "description": "offset in the results array of returned keywords optional field default value: 0 if you specify the 10 value, the first ten keywords in the results array will be omitted and the data will be provided for the successive keywords"
+            },
+            "tag": {
+              "type": "string",
+              "description": "user-defined task identifier optional field the character limit is 255 you can use this parameter to identify the task and match it with the result you will find the specified tag value in the data object of the response"
+            }
+          }
+        }
+      }
+    },
+    "required": [
+      "body"
+    ]
+  },
+  "response_schema": {
+    "type": "object",
+    "additionalProperties": true
+  },
+  "read_only": false,
+  "idempotent": false,
+  "side_effects": [
+    "writes-upstream"
+  ],
+  "annotations": {
+    "readOnlyHint": false,
+    "destructiveHint": true,
+    "idempotentHint": false,
+    "openWorldHint": true
+  },
+  "price": {
+    "currency": "USD",
+    "amount": null,
+    "model": "unknown",
+    "source": "local"
+  },
+  "availability": "unknown",
+  "source": "local",
+  "servers": [
+    "seo-labs"
+  ]
+}
+```

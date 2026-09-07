@@ -26,13 +26,16 @@ try {
     try {
       await client.connect(transport);
       const {tools} = await client.listTools();
-      if (all) {report.all_tool_count = tools.length; assert.equal(tools.length, 578);}
+      if (all) {report.all_tool_count = tools.length; assert.equal(tools.length, 579);}
       else {
-        report.default_tool_count = tools.length; assert.equal(tools.length, 3);
-        const resource = await client.readResource({uri: 'skill://aisa-api/SKILL.md'});
+        report.default_tool_count = tools.length; assert.equal(tools.length, 4);
+        const entry = await client.readResource({uri: 'skill://aisa-api/SKILL.md'});
+        assert.ok(Buffer.byteLength(entry.contents[0].text) < 8192);
+        const resource = await client.readResource({uri: 'skill://aisa-api/references/directory.md'});
         const rows = [...resource.contents[0].text.matchAll(/^\| `([^`]+)` \|/gm)];
         assert.equal(rows.length, 575);
-        assert.ok(resource.contents[0].text.includes('get_details'));
+        const local = await client.readResource({uri: 'skill://aisa-api/references/operations/get_agentmail_thread.md'});
+        assert.ok(local.contents[0].text.includes('arguments_schema'));
         report.resource_read = true;
         const details = await client.callTool({name: 'get_details', arguments: {operation_id: 'get_agentmail_thread'}});
         assert.equal(JSON.parse(details.content[0].text).arguments_schema.properties.Authorization, undefined);

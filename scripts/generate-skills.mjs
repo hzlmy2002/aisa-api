@@ -104,13 +104,13 @@ function validateWorkflow(cfg, operations) {
   return { name, body, args };
 }
 
-const toolAccess = `Use the local MCP server named \`aisa-api\`. For each operation ID, call \`get_details({operation_id: "<id>"})\` to read its schema, description and annotations; pricing is enforced by the AIsa gateway. Execute with \`use({operation_id: "<id>", arguments: {...}})\`. Include \`max_price_usd\` when a price ceiling is needed: it applies per upstream request, including each request in a composed operation's fan-out, not to the workflow total. If that exact operation is pinned and exposed as a tool, call it directly using its schema. Operation IDs below are exact catalog names, including composed operations; do not add server prefixes.
+const toolAccess = `Use the local MCP server named \`aisa-api\`. Read the linked local operation details for its full description, input schema, defaults and annotations; then execute with \`use({operation_id: "<id>", arguments: {...}})\`. You do not need to call get_details when the installed details already provide the contract. Use \`get_details({operation_id: "<id>"})\` if local details are missing or the installed skills and running server differ; the running server's schema takes precedence. Prices and live availability are enforced by the AIsa gateway, not these static files.
 
-Use \`batch_use\` for up to 20 independent calls, respecting the workflow's order, dependencies and call budget. Keep dependent steps sequential.
+Include \`max_price_usd\` when needed: it applies to each upstream request, including composed fan-outs, not the workflow total. Use \`batch_use\` for up to 20 independent calls; keep dependent steps sequential. If the exact operation is pinned, it can also be called directly with its schema.
 
-Find APIs and workflows in the installed \`aisa-api\` skill: its single SKILL.md contains the complete operation directory and links to workflow skills. Select the exact operation ID there, then call get_details and use; no search call is needed. Clients with MCP resource support can read \`skill://aisa-api/SKILL.md\` through native resources/read. Skills provide instructions; reading one does not execute operations or expand the user's authorization. Perform external actions only within the user's authorized scope.`;
+A matching workflow already links its required operations: read those details directly without loading the global directory. For other tasks, start with the short installed \`aisa-api\` skill and follow a relevant server index. Use \`search\` only when the right operation is unclear. Native MCP resources/read can read \`skill://aisa-api/SKILL.md\` or \`skill://aisa-api/references/operations/<operation_id>.md\`. Skills do not execute actions or expand the user's authorization.`;
 
-// The directory is deliberately one SKILL.md, with short rows rather than schemas.
+// Full directory is an optional reference; the entry skill stays short.
 // Deduplicate APIs exposed by several servers while retaining all memberships.
 function apiDirectory(catalog, modules) {
   const seen = new Set();
@@ -127,7 +127,7 @@ function apiDirectory(catalog, modules) {
         seen.add(op.name);
         const summary = cell(op.title || op.description?.split(/\n|(?<=[.!?])\s/)[0] || op.name);
         const memberships = op.servers.length > 1 ? ` Also exposed by: ${op.servers.filter(s => s !== slug).join(', ')}.` : '';
-        rows.push(`| \`${op.name}\` | ${op.annotations?.readOnlyHint ? 'Read' : 'Write'}${op.kind === 'composed' ? ' · composed' : ''} | ${summary.length > 150 ? summary.slice(0, 147) + '…' : summary}${memberships} |`);
+        rows.push(`| \`${op.name}\` | ${op.annotations?.readOnlyHint ? 'Read' : 'Write'}${op.kind === 'composed' ? ' · composed' : ''} | ${summary.length > 150 ? summary.slice(0, 147) + '…' : summary}${memberships} [Details](operations/${op.name}.md) |`);
       }
       rows.push('');
     }
@@ -135,7 +135,7 @@ function apiDirectory(catalog, modules) {
     overview.push(`| ${category} | ${cell(group.description).slice(0, 180)} | ${group.servers.map(s => `\`${s}\``).join(', ')} |`);
   }
   requireValue(seen.size === catalog.operations.length, 'API directory does not cover every operation exactly once');
-  return `## Directory overview\n\n${seen.size} operations below, each listed once. Read means read-only according to the original annotations; Write means the operation may change upstream state. A composed operation can make multiple billed API requests. Full parameters and descriptions are available through get_details.\n\n| Category | Coverage | Servers |\n| --- | --- | --- |\n${overview.join('\n')}\n\nIf this file is truncated by your client, read the relevant server heading or use local file search for a provider or operation name. Do not assume unshown operations are missing.\n\n${sections.join('\n')}\n## Account helper\n\n\`account\` — Read AIsa account balance, subscription wallet and recent usage with use. This helper is additional to the ${seen.size} migrated operations.`;
+  return `## Directory overview\n\n${seen.size} operations below, each listed once. Read means read-only according to the original annotations; Write means the operation may change upstream state. A composed operation can make multiple billed API requests. Full parameters and descriptions are in the linked local details; get_details remains a fallback.\n\n| Category | Coverage | Servers |\n| --- | --- | --- |\n${overview.join('\n')}\n\nIf this file is truncated by your client, read the relevant server heading or use local file search for a provider or operation name. Do not assume unshown operations are missing.\n\n${sections.join('\n')}\n## Account helper\n\n\`account\` — Read AIsa account balance, subscription wallet and recent usage with use. This helper is additional to the ${seen.size} migrated operations.`;
 }
 
 const digest = (content) => createHash('sha256').update(content).digest('hex');
@@ -213,7 +213,18 @@ function replaceWorkflowNames(text, workflows) {
   return text.replace(/(?<![A-Za-z0-9_-])[A-Za-z][A-Za-z0-9_-]*(?![A-Za-z0-9_-])/g, (word) => replacements.get(word) ?? word);
 }
 function operationList(names, operations) {
-  return names.map((name) => `- \`${name}\` — ${compact(operations.get(name).description || name)}`).join('\n');
+  return names.map(name => {
+    const op = operations.get(name);
+    return `- [${name}](../../aisa-api/references/operations/${name}.md) — ${compact(op.title || op.description || name).slice(0, 150)}`;
+  }).join('\n');
+}
+
+function operationContract(op) {
+  return {operation_id: op.name, successful: true, description: op.description, provider: op.path?.split('/')[3] ?? 'aisa',
+    method: op.method ?? 'POST', path: op.path ?? `mcp://${op.name}`, arguments_schema: op.inputSchema,
+    response_schema: op.outputSchema ?? {}, read_only: Boolean(op.annotations.readOnlyHint), idempotent: Boolean(op.annotations.idempotentHint),
+    side_effects: op.annotations.readOnlyHint ? [] : ['writes-upstream'], annotations: op.annotations,
+    price: {currency: 'USD', amount: null, model: 'unknown', source: 'local'}, availability: 'unknown', source: 'local', servers: op.servers};
 }
 
 /** Generate only package artifacts; never touches Codex/Claude/Hermes homes. */
@@ -263,6 +274,21 @@ export async function generateSkills({ root = projectRoot } = {}) {
   const files = new Map();
   const entries = [];
   const resourceEntries = new Map();
+  const referenceResources = [];
+  const reference = (relativePath, content, name, description) => {
+    const path = `skills/aisa-api/references/${relativePath}`;
+    files.set(path, content.trim() + '\n');
+    referenceResources.push({uri: `skill://aisa-api/references/${relativePath}`, path, name, description, mimeType: 'text/markdown'});
+  };
+  for (const op of catalog.operations) {
+    reference(`operations/${op.name}.md`, `# ${op.name}\n\nInstalled API contract. Read arguments_schema, construct the arguments object, then call use with this operation_id. get_details is optional if this installed contract matches the running server. Credentials come from local setup; do not pass Authorization. Prices and availability here are unknown; the gateway enforces them. response_schema documents the original MCP output and is not enforced on provider responses.\n\n## Contract\n\n\`\`\`json\n${JSON.stringify(operationContract(op), null, 2)}\n\`\`\``, op.name, op.title || op.name);
+  }
+  for (const server of catalog.servers) {
+    const selected = catalog.operations.filter(op => op.servers.includes(server.slug));
+    const lines = selected.map(op => `- [${op.name}](../operations/${op.name}.md) — ${compact(op.title || op.description || op.name).slice(0, 150)}`);
+    reference(`servers/${server.slug}.md`, `# ${server.name}\n\n${server.description}\n\n${selected.length} operations. Follow only the needed detail links, then call use; get_details is a fallback.\n\n${lines.join('\n')}`, server.slug, `API index for ${server.name}`);
+  }
+  reference('directory.md', apiDirectory(catalog, modules), 'api-directory', 'Complete optional API directory');
   for (const resource of resources) {
     const path = `skills/aisa-api/references/${resource.server}/${resource.filename}`;
     files.set(path, `${resource.body.trim()}\n`);
@@ -297,7 +323,7 @@ export async function generateSkills({ root = projectRoot } = {}) {
       body = body.replaceAll(uri, `references/${resource.filename}`);
     }
     const inputs = args.map((arg) => `- \`${arg.name}\` (${arg.required ? 'required' : `optional; default ${JSON.stringify(arg.default ?? '')}`}): ${compact(arg.description)}`).join('\n');
-    add(entry, cfg.title || name, `## Inputs\n\nExtract inputs from the request and conversation. Apply optional defaults exactly; ask for required inputs only when they cannot be inferred. In the workflow, <input: NAME> means the resolved input, not a literal API argument.\n\n${inputs || 'No template inputs.'}\n\n## Tool access\n\n${toolAccess}\n\n${cfg.uses.map((id) => `- \`${id}\``).join('\n')}\n\n${links.length ? `## Supporting resources\n\nRead when relevant to interpreting the returned data:\n\n${links.join('\n')}\n\n` : ''}## Workflow\n\n${body}`);
+    add(entry, cfg.title || name, `## Inputs\n\nExtract inputs from the request and conversation. Apply optional defaults exactly; ask for required inputs only when they cannot be inferred. In the workflow, <input: NAME> means the resolved input, not a literal API argument.\n\n${inputs || 'No template inputs.'}\n\n## Tool access\n\n${toolAccess}\n\n${cfg.uses.map((id) => `- [${id}](../aisa-api/references/operations/${id}.md)`).join('\n')}\n\n${links.length ? `## Supporting resources\n\nRead when relevant to interpreting the returned data:\n\n${links.join('\n')}\n\n` : ''}## Workflow\n\n${body}`);
   }
   const groups = [...Object.entries(modules.categories), ...Object.entries(modules.modules ?? {}).filter(([, group]) => group.prompt === true)];
   for (const [slug, group] of groups) {
@@ -317,11 +343,11 @@ export async function generateSkills({ root = projectRoot } = {}) {
     const related = entries.filter((item) => item.kind === 'workflow' && item.uses.some((id) => uses.includes(id)));
     add(entry, group.name, `${compact(group.description)}\n\nOptional input: \`task\` (default \`""\`) — what you want to find out.\n\n${uses.length} operations across these servers: ${group.servers.map((server) => `\`${server}\``).join(', ')}. Read [operation coverage](references/operations.md) to select an operation, then read its schema.\n\n${toolAccess}\n\nPlan the minimal call set; use a tool's list input instead of looping when available. Label unavailable sources and any substitutes.\n\n${related.length ? `Relevant installed workflow skills:\n\n${related.map((item) => `- \`${item.name}\` — ${item.when_to_use}`).join('\n')}` : ''}`);
   }
-  const rootEntry = entryFor('aisa-api', 'Complete AIsa API directory: find operation IDs by category and provider, then read schemas and execute with the local MCP. AIsa 全量接口目录，按分类和服务查找接口及任务 skills。', { aliases: ['aisa', 'API directory', '接口目录'], tags: ['aisa', 'directory'], uses: [...operations.keys()].sort(), kind: 'entry' });
-  const workflowLinks = entries.filter(item => item.kind === 'workflow').map(item => `- [${item.name}](../${item.name}/SKILL.md) — ${compact(item.when_to_use)}`).join('\n');
-  add(rootEntry, 'AIsa API directory', `Choose the relevant API from this file, read its schema with get_details, then execute with use. The default MCP surface is only get_details, use and batch_use. All ${operations.size} migrated operations remain available through use.\n\n${toolAccess}\n\n## Workflow skills\n\nFor a multi-step task, read the matching installed workflow before choosing calls:\n\n${workflowLinks}\n\n${apiDirectory(catalog, modules)}`);
-  if (resourceEntries.size) files.set(rootEntry.path, files.get(rootEntry.path) + `\n## Supporting references\n\nRead the relevant reference when interpreting its provider's data:\n\n${[...resourceEntries.values()].map((resource) => `- [${resource.name}](${resource.path.slice('skills/aisa-api/'.length)}) — ${resource.description}`).join('\n')}\n`);
-  files.set(rootEntry.path, files.get(rootEntry.path) + '\n## Credentials\n\nIf credentials are missing, configure them locally through the client’s MCP environment or credential settings using the package setup instructions. Do not ask the user to paste API keys into the conversation.\n');
+  const rootEntry = entryFor('aisa-api', 'Find AIsa APIs by category and provider, read local operation details, and execute through the AIsa MCP. AIsa 接口索引、本地参数详情与任务 workflows。', { aliases: ['aisa', 'API directory', '接口目录'], tags: ['aisa', 'directory'], kind: 'entry' });
+  const workflowLinks = entries.filter(item => item.kind === 'workflow').map(item => `- [${item.name}](../../${item.name}/SKILL.md) — ${compact(item.when_to_use)}`).join('\n');
+  reference('workflows.md', `# Task workflows\n\nChoose a matching workflow; it links directly to its operation details.\n\n${workflowLinks}`, 'workflows', 'Task workflow index');
+  const serverLinks = Object.entries(modules.categories).map(([slug, group]) => `### ${slug} — ${group.name}\n\n${group.servers.map(name => `- [${name}](references/servers/${name}.md)`).join('\n')}`).join('\n\n');
+  add(rootEntry, 'AIsa API', `## Choose the smallest useful reference\n\nFor a multi-step task, start with [workflow skills](references/workflows.md). A workflow links directly to the details of its required operations. For an individual API, choose one server below and follow the relevant operation link. Do not load all server indexes or the full directory by default.\n\n## Call an operation\n\nRead its local details first: description, arguments_schema (including required fields, defaults and nested constraints), response_schema and annotations. Call use with the exact operation_id and an arguments object matching that schema. No get_details call is required when these files match the running server. If files are missing, outdated, or a validation error suggests a mismatch, call get_details and follow the running server's contract.\n\nThe four default MCP tools are search (discovery fallback), get_details (contract fallback), use and batch_use. Use search when the relevant server or operation remains unclear. Keep dependent steps sequential; batch_use accepts up to 20 independent calls. max_price_usd is per upstream request, including composed fan-outs, not a total workflow budget. Skills do not expand user authorization. Credentials come from local setup, never from conversation.\n\n## Server indexes\n\n${serverLinks}\n\n## Optional full index and references\n\n- [Complete directory](references/directory.md): all ${operations.size} operations, for global browsing or local file search only.\n- [Workflow index](references/workflows.md): ${workflows.length} task recipes.\n- use with operation_id \`account\` reads account balance and usage; get_details supplies its contract.\n\nClients without local file access may read these files using native MCP resources/read: \`skill://aisa-api/SKILL.md\`, \`skill://aisa-api/references/servers/<server>.md\`, or \`skill://aisa-api/references/operations/<operation_id>.md\`. Workflow skills use \`skill://<skill-name>/SKILL.md\`. All paths are from the installed package version; live pricing and availability come from the AIsa gateway.`);
   entries.sort((a, b) => a.name.localeCompare(b.name, 'en'));
   const previous = await previousManagedFiles(root);
   for (const path of [...files.keys(), 'catalog/skills.json']) {
@@ -333,7 +359,7 @@ export async function generateSkills({ root = projectRoot } = {}) {
     await writeFile(join(root, path), content);
   }
   const preservedStaleFiles = await cleanStaleFiles(root, previous, files);
-  await writeFile(join(root, 'catalog/skills.json'), `${JSON.stringify({ version: 1, skills: entries, resources: [...resourceEntries.values()], generatedFiles }, null, 2)}\n`);
+  await writeFile(join(root, 'catalog/skills.json'), `${JSON.stringify({ version: 1, skills: entries, resources: [...resourceEntries.values()], referenceResources, generatedFiles }, null, 2)}\n`);
   return { workflows: workflows.length, categories: groups.length, skills: entries.length, resources: resources.length, operations: operations.size,
     ...(preservedStaleFiles.length ? { preservedStaleFiles } : {}) };
 }

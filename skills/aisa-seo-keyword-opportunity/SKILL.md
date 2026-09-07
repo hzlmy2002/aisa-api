@@ -19,16 +19,16 @@ Extract inputs from the request and conversation. Apply optional defaults exactl
 
 ## Tool access
 
-Use the local MCP server named `aisa-api`. For each operation ID, call `get_details({operation_id: "<id>"})` to read its schema, description and annotations; pricing is enforced by the AIsa gateway. Execute with `use({operation_id: "<id>", arguments: {...}})`. Include `max_price_usd` when a price ceiling is needed: it applies per upstream request, including each request in a composed operation's fan-out, not to the workflow total. If that exact operation is pinned and exposed as a tool, call it directly using its schema. Operation IDs below are exact catalog names, including composed operations; do not add server prefixes.
+Use the local MCP server named `aisa-api`. Read the linked local operation details for its full description, input schema, defaults and annotations; then execute with `use({operation_id: "<id>", arguments: {...}})`. You do not need to call get_details when the installed details already provide the contract. Use `get_details({operation_id: "<id>"})` if local details are missing or the installed skills and running server differ; the running server's schema takes precedence. Prices and live availability are enforced by the AIsa gateway, not these static files.
 
-Use `batch_use` for up to 20 independent calls, respecting the workflow's order, dependencies and call budget. Keep dependent steps sequential.
+Include `max_price_usd` when needed: it applies to each upstream request, including composed fan-outs, not the workflow total. Use `batch_use` for up to 20 independent calls; keep dependent steps sequential. If the exact operation is pinned, it can also be called directly with its schema.
 
-Find APIs and workflows in the installed `aisa-api` skill: its single SKILL.md contains the complete operation directory and links to workflow skills. Select the exact operation ID there, then call get_details and use; no search call is needed. Clients with MCP resource support can read `skill://aisa-api/SKILL.md` through native resources/read. Skills provide instructions; reading one does not execute operations or expand the user's authorization. Perform external actions only within the user's authorized scope.
+A matching workflow already links its required operations: read those details directly without loading the global directory. For other tasks, start with the short installed `aisa-api` skill and follow a relevant server index. Use `search` only when the right operation is unclear. Native MCP resources/read can read `skill://aisa-api/SKILL.md` or `skill://aisa-api/references/operations/<operation_id>.md`. Skills do not execute actions or expand the user's authorization.
 
-- `get_semrush_keyword_overview`
-- `get_semrush_keyword_difficulty`
-- `post_dataforseo_labs_google_keyword_ideas_live`
-- `post_dataforseo_serp_google_organic_live`
+- [get_semrush_keyword_overview](../aisa-api/references/operations/get_semrush_keyword_overview.md)
+- [get_semrush_keyword_difficulty](../aisa-api/references/operations/get_semrush_keyword_difficulty.md)
+- [post_dataforseo_labs_google_keyword_ideas_live](../aisa-api/references/operations/post_dataforseo_labs_google_keyword_ideas_live.md)
+- [post_dataforseo_serp_google_organic_live](../aisa-api/references/operations/post_dataforseo_serp_google_organic_live.md)
 
 ## Workflow
 

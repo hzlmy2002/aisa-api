@@ -31,15 +31,28 @@ npx -y @hzlmy2002/aisa-api@0.1.0 serve
 
 以下目录优先模式已在当前源码中实现，尚未发布新版 npm 包；已发布的 `0.1.0` 保持原有默认工具列表。要现在使用目录模式，请按上面的源码构建方式安装。
 
-默认只展示 3 个执行工具。完整的 575 个接口目录写在一份 [aisa-api/SKILL.md](skills/aisa-api/SKILL.md) 中，按分类和 server 分组，每项给出 operation ID、简短用途和读写标记。先读目录选接口，再按需读取参数，无需调用 search。
+默认展示 4 个工具。[aisa-api/SKILL.md](skills/aisa-api/SKILL.md) 是简短入口，按分类链接到 26 份 server 索引；每份索引再链接到所需接口的完整本地详情。575 份详情保留原描述、输入/输出 schema、默认值和 annotations，直接读取后即可调用 `use`，无需额外调用 `get_details`。
+
+```text
+skills/aisa-api/
+  SKILL.md                          简短入口
+  references/
+    servers/<server>.md             按服务浏览接口
+    operations/<operation_id>.md    每个接口的完整契约
+    workflows.md                    任务 workflows 索引
+    directory.md                    可选全量目录
+```
+
+匹配到 workflow 时，直接读该 skill 链接的接口详情，不必经过全局目录。完整目录保留用于全局浏览，不默认整份加载。静态详情与运行中的服务不一致、文件缺失，或参数校验提示版本差异时，再调用 `get_details`；运行中服务的 schema 优先。静态文件不提供实时价格、余额或可用性承诺。
 
 | 工具 | 用途 |
 | --- | --- |
-| `get_details` | 查看原 MCP 描述、参数 schema、annotations 和路由 |
+| `search` | 目录无法明确定位接口时的发现兜底 |
+| `get_details` | 本地详情缺失或版本不一致时获取运行中的契约 |
 | `use` | 使用原 operation ID 和参数执行任意已支持操作 |
 | `batch_use` | 最多 20 个独立操作，最多 5 个操作并发 |
 
-原来的 `search`、`search_skills`、`list_categories`、`list_resources`、`read_resource` 默认不展示；需要兼容旧流程时通过 `serve --discovery-tools` 或 `setup --discovery-tools` 开启。MCP 原生 resources/list、resources/read 始终可用，目录 URI 为 `skill://aisa-api/SKILL.md`。目录同时链接到 17 个 workflow skills。
+`search_skills`、`list_categories`、`list_resources`、`read_resource` 默认不展示；需要兼容旧流程时通过 `serve --discovery-tools` 或 `setup --discovery-tools` 开启。MCP 原生 resources/list、resources/read 始终可用，入口 URI 为 `skill://aisa-api/SKILL.md`。索引和详情支持 `skill://aisa-api/references/servers/<server>.md`、`skill://aisa-api/references/operations/<operation_id>.md`。详情可按 URI 读取，不会将数百项文件塞进默认 resource 列表。
 
 `account` 是额外的辅助操作，可通过 `use` 读取余额、订阅钱包和近期用量。
 

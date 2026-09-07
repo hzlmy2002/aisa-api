@@ -32,18 +32,26 @@ async function connect(t, options = {}) {
 }
 const call = (client, name, args = {}, options) => client.callTool({name, arguments: args}, undefined, options);
 
-test('default directory flow needs only three tools and executes a catalog-selected operation', async t => {
+test('default four-tool flow executes from local details without a get_details round trip', async t => {
   const invoked = [];
   const client = await connect(t, {discoveryTools: false, api: {execute: async (name,args) => {invoked.push(name); return {ok: true};}}});
-  assert.deepEqual((await client.listTools()).tools.map(t => t.name), ['get_details', 'use', 'batch_use']);
-  const directory = await client.readResource({uri: 'skill://aisa-api/SKILL.md'});
+  assert.deepEqual((await client.listTools()).tools.map(t => t.name), ['search', 'get_details', 'use', 'batch_use']);
+  const directory = await client.readResource({uri: 'skill://aisa-api/references/directory.md'});
   const names = [...directory.contents[0].text.matchAll(/^\| `([^`]+)` \|/gm)].map(r => r[1]);
   assert.deepEqual(names.sort(), catalog.operations.map(op => op.name).sort());
   const id = names.find(name => name === operation);
-  assert.equal(decode(await call(client, 'get_details', {operation_id: id})).operation_id, id);
+  const doc = await client.readResource({uri: `skill://aisa-api/references/operations/${id}.md`});
+  const local = JSON.parse(doc.contents[0].text.match(/```json\n([\s\S]*?)\n```/)[1]);
+  assert.equal(local.operation_id, id);
+  assert.deepEqual(local.arguments_schema.required, []);
   assert.equal(decode(await call(client, 'use', {operation_id: id})).successful, true);
   assert.deepEqual(invoked, [id]);
-  assert.equal((await call(client, 'search', {query: 'anything'})).isError, true);
+  assert.equal((await call(client, 'search', {query: operation})).isError, undefined);
+  for (const op of ['get_agentmail_thread', 'post_dataforseo_labs_google_bulk_traffic_estimation_live', 'twitter_stock_pulse']) {
+    const doc = await client.readResource({uri: `skill://aisa-api/references/operations/${op}.md`});
+    const contract = JSON.parse(doc.contents[0].text.match(/```json\n([\s\S]*?)\n```/)[1]);
+    assert.deepEqual(contract, decode(await call(client, 'get_details', {operation_id: op})));
+  }
   assert.equal((await call(client, 'search_skills', {query: 'anything'})).isError, true);
 });
 
@@ -249,7 +257,8 @@ test('real stdio child completes SDK handshake, discovery, resource reads and sh
   await client.connect(transport);
   const {tools} = await client.listTools();
   assert.ok(tools.some(t => t.name === operation));
-  assert.ok(!tools.some(t => t.name === 'search'));
+  assert.ok(tools.some(t => t.name === 'search'));
+  assert.ok(!tools.some(t => t.name === 'search_skills'));
   assert.equal(decode(await call(client, 'get_details', {operation_id: operation})).operation_id, operation);
   const {resources} = await client.listResources();
   assert.ok((await client.readResource({uri: resources[0].uri})).contents[0].text.length > 0);

@@ -1,11 +1,15 @@
 {
-  "tested_at": "2026-09-07T04:27:48.616Z",
+  "tested_at": "2026-09-07T04:37:00.957Z",
   "node": "22.16.0",
   "tests_passed": 111,
-  "directory": "skills/aisa-api/SKILL.md",
-  "directory_bytes": 59833,
+  "entry": "skills/aisa-api/SKILL.md",
+  "entry_bytes": 3784,
+  "directory": "skills/aisa-api/references/directory.md",
   "directory_operations": 575,
+  "server_indexes": 26,
+  "operation_details": 575,
   "default_tools": [
+    "search",
     "get_details",
     "use",
     "batch_use"
@@ -14,10 +18,10 @@
   "npm_update_published": false,
   "package_verified": {
     "node": "v22.16.0",
-    "package_root": "/private/tmp/aisa-api-directory-check/node_modules/@hzlmy2002/aisa-api",
+    "package_root": "/private/tmp/aisa-api-layered-check/node_modules/@hzlmy2002/aisa-api",
     "skills_installed": 25,
-    "default_tool_count": 3,
-    "all_tool_count": 578,
+    "default_tool_count": 4,
+    "all_tool_count": 579,
     "resource_read": true,
     "uninstall_clean": true
   }

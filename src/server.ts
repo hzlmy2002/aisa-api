@@ -11,7 +11,7 @@ import {VERSION} from './version.js';
 const skillsCatalog = JSON.parse(readFileSync(new URL('../catalog/skills.json', import.meta.url), 'utf8'));
 const skills: Json[] = skillsCatalog.skills;
 const resources: Json[] = [...skills, ...(skillsCatalog.resources ?? [])];
-const resourceMap = new Map(resources.map(r => [r.uri, r]));
+const resourceMap = new Map([...resources, ...(skillsCatalog.referenceResources ?? [])].map(r => [r.uri, r]));
 const string = {type: 'string', minLength: 1};
 const object = {type: 'object', additionalProperties: true};
 const limit = {type: 'integer', minimum: 1, maximum: 20, default: 5};
@@ -19,7 +19,7 @@ const cap = {type: 'number', minimum: 0, description: 'Maximum USD per upstream 
 const readOnly = {readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false};
 const schema = (properties: Json, required: string[] = []) => ({type: 'object' as const, properties, required, additionalProperties: false});
 const meta = [
-  {name: 'search', description: 'Find AIsa API operations by task, provider or operation ID. Returns input schemas. Free, local. English API terms work best; Chinese workflow discovery is available through search_skills.', inputSchema: schema({query: {...string, maxLength: 4096}, limit, category: {type: 'string', enum: Object.keys(catalog.modules.categories)}}, ['query'])},
+  {name: 'search', description: 'Fallback API discovery when the installed server indexes or workflow skills do not identify an operation. Search by task, provider or operation ID; returns input schemas. Free, local. English API terms work best; the local workflow index includes Chinese task descriptions.', inputSchema: schema({query: {...string, maxLength: 4096}, limit, category: {type: 'string', enum: Object.keys(catalog.modules.categories)}}, ['query'])},
   {name: 'get_details', description: 'Read the original MCP description, input/output schemas, annotations and AIsa route for one operation or up to 20. Free, local.', inputSchema: schema({operation_id: string, operation_ids: {type: 'array', minItems: 1, maxItems: 20, items: string}})},
   {name: 'use', description: 'Execute any supported AIsa operation using its original MCP arguments. Calls can be billed or change upstream state: inspect get_details first. Does not automatically retry.', inputSchema: schema({operation_id: string, arguments: {...object, default: {}}, max_price_usd: cap}, ['operation_id']), annotations: {readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true}},
   {name: 'batch_use', description: 'Execute up to 20 AIsa operations with at most 5 concurrent operations. Each result succeeds or fails independently. max_price_usd is per upstream request, not a batch budget.', inputSchema: schema({calls: {type: 'array', minItems: 1, maxItems: 20, items: schema({call_id: string, operation_id: string, arguments: {...object, default: {}}}, ['operation_id'])}, max_price_usd: cap}, ['calls']), annotations: {readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true}},
@@ -30,12 +30,12 @@ const meta = [
 ].map(t => ({...t, annotations: t.annotations ?? readOnly}));
 const ajv = new Ajv({strict: false, useDefaults: true});
 const metaValidators = new Map(meta.map(t => [t.name, ajv.compile(t.inputSchema)]));
-const coreToolNames = new Set(['get_details', 'use', 'batch_use']);
+const coreToolNames = new Set(['search', 'get_details', 'use', 'batch_use']);
 const unknownPrice = {currency: 'USD', amount: null, model: 'unknown', source: 'local'};
 const wire = (data: any, isError = false) => ({content: [{type: 'text' as const, text: JSON.stringify(data)}], structuredContent: data !== null && typeof data === 'object' && !Array.isArray(data) ? data : {result: data}, ...(isError ? {isError: true} : {})});
 function readResource(uri: string) {
   const r = resourceMap.get(uri);
-  if (!r) throw new ApiError('unknown_resource', 'Unknown resource URI. Use list_resources.', 404);
+  if (!r) throw new ApiError('unknown_resource', 'Unknown resource URI. Read skill://aisa-api/SKILL.md or native resources/list.', 404);
   return {contents: [{uri, mimeType: r.mimeType ?? 'text/markdown', text: readFileSync(new URL('../' + r.path, import.meta.url), 'utf8')}]};
 }
 function details(op: Operation) {
@@ -77,7 +77,7 @@ export function createServer(options: ServerOptions = {}) {
     for (const op of moduleOperations(module)) pinned.set(op.name, op);
   }
   const server = new Server({name: 'aisa-api', version: VERSION}, {capabilities: {tools: {}, resources: {}}, instructions:
-    'AIsa APIs run through this local stdio server and use your AIsa credentials. Read the installed aisa-api skill for the complete API directory and workflow links, or use native resources/read with skill://aisa-api/SKILL.md. Select an operation ID from the directory; get_details gives its schema; use executes it. The default tools are get_details, use and batch_use. Pinned tools can be called directly. All supported APIs remain reachable through use. Directory and schema reads are local and free; API calls may be billed or write to external services. max_price_usd limits each upstream request, not a workflow total. Setup installs workflow skills into your client. If authentication fails, run aisa-api setup in a terminal; never request keys or OAuth callback URLs in conversation.'});
+    'AIsa APIs run through this local stdio server and use your AIsa credentials. Read the short installed aisa-api skill, follow one server index or workflow, and read the linked local operation details before use. Local details include the full arguments schema; get_details is a fallback for missing or mismatched versions. Native resources/read supports skill://aisa-api/SKILL.md and skill://aisa-api/references/operations/<operation_id>.md. The default tools are search (discovery fallback), get_details, use and batch_use. Pinned tools can be called directly. All supported APIs remain reachable through use. Directory and schema reads are local and free; API calls may be billed or write to external services. max_price_usd limits each upstream request, not a workflow total. Setup installs workflow skills into your client. If authentication fails, run aisa-api setup in a terminal; never request keys or OAuth callback URLs in conversation.'});
   const execute = async (name: string, input: Json, capValue?: number, signal?: AbortSignal): Promise<any> => {
     validateCap(capValue);
     if (signal?.aborted) throw new ApiError('cancelled', 'Request cancelled before execution.');

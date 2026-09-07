@@ -91,24 +91,48 @@ test('all original workflows retain instructions, input defaults, metadata and e
   assert.ok(composed.uses.includes('twitter_stock_pulse'));
 });
 
-test('single directory skill covers every operation once with access flags and workflow links', async t => {
+test('short entry routes to server indexes and complete per-operation local contracts', async t => {
   const root = await fixture(t);
   await generateSkills({root});
-  const {operations} = await json(join(root, 'catalog/operations.json'));
-  const {skills} = await json(join(root, 'catalog/skills.json'));
-  const directory = skills.find(s => s.name === 'aisa-api');
-  const body = await readFile(join(root, directory.path), 'utf8');
+  const {operations, servers} = await json(join(root, 'catalog/operations.json'));
+  const {skills, referenceResources} = await json(join(root, 'catalog/skills.json'));
+  const entry = await readFile(join(root, 'skills/aisa-api/SKILL.md'), 'utf8');
+  assert.ok(Buffer.byteLength(entry) < 8192, 'entry must remain a routing brief');
+  const body = await readFile(join(root, 'skills/aisa-api/references/directory.md'), 'utf8');
   const rows = [...body.matchAll(/^\| `([^`]+)` \| (Read|Write)(?: · composed)? \| (.+) \|$/gm)];
-  assert.equal(rows.length, operations.length);
   assert.deepEqual(rows.map(r => r[1]).sort(), operations.map(o => o.name).sort());
-  for (const [, name, access, description] of rows) {
-    const op = operations.find(o => o.name === name);
-    assert.equal(access, op.annotations.readOnlyHint ? 'Read' : 'Write', name);
-    assert.ok(description.trim(), name);
+  for (const server of servers) {
+    assert.ok(entry.includes(`](references/servers/${server.slug}.md)`));
+    const index = await readFile(join(root, `skills/aisa-api/references/servers/${server.slug}.md`), 'utf8');
+    const ids = [...index.matchAll(/^- \[([^\]]+)\]\(\.\.\/operations\//gm)].map(r => r[1]);
+    assert.deepEqual(ids.sort(), operations.filter(o => o.servers.includes(server.slug)).map(o => o.name).sort());
   }
-  for (const skill of skills.filter(s => s.kind === 'workflow')) assert.ok(body.includes(`](../${skill.name}/SKILL.md)`));
-  assert.deepEqual(directory.uses, operations.map(o => o.name).sort());
-  assert.ok(body.includes('account'));
+  for (const op of operations) {
+    const resource = referenceResources.find(r => r.uri === `skill://aisa-api/references/operations/${op.name}.md`);
+    assert.ok(resource, op.name);
+    const text = await readFile(join(root, resource.path), 'utf8');
+    const contract = JSON.parse(text.match(/```json\n([\s\S]*?)\n```/)[1]);
+    assert.equal(contract.operation_id, op.name);
+    assert.equal(contract.description, op.description);
+    assert.deepEqual(contract.arguments_schema, op.inputSchema);
+    assert.deepEqual(contract.response_schema, op.outputSchema ?? {});
+    assert.deepEqual(contract.annotations, op.annotations);
+    assert.equal(contract.price.amount, null);
+    assert.equal(contract.availability, 'unknown');
+  }
+  for (const workflow of skills.filter(s => s.kind === 'workflow')) {
+    const text = await readFile(join(root, workflow.path), 'utf8');
+    for (const id of workflow.uses) assert.ok(text.includes(`](../aisa-api/references/operations/${id}.md)`), workflow.name);
+  }
+  for (const resource of referenceResources) {
+    const text = await readFile(join(root, resource.path), 'utf8');
+    // JSON descriptions may contain provider-authored links. Validate only authored index links.
+    if (resource.path.includes('/operations/')) continue;
+    for (const [, target] of text.matchAll(/\]\(([^)]+)\)/g)) {
+      if (/^https?:/.test(target)) continue;
+      await readFile(resolve(root, dirname(resource.path), target));
+    }
+  }
 });
 
 test('category coverage includes whole servers and explicit cross-category tools', async (t) => {
