@@ -1,0 +1,30 @@
+{
+  "tested_at": "2026-09-07T22:25:56.505Z",
+  "platform": "darwin-arm64",
+  "minimum_declared": "20.6.0",
+  "tests": [
+    {
+      "node": "18.20.8",
+      "passed": 112,
+      "supported": false,
+      "reason": "@hono/node-server in the installed dependency tree requires Node >=20"
+    },
+    {
+      "node": "20.6.0",
+      "passed": 112,
+      "supported": true
+    },
+    {
+      "node": "20.20.2",
+      "passed": 112,
+      "supported": true
+    }
+  ],
+  "build": {
+    "node": "20.6.0",
+    "catalog_generation": true,
+    "skills_generation": true,
+    "typescript": true
+  },
+  "live_api_calls": 0
+}
