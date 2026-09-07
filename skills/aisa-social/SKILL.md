@@ -30,3 +30,4 @@ Relevant installed workflow skills:
 - `aisa-stock-chatter-workflow` — Use when asked what X is saying about stocks together with the market data behind those mentions. 分析股票相关社交舆情，结合行情和新闻核对热门股票讨论。
 - `aisa-track-topic-on-x` — Use when asked to investigate posts, authors or discussions about a topic on X/Twitter. 追踪 X、Twitter、推特上的话题讨论，分析发帖作者、关注点和回复，整理带来源的报告。
 - `aisa-search-youtube-deliberately` — Use when asked to search YouTube with deliberate locale or filter choices and report the returned results. 按语言、地区和筛选条件搜索 YouTube 视频，整理搜索结果。
+- `aisa-recent-topic-research` — Research what happened recently or what people are saying about a topic, product launch, company or competitor. Use for last-30-days research, launch reactions, recent trends and cross-source discussion briefs. 最近30天、近期动态、产品发布反响、热点趋势、竞品近况、社区反馈、舆情调研。

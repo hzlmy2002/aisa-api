@@ -2,7 +2,7 @@
 
 把 AIsa 已有 API 和任务 workflows 带到 Codex、Claude Code、Hermes。采用 TypeScript / Node.js，通过 npm 分发；本地运行 MCP，HTTP 请求直接发送到 `api.aisa.one`，认证与计费仍由 AIsa 网关处理。
 
-当前迁移包含 **26 个 server、571 个原子 API 工具、4 个组合工具、25 份 skills、3 份参考资源**。API 范围以 aisa-mcp 已支持的 operation 为准；不包含 docs 中尚未由 aisa-mcp 暴露的其他接口。
+当前迁移包含 **26 个 server、571 个原子 API 工具、4 个组合工具、27 份 skills、3 份参考资源**。API 范围以 aisa-mcp 已支持的 operation 为准；不包含 docs 中尚未由 aisa-mcp 暴露的其他接口。
 
 ## 开发版使用
 
@@ -71,7 +71,7 @@ node dist/cli.js serve --all-tools
 
 `--server` 和 `--modules` 控制直接列出的工具，全量 API 仍能通过 `use` 调用。未固定展示的工具不能直接用工具名调用。
 
-17 个原 workflow prompts 已转为 skills，保留输入默认值、步骤、停止条件和 `uses` 工具引用；另提供 6 个分类 skill、GTM skill 和 AIsa 入口 skill。安装目录：
+新增达人拓展名单和最近 30 天话题研究两个分层 workflow；17 个原 workflow prompts 已转为 skills，保留输入默认值、步骤、停止条件和 `uses` 工具引用；另提供 6 个分类 skill、GTM skill 和 AIsa 入口 skill。安装目录：
 
 | 客户端 | skills | MCP 配置 |
 | --- | --- | --- |
@@ -122,3 +122,5 @@ OAuth 测试需要允许监听临时 loopback 端口，其余测试使用 mock/�
 `scripts/generate-catalog.mjs` 和 `scripts/generate-skills.mjs` 在 Node.js 中生成发行数据。源文件变化会触发校验失败，更新时需一起审查操作覆盖、工具契约、参数映射和快照，避免生成出新路由配旧 schema 的版本。运行时不下载 specs。
 
 发布使用 `npm publish --access public`；执行前应确认 npm 账号具有 `@hzlmy2002` scope 的发布权限。
+
+本地扩展的源文件位于 `workflows/`，入口只链接按需读取的流程参考与接口契约。来源与改造说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

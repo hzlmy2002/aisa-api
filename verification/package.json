@@ -1,7 +1,7 @@
 {
   "node": "v22.16.0",
-  "package_root": "/private/tmp/aisa-api-layered-check/node_modules/@hzlmy2002/aisa-api",
-  "skills_installed": 25,
+  "package_root": "/private/tmp/aisa-integrated-check/node_modules/@hzlmy2002/aisa-api",
+  "skills_installed": 27,
   "default_tool_count": 4,
   "all_tool_count": 579,
   "resource_read": true,

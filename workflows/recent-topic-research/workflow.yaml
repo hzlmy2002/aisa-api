@@ -1,0 +1,65 @@
+name: recent_topic_research
+title: Research recent topic evidence across web and social sources
+description: Build a dated, deduplicated brief on recent discussion, launch
+  reactions or competitor developments using the supported web, X and Reddit
+  sources.
+arguments:
+  - name: topic
+    description: Topic, product, company or comparison to investigate.
+    required: true
+  - name: window
+    description: Requested date window; resolve relative dates using the current date.
+    required: false
+    default: last 30 days
+skill:
+  when_to_use: Research what happened recently or what people are saying about a
+    topic, product launch, company or competitor. Use for last-30-days research,
+    launch reactions, recent trends and cross-source discussion briefs.
+    最近30天、近期动态、产品发布反响、热点趋势、竞品近况、社区反馈、舆情调研。
+  aliases:
+    - last30days
+    - recent trend scan
+    - launch reactions
+    - 近期话题研究
+  tags:
+    - research
+    - social
+    - recency
+  providers:
+    - tavily
+    - twitter
+    - reddit
+  examples:
+    - What have people said about this product in the last 30 days?
+uses:
+  - post_tavily_search
+  - get_twitter_tweet_advanced_search
+  - get_reddit_search
+  - post_tavily_extract
+  - get_reddit_post_comments
+template: >-
+  Topic: {topic}
+
+  Window: {window}
+
+
+  1. Resolve an explicit start/end date and timezone. Read [source
+  selection](references/sources.md); choose only the sources needed for this
+  question.
+
+  2. Search with `post_tavily_search`, `get_twitter_tweet_advanced_search`
+  and/or `get_reddit_search`. Start with one page per selected source, not every
+  available platform. Read each selected operation's local contract immediately
+  before use.
+
+  3. Inspect returned snippets first. If a central claim needs full context, use
+  `post_tavily_extract` for selected pages or `get_reddit_post_comments` for
+  selected threads. Do not load all result bodies.
+
+  4. Read [evidence and reporting](references/evidence.md) before synthesis.
+  Deduplicate, cluster by claim, distinguish publication dates from event dates,
+  and cite representative evidence. Stop when the question is answered within
+  the initial budget; state missing coverage.
+references:
+  - sources.md
+  - evidence.md

@@ -29,3 +29,4 @@ Relevant installed workflow skills:
 - `aisa-brand-mentions-across-social` — Use when asked to collect brand or product mentions across X, Reddit and Instagram. 跨多个社交平台收集品牌或产品提及，对比各平台反馈。
 - `aisa-creator-profile-snapshot` — Use when asked for an audience and recent-content snapshot of a creator or public account. 分析创作者或公开账号的个人资料、受众和最近发布的内容。
 - `aisa-research-brief` — Use when asked to research one question on the open web and produce a short sourced brief. 围绕一个问题进行公开网页研究，交叉核实资料，撰写带引用的简报。
+- `aisa-recent-topic-research` — Research what happened recently or what people are saying about a topic, product launch, company or competitor. Use for last-30-days research, launch reactions, recent trends and cross-source discussion briefs. 最近30天、近期动态、产品发布反响、热点趋势、竞品近况、社区反馈、舆情调研。

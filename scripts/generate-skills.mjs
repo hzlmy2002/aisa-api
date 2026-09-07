@@ -259,6 +259,14 @@ export async function generateSkills({ root = projectRoot } = {}) {
       workflows.push({ cfg, ...validateWorkflow(cfg, operations), server: relative(join(root, 'upstream/prompts'), path).split(/[\\/]/)[0] });
     } catch (error) { throw new Error(`${path}: ${error.message}`, { cause: error }); }
   }
+  // Local adaptations are maintained separately from immutable upstream snapshots.
+  const extensionsRoot = join(root, 'workflows');
+  for (const path of await yamlFiles(extensionsRoot)) {
+    const cfg = await readYaml(path);
+    requireValue(Array.isArray(cfg.references) && cfg.references.every(name => /^[a-z0-9-]+\.md$/.test(name)), `${path}: invalid references`);
+    const localReferences = await Promise.all(cfg.references.map(async name => ({ name, body: await readFile(join(dirname(path), 'references', name), 'utf8') })));
+    workflows.push({ cfg, ...validateWorkflow(cfg, operations), server: 'local-extension', localReferences });
+  }
   requireValue(workflows.length > 0, 'No workflow YAML files found');
   const resources = [];
   const resourceUris = new Set();
@@ -322,12 +330,17 @@ export async function generateSkills({ root = projectRoot } = {}) {
       when_to_use: cfg.skill.when_to_use, tags: cfg.skill.tags, providers: cfg.skill.providers, examples: cfg.skill.examples,
       aliases: [...new Set([cfg.name, name.slice(5), ...cfg.skill.aliases])], uses: cfg.uses, arguments: args, kind: 'workflow',
     });
-    const attached = resources.filter((resource) => resource.server === server || cfg.uses.some((id) => operations.get(id).servers.includes(resource.server)) || cfg.template.includes(resource.cfg.uri));
+    const attached = workflow.localReferences ? [] : resources.filter((resource) => resource.server === server || cfg.uses.some((id) => operations.get(id).servers.includes(resource.server)) || cfg.template.includes(resource.cfg.uri));
     const links = attached.map((resource) => {
       const path = `references/${resource.filename}`;
       files.set(`skills/${name}/${path}`, `${resource.body.trim()}\n`);
       return `- [${resource.cfg.title || resource.cfg.name}](${path}) — ${compact(resource.cfg.description)}`;
     });
+    for (const ref of workflow.localReferences ?? []) {
+      const path = `skills/${name}/references/${ref.name}`;
+      files.set(path, ref.body);
+      referenceResources.push({uri: `skill://${name}/references/${ref.name}`, path, name: `${name}/${ref.name}`, description: `On-demand workflow guidance for ${name}`, mimeType: 'text/markdown'});
+    }
     let body = replaceWorkflowNames(workflow.body, workflows);
     for (const uri of body.match(/aisa:\/\/[^\s`<>"')]+/g) ?? []) {
       const resource = attached.find((item) => item.cfg.uri === uri);
@@ -335,7 +348,10 @@ export async function generateSkills({ root = projectRoot } = {}) {
       body = body.replaceAll(uri, `references/${resource.filename}`);
     }
     const inputs = args.map((arg) => `- \`${arg.name}\` (${arg.required ? 'required' : `optional; default ${JSON.stringify(arg.default ?? '')}`}): ${compact(arg.description)}`).join('\n');
-    add(entry, cfg.title || name, `${compact(cfg.description)}\n\n## Inputs\n\nExtract inputs from the request and conversation. Apply optional defaults exactly; ask for required inputs only when they cannot be inferred. In the workflow, <input: NAME> means the resolved input, not a literal API argument.\n\n${inputs || 'No template inputs.'}\n\n## Tool access\n\n${toolAccess}\n\n${cfg.uses.map((id) => `- [${id}](../aisa-api/references/operations/${id}.md)`).join('\n')}\n\n${links.length ? `## Supporting resources\n\nRead when relevant to interpreting the returned data:\n\n${links.join('\n')}\n\n` : ''}## Workflow\n\n${body}`);
+    const access = workflow.localReferences
+      ? 'Use the aisa-api MCP. Read only the linked contracts needed for the current step, then call use with operation_id and arguments. get_details is the fallback for missing or mismatched local contracts. Keep dependent steps sequential; batch_use is for independent calls. max_price_usd applies per upstream request, not to the whole workflow. Credentials come from setup. Read supporting references only at the step that links them.'
+      : toolAccess;
+    add(entry, cfg.title || name, `${compact(cfg.description)}\n\n## Inputs\n\nExtract inputs from the request and conversation. Apply optional defaults exactly; ask for required inputs only when they cannot be inferred. In the workflow, <input: NAME> means the resolved input, not a literal API argument.\n\n${inputs || 'No template inputs.'}\n\n## Tool access\n\n${access}\n\n${cfg.uses.map((id) => `- [${id}](../aisa-api/references/operations/${id}.md)`).join('\n')}\n\n${links.length ? `## Supporting resources\n\nRead when relevant to interpreting the returned data:\n\n${links.join('\n')}\n\n` : ''}## Workflow\n\n${body}`);
   }
   const groups = [...Object.entries(modules.categories), ...Object.entries(modules.modules ?? {}).filter(([, group]) => group.prompt === true)];
   for (const [slug, group] of groups) {

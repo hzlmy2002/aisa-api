@@ -70,7 +70,7 @@ The four default MCP tools are search (discovery fallback), get_details (contrac
 ## Optional full index and references
 
 - [Complete directory](references/directory.md): all 575 operations, for global browsing or local file search only.
-- [Workflow index](references/workflows.md): 17 task recipes.
+- [Workflow index](references/workflows.md): 19 task recipes.
 - use with operation_id `account` reads account balance and usage; get_details supplies its contract.
 
 Clients without local file access may read these files using native MCP resources/read: `skill://aisa-api/SKILL.md`, `skill://aisa-api/references/servers/<server>.md`, or `skill://aisa-api/references/operations/<operation_id>.md`. Workflow skills use `skill://<skill-name>/SKILL.md`. All paths are from the installed package version; live pricing and availability come from the AIsa gateway.

@@ -233,6 +233,42 @@
       "kind": "workflow"
     },
     {
+      "name": "aisa-creator-outreach-list",
+      "description": "Find similar YouTube or TikTok creators, research influencers, look up creator emails, or build a KOL outreach shortlist from a profile or campaign brief. 达人拓展、相似博主、网红名单、创作者邮箱、KOL联系表、YouTube和TikTok达人发现、Instagram邮箱查询。 Related requests: influencer prospecting, creator contact list, 达人名单. Sources: waveinflu.",
+      "uri": "skill://aisa-creator-outreach-list/SKILL.md",
+      "path": "skills/aisa-creator-outreach-list/SKILL.md",
+      "aliases": [
+        "creator_outreach_list",
+        "creator-outreach-list",
+        "influencer prospecting",
+        "creator contact list",
+        "达人名单"
+      ],
+      "tags": [
+        "sales",
+        "creators"
+      ],
+      "providers": [
+        "waveinflu"
+      ],
+      "examples": [
+        "Find ten creators similar to this YouTube channel and their contact emails."
+      ],
+      "uses": [
+        "post_waveinflu_similar_creators",
+        "post_waveinflu_email_lookup"
+      ],
+      "when_to_use": "Find similar YouTube or TikTok creators, research influencers, look up creator emails, or build a KOL outreach shortlist from a profile or campaign brief. 达人拓展、相似博主、网红名单、创作者邮箱、KOL联系表、YouTube和TikTok达人发现、Instagram邮箱查询。",
+      "arguments": [
+        {
+          "name": "brief",
+          "description": "Seed creator profile URL or content direction, target platform, and any audience filters.",
+          "required": true
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
       "name": "aisa-creator-profile-snapshot",
       "description": "Use when asked for an audience and recent-content snapshot of a creator or public account. 分析创作者或公开账号的个人资料、受众和最近发布的内容。 Related requests: 创作者画像, 网红分析, 账号画像, influencer profile. Sources: twitter, instagram, tavily.",
       "uri": "skill://aisa-creator-profile-snapshot/SKILL.md",
@@ -835,6 +871,55 @@
           "default": ""
         }
       ]
+    },
+    {
+      "name": "aisa-recent-topic-research",
+      "description": "Research what happened recently or what people are saying about a topic, product launch, company or competitor. Use for last-30-days research, launch reactions, recent trends and cross-source discussion briefs. 最近30天、近期动态、产品发布反响、热点趋势、竞品近况、社区反馈、舆情调研。 Related requests: last30days, recent trend scan, launch reactions, 近期话题研究. Sources: tavily, twitter, reddit.",
+      "uri": "skill://aisa-recent-topic-research/SKILL.md",
+      "path": "skills/aisa-recent-topic-research/SKILL.md",
+      "aliases": [
+        "recent_topic_research",
+        "recent-topic-research",
+        "last30days",
+        "recent trend scan",
+        "launch reactions",
+        "近期话题研究"
+      ],
+      "tags": [
+        "research",
+        "social",
+        "recency"
+      ],
+      "providers": [
+        "tavily",
+        "twitter",
+        "reddit"
+      ],
+      "examples": [
+        "What have people said about this product in the last 30 days?"
+      ],
+      "uses": [
+        "post_tavily_search",
+        "get_twitter_tweet_advanced_search",
+        "get_reddit_search",
+        "post_tavily_extract",
+        "get_reddit_post_comments"
+      ],
+      "when_to_use": "Research what happened recently or what people are saying about a topic, product launch, company or competitor. Use for last-30-days research, launch reactions, recent trends and cross-source discussion briefs. 最近30天、近期动态、产品发布反响、热点趋势、竞品近况、社区反馈、舆情调研。",
+      "arguments": [
+        {
+          "name": "topic",
+          "description": "Topic, product, company or comparison to investigate.",
+          "required": true
+        },
+        {
+          "name": "window",
+          "description": "Requested date window; resolve relative dates using the current date.",
+          "required": false,
+          "default": "last 30 days"
+        }
+      ],
+      "kind": "workflow"
     },
     {
       "name": "aisa-research-brief",
@@ -6088,6 +6173,34 @@
       "mimeType": "text/markdown"
     },
     {
+      "uri": "skill://aisa-creator-outreach-list/references/discovery.md",
+      "path": "skills/aisa-creator-outreach-list/references/discovery.md",
+      "name": "aisa-creator-outreach-list/discovery.md",
+      "description": "On-demand workflow guidance for aisa-creator-outreach-list",
+      "mimeType": "text/markdown"
+    },
+    {
+      "uri": "skill://aisa-creator-outreach-list/references/report.md",
+      "path": "skills/aisa-creator-outreach-list/references/report.md",
+      "name": "aisa-creator-outreach-list/report.md",
+      "description": "On-demand workflow guidance for aisa-creator-outreach-list",
+      "mimeType": "text/markdown"
+    },
+    {
+      "uri": "skill://aisa-recent-topic-research/references/sources.md",
+      "path": "skills/aisa-recent-topic-research/references/sources.md",
+      "name": "aisa-recent-topic-research/sources.md",
+      "description": "On-demand workflow guidance for aisa-recent-topic-research",
+      "mimeType": "text/markdown"
+    },
+    {
+      "uri": "skill://aisa-recent-topic-research/references/evidence.md",
+      "path": "skills/aisa-recent-topic-research/references/evidence.md",
+      "name": "aisa-recent-topic-research/evidence.md",
+      "description": "On-demand workflow guidance for aisa-recent-topic-research",
+      "mimeType": "text/markdown"
+    },
+    {
       "uri": "skill://aisa-api/references/workflows.md",
       "path": "skills/aisa-api/references/workflows.md",
       "name": "workflows",
@@ -6701,8 +6814,8 @@
     "skills/aisa-api/references/servers/youtube-search.md": "7635bd353cce6d75daa3f0d017f1542183a165d30d3bfd5dc83943742ef7221e",
     "skills/aisa-api/references/stock-pulse/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
     "skills/aisa-api/references/twitter-api/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
-    "skills/aisa-api/references/workflows.md": "56ecd2e4ae6e3e1e5cb7d34f5b692bcbac0c62a876147d36acc7d3aa235b9723",
-    "skills/aisa-api/SKILL.md": "83d088f5437ff894f6b98561784d667708a89c9bc142ce57d905f13507d88278",
+    "skills/aisa-api/references/workflows.md": "3c841595435e964412460f95dc3e9ba4f9257583e5007e6d4f1fab6b7a45e92e",
+    "skills/aisa-api/SKILL.md": "db419e2ce06843200f94335c65db3c4fc18f743bda6e9d862027a8fd2c31757f",
     "skills/aisa-brand-mentions-across-social/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
     "skills/aisa-brand-mentions-across-social/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
     "skills/aisa-brand-mentions-across-social/SKILL.md": "bf581553792af5a5bceeb592f3b8def22c9c25183f3d40d5caa6f58f9a354040",
@@ -6711,31 +6824,37 @@
     "skills/aisa-compare-event-odds/references/aisa-venue-field-map.md": "88b1d4ed788bc10df52a607bb9ae46f81e944be4d5646dbff2a145e9826f9392",
     "skills/aisa-compare-event-odds/SKILL.md": "6ae1c89ec725a31ab6a7c067ee9719b7e6cb3ab9b51b8ddbcd978fc1317e08db",
     "skills/aisa-competitor-teardown/SKILL.md": "3d0ce4285c0397393086581ff309434393a8981ab1f8a6cbf33e1078ab0184ab",
+    "skills/aisa-creator-outreach-list/references/discovery.md": "b8b0b04cd1725da904a8d9d44a03bd9b7efa5e49ab8c382316bf93198ec0f94c",
+    "skills/aisa-creator-outreach-list/references/report.md": "33ce6bb3016aeebe51b9d73f181997f7dd148645d24674f418d16e89d2700aec",
+    "skills/aisa-creator-outreach-list/SKILL.md": "18aa1beb4b0f3a23b31ede3c7a3a0676044fc5bdee662b410e0a82cfd3033b3f",
     "skills/aisa-creator-profile-snapshot/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
     "skills/aisa-creator-profile-snapshot/SKILL.md": "fcde5b250550ce55ae4309cc3b88b4e4c5b05cbc9c71adc1b2824a6cb8f9c5eb",
     "skills/aisa-crypto-market-health/SKILL.md": "a3493cbeddda092de74b454cd50eed33334ac4a069a6e4d14746c6917d3a696a",
     "skills/aisa-enrich-lead-list/SKILL.md": "7f6cecb96210d0ff261e4cdfa830011ea246f3aea0c889f86f20c1d3a142d8cc",
     "skills/aisa-finance/references/operations.md": "ff8f7652c48ac3bd18fcd609335ebed5e0232fe039d421ff2020fb0a8ffb6e9a",
-    "skills/aisa-finance/SKILL.md": "155276b5b7363f611b87047fa2bbc80309ee89e483c616edc032d4891ebbea7a",
+    "skills/aisa-finance/SKILL.md": "e354acd5f3dc6413392e1a376b033305112cfab7a9fd2510972e7c7deb613c0b",
     "skills/aisa-find-people-at-company/SKILL.md": "99f8ad9123523951d7936d92a4aadb237d59f53bfe96dfdb7f76a333bd64572c",
     "skills/aisa-gtm/references/operations.md": "3ee527949b801ae7617ce6873ab6865d16256dff4870171f1e3f1e0c3d55ae45",
-    "skills/aisa-gtm/SKILL.md": "468add788574b155586944a0d20d87dbe8b2e45227d5c36f6fbe3aa87432591b",
+    "skills/aisa-gtm/SKILL.md": "1fbf8a0917174fabafd07e45228d67aacdffa5213d2194c87cb232afc9fb5e0b",
     "skills/aisa-look-up-token-market/SKILL.md": "ec86bf1b0a1190c4686f4604a75f8796e97ab0a2561e5e24db383d294cfb974b",
     "skills/aisa-mail/references/operations.md": "8740aeb8ef6b417389d5200047b0aee754601c6e6e36fed427a918acefade9a3",
     "skills/aisa-mail/SKILL.md": "5c952b2d6caa6cf94dd564806a01cfbb20fd8448575643123621457564cf5b60",
+    "skills/aisa-recent-topic-research/references/evidence.md": "dcb6983dfffc37a66f492a19ba4e8d4221a8e29104fefb495baffc094ac22e75",
+    "skills/aisa-recent-topic-research/references/sources.md": "aa0075c19b18c1046d0a575f5d4ed92f09b9cc0589970eba57c40b1edb92d9ab",
+    "skills/aisa-recent-topic-research/SKILL.md": "e7a6ab1187a515c9ce4ee46ef68b7492d7baac360a9a62c30c4fb2ad03b142fd",
     "skills/aisa-research-brief/SKILL.md": "40f44f0126a5298167ec7a94a78ff866e8c7adc32c2324ac1863eadc077384f2",
     "skills/aisa-sales/references/operations.md": "6ce0bec24e6d983038af2c036eafbb7feb088cc27041f06d776600d08e7d3257",
-    "skills/aisa-sales/SKILL.md": "4ff585bb7bffe1343332c1b4c714bebc20533eac6d734ce214667e46e28e6f63",
+    "skills/aisa-sales/SKILL.md": "dcfb47b68018f7560f358ea49679527033b337e0366663aa4209c50978aa8953",
     "skills/aisa-search-youtube-deliberately/SKILL.md": "91b8267bc10c6c8894de5d1dc405732471969fe44283685edce863875ce4c9e6",
     "skills/aisa-search/references/operations.md": "c81fe4de54a0a1ab021218c7ebed8735b6cb09655e206c204a56107c277e0fe9",
-    "skills/aisa-search/SKILL.md": "c881222cb2492a3aefd0140bc7ec7bd3340a189200f88050b908329c582c33ad",
+    "skills/aisa-search/SKILL.md": "e241e9a2e92f5db25a0264dba9d44b5172383cd4f8ff26b7fb651f53426b4a7c",
     "skills/aisa-seo-ai-visibility/SKILL.md": "413108b556e130e58840fdb1f67aa7ff7a594ec92fdcdb4abbf3b2c7e35f14fb",
     "skills/aisa-seo-keyword-opportunity/SKILL.md": "e2706b1fc70e223c6c70c88ac0201be0b09aa4a9bfd757bf1e9583f4530d1de7",
     "skills/aisa-seo-site-audit/SKILL.md": "da7e0b57c7c724745674c7cbe8b3cf018abde8afaf66ad4830f1ab9e41f15391",
     "skills/aisa-seo/references/operations.md": "f65c693f7f3904b80b0aad59d9f2b736e9513a6181ca2e6867c30ac69aad91d7",
     "skills/aisa-seo/SKILL.md": "afa9081fb733490a531f782f119624f2c4e36ea61c121581b40dc9451d03463e",
     "skills/aisa-social/references/operations.md": "36b75707172893df59fd1831cb3998966d73af377fe74eb5d6109ad5b46f3975",
-    "skills/aisa-social/SKILL.md": "3d686c4c957ff28610e0ec28ea4894f4f2959eb4252f45238214ef6edbdb589e",
+    "skills/aisa-social/SKILL.md": "d2fdb842f65043f863081f8fa20cfeae6f8c525b7672ff23ab3ddaf23326099b",
     "skills/aisa-stock-chatter-workflow/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
     "skills/aisa-stock-chatter-workflow/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
     "skills/aisa-stock-chatter-workflow/SKILL.md": "724d7d6efacf6408b64258e56998ac699aef19928603090b137a9b6371336e94",

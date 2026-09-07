@@ -4,7 +4,7 @@
   "description": "All AIsa MCP APIs and workflow skills through a local stdio server",
   "type": "module",
   "bin": {"aisa-api": "dist/cli.js"},
-  "files": ["dist", "catalog", "skills", "README.md", "upstream/snapshot.json"],
+  "files": ["dist", "catalog", "skills", "README.md", "THIRD_PARTY_NOTICES.md", "upstream/snapshot.json"],
   "engines": {"node": ">=22"},
   "scripts": {
     "generate": "node scripts/generate-catalog.mjs && node scripts/generate-skills.mjs",

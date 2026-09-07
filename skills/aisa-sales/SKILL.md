@@ -29,3 +29,4 @@ Relevant installed workflow skills:
 - `aisa-enrich-lead-list` — Use when given a list of leads to enrich with contact and company details in bulk. 批量补全销售线索的联系人、工作邮箱和公司资料。
 - `aisa-find-people-at-company` — Use when asked to find people in specific roles at a company and retrieve their work contact details. 按公司和职位寻找决策人、高管及其工作联系方式。
 - `aisa-competitor-teardown` — Use when asked to analyze a competitor or map a market starting from a domain. 从域名分析竞争对手的网站流量、受众地域、相似网站和竞争格局。
+- `aisa-creator-outreach-list` — Find similar YouTube or TikTok creators, research influencers, look up creator emails, or build a KOL outreach shortlist from a profile or campaign brief. 达人拓展、相似博主、网红名单、创作者邮箱、KOL联系表、YouTube和TikTok达人发现、Instagram邮箱查询。

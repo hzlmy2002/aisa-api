@@ -15,10 +15,11 @@ const report = {node: process.version, package_root: packageRoot, skills_install
 try {
   execFileSync(process.execPath, [cli, 'setup', '--client', 'codex', '--home', home, '--auth', 'key'], {env, stdio: 'pipe'});
   const config = await readFile(join(home, '.codex/config.toml'), 'utf8');
-  assert.match(config, /aisa-api@0\.1\.0/);
+  const pkg = JSON.parse(await readFile(join(packageRoot, 'package.json'), 'utf8'));
+  assert.ok(config.includes(`aisa-api@${pkg.version}`));
   assert.match(config, /npx/);
   report.skills_installed = (await readdir(join(home, '.agents/skills'))).length;
-  assert.equal(report.skills_installed, 25);
+  assert.equal(report.skills_installed, 27);
   delete env.AISA_API_KEY;
   for (const all of [false, true]) {
     const transport = new StdioClientTransport({command: process.execPath, args: [cli, 'serve', ...(all ? ['--all-tools'] : [])], env, stderr: 'pipe'});
@@ -36,6 +37,11 @@ try {
         assert.equal(rows.length, 575);
         const local = await client.readResource({uri: 'skill://aisa-api/references/operations/get_agentmail_thread.md'});
         assert.ok(local.contents[0].text.includes('arguments_schema'));
+        for (const [name, ref] of [['aisa-creator-outreach-list', 'discovery.md'], ['aisa-recent-topic-research', 'sources.md']]) {
+          const installed = await readFile(join(home, '.agents/skills', name, 'references', ref), 'utf8');
+          const served = await client.readResource({uri: `skill://${name}/references/${ref}`});
+          assert.equal(served.contents[0].text, installed);
+        }
         report.resource_read = true;
         const details = await client.callTool({name: 'get_details', arguments: {operation_id: 'get_agentmail_thread'}});
         assert.equal(JSON.parse(details.content[0].text).arguments_schema.properties.Authorization, undefined);

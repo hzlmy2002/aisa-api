@@ -17,6 +17,7 @@ async function fixture(t) {
   for (const path of ['prompts', 'resources', 'modules.yaml']) {
     await cp(join(project, 'upstream', path), join(root, 'upstream', path), { recursive: true });
   }
+  await cp(join(project, 'workflows'), join(root, 'workflows'), { recursive: true });
   return root;
 }
 async function workflows(root) {
@@ -43,10 +44,10 @@ test('all original workflows retain instructions, input defaults, metadata and e
   const root = await fixture(t);
   const original = await workflows(root);
   const counts = await generateSkills({ root });
-  assert.equal(counts.workflows, original.length);
-  assert.equal(counts.workflows, 17);
+  assert.equal(counts.workflows, original.length + 2);
+  assert.equal(counts.workflows, 19);
   assert.equal(counts.categories, 7);
-  assert.equal(counts.skills, 25);
+  assert.equal(counts.skills, 27);
   const { skills, resources } = await json(join(root, 'catalog/skills.json'));
   const operations = new Set((await json(join(root, 'catalog/operations.json'))).operations.map((op) => op.name));
   const skillNames = new Set(skills.map((skill) => skill.name));
@@ -337,4 +338,27 @@ test('legacy catalogs adopt current outputs without deleting untracked files', a
   await generateSkills({ root });
   assert.ok(Object.keys((await json(path)).generatedFiles).length > 25);
   assert.equal(await readFile(join(root, 'skills/aisa-old/SKILL.md'), 'utf8'), 'Untracked legacy file');
+});
+
+test('local workflows keep guidance in resolvable references and reject unknown operations', async (t) => {
+  const root = await fixture(t);
+  await generateSkills({root});
+  const catalog = await json(join(root, 'catalog/skills.json'));
+  for (const name of ['aisa-creator-outreach-list', 'aisa-recent-topic-research']) {
+    const entry = catalog.skills.find(s => s.name === name);
+    const text = await readFile(join(root, entry.path), 'utf8');
+    assert.ok(Buffer.byteLength(text) < 4096, `${name}: entry context budget`);
+    const refs = catalog.referenceResources.filter(r => r.uri.startsWith(`skill://${name}/references/`));
+    assert.equal(refs.length, 2);
+    for (const ref of refs) {
+      const content = await readFile(join(root, ref.path), 'utf8');
+      assert.ok(content.trim() && Buffer.byteLength(content) < 4096);
+      assert.ok(text.includes(`](references/${ref.path.split('/').at(-1)})`));
+    }
+  }
+  const path = join(root, 'workflows/creator-outreach-list/workflow.yaml');
+  const cfg = YAML.parse(await readFile(path, 'utf8'));
+  cfg.uses.push('nonexistent_operation');
+  await writeFile(path, YAML.stringify(cfg));
+  await assert.rejects(generateSkills({root}), /unknown operation/);
 });
