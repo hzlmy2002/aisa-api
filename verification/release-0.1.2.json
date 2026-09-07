@@ -1,0 +1,12 @@
+{
+  "version": "0.1.2",
+  "prepared_at": "2026-09-07T22:28:56.556Z",
+  "artifact": "artifacts/hzlmy2002-aisa-api-0.1.2.tgz",
+  "sha256": "0e27346f60784d696c26c2c2b7d8ad9a96bc6d78bb04e306c0c34e4f81be757b",
+  "integrity": "sha512-JrJWT2imvdudBw9RN7O9iVjG5gzYVgCrfF9MVfPUXNT2F5OBWIPtZgwC4w+oz9TiS3ytUydJ3zKxbv2qLLb6Uw==",
+  "tests_passed": 112,
+  "node": "20.6.0",
+  "skills": 27,
+  "operations": 575,
+  "published": false
+}

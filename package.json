@@ -1,6 +1,6 @@
 {
   "name": "@hzlmy2002/aisa-api",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "All AIsa MCP APIs and workflow skills through a local stdio server",
   "type": "module",
   "bin": {"aisa-api": "dist/cli.js"},

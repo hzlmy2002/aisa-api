@@ -112,7 +112,7 @@ export class ApiClient implements Transport {
     if (!token) throw new ApiError('missing_credentials', 'Run aisa-api setup or configure AISA_API_KEY.');
     const signal = AbortSignal.any([AbortSignal.timeout(options.timeoutMs ?? 15000), ...(options.signal ? [options.signal] : [])]);
     const headers = new Headers(init.headers);
-    headers.set('Authorization', `Bearer ${token}`); headers.set('Accept', 'application/json'); headers.set('User-Agent', 'aisa-api/0.1.1');
+    headers.set('Authorization', `Bearer ${token}`); headers.set('Accept', 'application/json'); headers.set('User-Agent', 'aisa-api/0.1.2');
     if (options.maxPriceUsd !== undefined) headers.set('X-AISA-Max-Price-USD', String(options.maxPriceUsd));
     try {
       const response = await (this.options.fetcher ?? fetch)(url, {...init, headers, signal, redirect: 'error'});

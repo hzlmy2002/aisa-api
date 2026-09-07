@@ -22,14 +22,14 @@ node dist/cli.js setup --client codex
 标准 npm 接入命令：
 
 ```sh
-npx -y @hzlmy2002/aisa-api@0.1.1 setup
-npx -y @hzlmy2002/aisa-api@0.1.1 setup --client codex
-npx -y @hzlmy2002/aisa-api@0.1.1 serve
+npx -y @hzlmy2002/aisa-api@0.1.2 setup
+npx -y @hzlmy2002/aisa-api@0.1.2 setup --client codex
+npx -y @hzlmy2002/aisa-api@0.1.2 serve
 ```
 
 ## 工具与 skills
 
-`0.1.1` 引入以下目录优先模式和更广的 skill 触发描述；`0.1.0` 保持原有默认工具列表。上面的 npm 命令需在 `0.1.1` 发布后使用，发布前可按源码构建方式安装。
+`0.1.2` 包含目录优先模式、更广的 skill 触发描述、达人拓展和近期话题研究 workflows，并支持 Node.js ≥20.6.0。上面的 npm 命令需在 `0.1.2` 发布后使用，发布前可按源码构建方式安装。
 
 默认展示 4 个工具。[aisa-api/SKILL.md](skills/aisa-api/SKILL.md) 是简短入口，按分类链接到 26 份 server 索引；每份索引再链接到所需接口的完整本地详情。575 份详情保留原描述、输入/输出 schema、默认值和 annotations，直接读取后即可调用 `use`，无需额外调用 `get_details`。
 
