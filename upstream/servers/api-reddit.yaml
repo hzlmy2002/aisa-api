@@ -1,0 +1,39 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# Reddit gets its own server rather than joining a shared "social" one, for the
+# same reason Twitter has its own: these five tools are not substitutes for each
+# other the way tavily/perplexity/exa are inside web-search. An agent that wants
+# threaded discussion wants Reddit specifically. Merging unlike networks would
+# only dilute retrieval — see mcp/mcp.md section 2.3.
+#
+# ⭐ Instagram was measured in the same round and deliberately did NOT get a
+# server here: seven of its endpoints return 190 KB to 632 KB, which lands in
+# the caller's context window. Reddit's largest is 22 KB. See mcp/node.md §26.2.
+id:    aisa-reddit               # always "aisa-" + slug, checked in CI
+slug:  reddit                    # decides the public URL mcp.aisa.one/reddit/mcp; frozen once published
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Reddit
+category: Social
+description: >
+  Read public Reddit through AIsa: search every subreddit or one of them,
+  browse a community's post stream, read a subreddit's size and rules, and
+  pull the comment tree under any post.
+
+# ⚠️ The 15-second default was too tight for this API. /reddit/search measured
+# 7 to 16 seconds across eight live calls — the top of that range is the default
+# itself, so the timeout would fire on a call that was about to succeed. 45s
+# gives real headroom without letting a hung request sit forever; the connect
+# timeout stays at 10s so a dead host still fails fast.
+# The other four endpoints all answered in 2 to 5 seconds.
+timeout_seconds: 45
+
+include:
+  - spec: reddit.json
+    operations: "*"      # five: search / subreddit / subreddit details /
+                         # subreddit search / post comments
+
+# No read_only block: all five are GET, which the annotator already treats as
+# read-only. Apollo needed one because twelve of its read endpoints are POST.

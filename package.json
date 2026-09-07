@@ -1,0 +1,29 @@
+{
+  "name": "@hzlmy2002/aisa-api",
+  "version": "0.1.0",
+  "description": "All AIsa MCP APIs and workflow skills through a local stdio server",
+  "type": "module",
+  "bin": {"aisa-api": "dist/cli.js"},
+  "files": ["dist", "catalog", "skills", "README.md", "upstream/snapshot.json"],
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "generate": "node scripts/generate-catalog.mjs && node scripts/generate-skills.mjs",
+    "build": "tsc",
+    "check": "tsc --noEmit",
+    "test": "npm run generate && npm run build && node --import ./tests/isolate-env.mjs --test tests/*.test.mjs",
+    "prepack": "npm run generate && npm run build"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@iarna/toml": "2.2.5",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "ajv": "8.17.1",
+    "yaml": "2.9.0",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {"@types/node": "22.20.1", "typescript": "5.9.3"},
+  "publishConfig": {"access": "public", "registry": "https://registry.npmjs.org/"},
+  "repository": {"type": "git", "url": "git+https://github.com/hzlmy2002/aisa-api.git"},
+  "homepage": "https://github.com/hzlmy2002/aisa-api#readme",
+  "bugs": {"url": "https://github.com/hzlmy2002/aisa-api/issues"}
+}

@@ -1,0 +1,347 @@
+{
+  "credential_adaptations": [
+    {
+      "operation_id": "get_agentmail_thread",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "patch_agentmail_thread",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "delete_agentmail_thread",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_draft",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "patch_agentmail_inbox_draft",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "delete_agentmail_inbox_draft",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "patch_agentmail_inbox",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "delete_agentmail_inbox",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_list_entries",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "post_agentmail_list_entry",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "post_agentmail_inbox_message_reply_all",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "post_agentmail_inbox_message_send",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_thread",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "patch_agentmail_inbox_thread",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "delete_agentmail_inbox_thread",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_threads",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_threads",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_draft_attachment",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_events",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_message",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "patch_agentmail_inbox_message",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "delete_agentmail_inbox_message",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_drafts",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "post_agentmail_inbox_draft",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_thread_attachment",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_messages",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_list_entry",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "delete_agentmail_inbox_list_entry",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_metrics",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "post_agentmail_inbox_draft_send",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_list_entry",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "delete_agentmail_list_entry",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_metrics",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_drafts",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "post_agentmail_inbox_message_forward",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_message_raw",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_message_attachment",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inboxes",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "post_agentmail_inbox",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "post_agentmail_inbox_message_reply",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_thread_attachment",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_draft",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_list_entries",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "post_agentmail_inbox_list_entry",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_draft_attachment",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_threads_search",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_threads_search",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    },
+    {
+      "operation_id": "get_agentmail_inbox_messages_search",
+      "removed_inputs": [
+        "Authorization"
+      ],
+      "reason": "Authorization is injected from local credentials."
+    }
+  ]
+}

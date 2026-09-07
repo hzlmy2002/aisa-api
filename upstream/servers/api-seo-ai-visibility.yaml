@@ -1,0 +1,63 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# One of twelve servers splitting DataForSEO's 445 operations by the question
+# they answer. A single server was never an option - CASEBOOK D4: 445 tools in
+# one endpoint is a menu no agent can choose from.
+#
+# ⚠️ Two conventions apply across all twelve, decided 2026-08-25:
+#
+# 1. ASYNC IS COLLAPSED. DataForSEO offers most operations as a three-call
+#    dance: task_post queues, tasks_ready lists what finished, task_get
+#    retrieves. Where a `_live` variant exists the async twin is dropped
+#    entirely; where it does not, the pair is submit + fetch and `tasks_ready`
+#    is withheld. A caller that submitted a job holds its own id, so listing
+#    everyone's finished jobs answers a question no single caller is asking.
+#    This mirrors the firecrawl and exa job pairs already in `web-search`.
+#    445 operations become 317 tools this way.
+#
+# 2. VENDORS ARE MIXED BY QUESTION. Semrush and Ahrefs used to sit together in
+#    a server called `seo`; their 21 tools are redistributed here by what they
+#    answer, so an agent asking about domain authority sees that DataForSEO,
+#    Semrush and Ahrefs all have a number for it and can cross-refer between
+#    them. Same reasoning that put Semrush and Ahrefs together in the first
+#    place, carried one step further.
+
+id:    aisa-seo-ai-visibility
+slug:  seo-ai-visibility
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa AI Visibility
+category: SEO & Search Data
+description: >
+  How brands and pages appear inside AI answers: mentions across assistants
+  with aggregated and cross-model metrics, top domains and pages, and raw
+  responses from ChatGPT, Claude, Gemini and Perplexity for a given prompt.
+
+include:
+  - spec: dataforseo.json
+    operations:
+      - get_dataforseo_ai_chat_gpt_llm_responses_models
+      - get_dataforseo_ai_claude_llm_responses_models
+      - get_dataforseo_ai_gemini_llm_responses_models
+      - get_dataforseo_ai_gemini_llm_scraper_languages
+      - get_dataforseo_ai_gemini_llm_scraper_locations
+      - get_dataforseo_ai_keyword_locales
+      - get_dataforseo_ai_llm_mentions_available_filters
+      - get_dataforseo_ai_llm_mentions_locales
+      - get_dataforseo_ai_perplexity_llm_responses_models
+      - post_dataforseo_ai_chat_gpt_llm_responses_live
+      - post_dataforseo_ai_chat_gpt_llm_scraper_live
+      - post_dataforseo_ai_chat_gpt_llm_scraper_live_html
+      - post_dataforseo_ai_claude_llm_responses_live
+      - post_dataforseo_ai_gemini_llm_responses_live
+      - post_dataforseo_ai_gemini_llm_scraper_live
+      - post_dataforseo_ai_gemini_llm_scraper_live_html
+      - post_dataforseo_ai_keyword_volume_live
+      - post_dataforseo_ai_llm_mentions_aggregated_metrics_live
+      - post_dataforseo_ai_llm_mentions_cross_metrics_live
+      - post_dataforseo_ai_llm_mentions_search_live
+      - post_dataforseo_ai_llm_mentions_top_domains_live
+      - post_dataforseo_ai_llm_mentions_top_pages_live
+      - post_dataforseo_ai_perplexity_llm_responses_live

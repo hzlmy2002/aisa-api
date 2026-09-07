@@ -1,0 +1,70 @@
+# The name is frozen once published.
+name: stock_snapshot_brief
+title: A one-page brief on a listed company, today
+description: >
+  Price, valuation, latest earnings, what analysts expect, who inside is
+  buying or selling, and the news behind it — six calls, one page. Sets
+  the order and where to stop; it does not give investment advice.
+
+arguments:
+  - name: ticker
+    description: The ticker symbol, e.g. `AAPL`.
+    required: true
+
+uses:
+  - get_financial_prices_snapshot
+  - get_financial_financial_metrics_snapshot
+  - get_financial_earnings
+  - get_financial_analyst_estimates
+  - get_financial_insider_trades
+  - get_financial_news
+
+skill:
+  when_to_use: Use when asked for a concise current company brief covering price,
+    valuation, earnings, insiders and news.
+    汇总单只股票的最新股价、估值、财报预期、内部交易和新闻。
+  providers:
+  - financial-datasets
+  examples:
+  - 给我一份这家上市公司的最新股票快照。
+  aliases:
+  - 股票简报
+  - 个股快照
+  - 股票概况
+  - stock brief
+  tags:
+  - finance
+  - stocks
+  - snapshot
+
+template: |
+  One-page brief on: {ticker}
+
+  All six tools take ticker={ticker}; run them in this order and stop —
+  full statements, filings and price history are separate tasks.
+
+  1. `get_financial_prices_snapshot` — last price, day change, volume.
+  2. `get_financial_financial_metrics_snapshot` — market cap, P/E, margins,
+     debt; the valuation line of the brief.
+  3. `get_financial_earnings` — the most recent quarters: beat or miss,
+     and by how much.
+  4. `get_financial_analyst_estimates` with a small limit — consensus for
+     the next periods; compare with step 3's actuals.
+  5. `get_financial_insider_trades` with a small limit — the last insider
+     buys and sells; note whether officers are net buyers or sellers.
+  6. `get_financial_news` with a small limit — the headlines that explain
+     any move you saw in step 1.
+
+  Report in this order: price and move · valuation · last earnings vs
+  estimate · what analysts expect next · insider activity · the news that
+  matters. One line each, numbers with their date. Do not extrapolate
+  beyond what the six calls returned.
+
+  Typical call budget: 6 calls, ideally one batch_use.
+
+  ## Fallbacks
+
+  - Each of the six is independent: a failure leaves that line as "not
+    available" and the other five stand. Do not retry.
+  - If `get_financial_news` returns nothing, say so; do not substitute web
+    search unless asked — the brief is about the filings-grade sources.

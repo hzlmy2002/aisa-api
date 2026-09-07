@@ -1,0 +1,67 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# WARNING: this is the platform's first MCP server that writes. 23 of its 54
+# tools change data, and what they change is the single Apollo workspace AIsa
+# owns, shared by every caller:
+#   - a contact, account or deal one agent creates is visible and editable by
+#     every other agent
+#   - post_apollo_emailer_campaigns_sequence_id_approve and _add_contact_ids
+#     cause real email to leave the workspace's connected mailboxes, and a sent
+#     message cannot be recalled
+#   - post_apollo_fields changes the schema rather than the data, and this API
+#     offers no way to remove a field afterwards
+# The risk is registered in mcp.md section 5.5 as R1. We still expose all 54,
+# because /apis/v1 has exposed all 54 for a long time; holding some back over
+# MCP would invent a second, quieter capability boundary that disagrees with
+# the first one.
+#
+# The mitigation is saying so, not hiding it. Every write endpoint's description
+# states plainly that it writes to a shared workspace, and _annotate marks them
+# destructiveHint=true / readOnlyHint=false, which is what makes a conforming
+# client confirm each call with its user. Neither half works alone.
+id:    aisa-apollo              # always "aisa-" + slug, checked in CI
+slug:  apollo                   # decides the public URL mcp.aisa.one/apollo/mcp; frozen once published
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Apollo
+category: Sales
+description: >
+  Apollo B2B sales data and CRM through AIsa: enrich a person or company from
+  whatever identifier you have, search Apollo's global database of people and
+  companies, and read or write the accounts, contacts, deals, tasks, calls,
+  notes and email sequences held in the AIsa Apollo workspace.
+
+include:
+  # Everything. "*" rather than 54 hand-written lines, because this server's
+  # contract is "identical to /apis/v1/apollo" — a pinned list would be one more
+  # place that drifts the day someone adds an endpoint to the spec. What to
+  # expose and how to describe it is decided in openapi/apollo.json in the docs
+  # repo, which is the single source of truth.
+  - spec: apollo.json
+    operations: "*"
+
+# Read-only exceptions: these twelve are POSTs that write nothing. They are
+# POSTs only because their query — dozens of filters, arrays of ids — does not
+# fit in a URL. The method-based default marks them destructive, so a client
+# would confirm with the user before every search. That is not erring toward
+# caution; it teaches the user to approve without reading, and spends exactly
+# the attention the 23 real writes below need to keep.
+#
+# Overrides may only move toward read-only; see the _annotate docstring. Before
+# adding a line, confirm the endpoint really writes nothing — the evidence is
+# upstream documentation plus an actual call, not whether the name says search.
+read_only:
+  - post_apollo_people_match                  # enrichment, reads Apollo's global database
+  - post_apollo_people_bulk_match
+  - post_apollo_organizations_bulk_enrich
+  - post_apollo_mixed_people_api_search       # searches Apollo's global database
+  - post_apollo_mixed_companies_search
+  - post_apollo_news_articles_search
+  - post_apollo_accounts_search               # searches the workspace: reads shared data, changes none
+  - post_apollo_contacts_search
+  - post_apollo_tasks_search
+  - post_apollo_emailer_campaigns_search
+  - post_apollo_reports_sync_report           # runs a report; the output is not stored
+  - post_apollo_usage_stats_api_usage_stats   # reads quota

@@ -1,0 +1,1920 @@
+{
+  "version": 1,
+  "skills": [
+    {
+      "name": "aisa-api",
+      "description": "Discover AIsa API operations and packaged workflows when the user asks to use AIsa or explore its data coverage.",
+      "uri": "skill://aisa-api/SKILL.md",
+      "path": "skills/aisa-api/SKILL.md",
+      "aliases": [
+        "aisa"
+      ],
+      "tags": [
+        "aisa",
+        "discovery"
+      ],
+      "providers": [],
+      "examples": [],
+      "uses": [],
+      "kind": "entry"
+    },
+    {
+      "name": "aisa-brand-mentions-across-social",
+      "description": "One pass over the three public social sources for a brand, product or topic: the recent posts, where the conversation is, and what is missing. Sets the source order, the page budget and when to stop; it does not score sentiment for you. Use when asked to collect brand or product mentions across X, Reddit and Instagram. 跨多个社交平台收集品牌或产品提及，对比各平台反馈。",
+      "uri": "skill://aisa-brand-mentions-across-social/SKILL.md",
+      "path": "skills/aisa-brand-mentions-across-social/SKILL.md",
+      "aliases": [
+        "brand_mentions_across_social",
+        "brand-mentions-across-social",
+        "品牌舆情",
+        "社交平台提及",
+        "跨平台舆情",
+        "brand monitoring"
+      ],
+      "tags": [
+        "social",
+        "brand",
+        "mentions"
+      ],
+      "providers": [
+        "twitter",
+        "reddit",
+        "instagram",
+        "tavily"
+      ],
+      "examples": [
+        "汇总 Reddit、Instagram 和推特上对这个品牌的评价。"
+      ],
+      "uses": [
+        "get_twitter_tweet_advanced_search",
+        "get_reddit_search",
+        "get_instagram_search_hashtag",
+        "get_reddit_post_comments",
+        "post_tavily_search"
+      ],
+      "when_to_use": "Use when asked to collect brand or product mentions across X, Reddit and Instagram. 跨多个社交平台收集品牌或产品提及，对比各平台反馈。",
+      "arguments": [
+        {
+          "name": "brand",
+          "description": "The brand, product or topic as people write it. Used as the search phrase on every platform; add a second spelling in the query yourself if the brand has one.\n",
+          "required": true
+        },
+        {
+          "name": "window",
+          "description": "How far back to look, e.g. `7d` or `30d`. X gets it as a search operator; Reddit and Instagram get the nearest option their schema offers.\n",
+          "required": false,
+          "default": "7d"
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-company-fundamentals",
+      "description": "Resolve a company, then pull the slices of its financial record that the question actually needs — price, statements, ratios, earnings, insiders, filings — without dragging back everything. Encodes the two things that reliably go wrong here: half these tools refuse to answer without a period argument, and several pairs look interchangeable but differ by an order of magnitude in how much they return. Use when asked to assemble financial statements, metrics or filings for a US-listed company. 研究美股公司基本面，整理财务报表、估值指标和监管披露。",
+      "uri": "skill://aisa-company-fundamentals/SKILL.md",
+      "path": "skills/aisa-company-fundamentals/SKILL.md",
+      "aliases": [
+        "company_fundamentals",
+        "company-fundamentals",
+        "公司基本面",
+        "财务报表",
+        "美股财报",
+        "company financials"
+      ],
+      "tags": [
+        "finance",
+        "stocks",
+        "fundamentals"
+      ],
+      "providers": [
+        "financial-datasets"
+      ],
+      "examples": [
+        "分析这家公司的收入、利润、资产负债和现金流。"
+      ],
+      "uses": [
+        "get_financial_company_facts",
+        "post_financial_financials_search_screener",
+        "get_financial_prices_snapshot",
+        "get_financial_prices",
+        "get_financial_financials",
+        "get_financial_financials_income_statements",
+        "get_financial_financials_balance_sheets",
+        "get_financial_financials_cash_flow_statements",
+        "post_financial_financials_search_line_items",
+        "get_financial_financial_metrics_snapshot",
+        "get_financial_financial_metrics",
+        "get_financial_earnings",
+        "get_financial_analyst_estimates",
+        "get_financial_insider_trades",
+        "get_financial_filings",
+        "get_financial_filings_items",
+        "get_financial_news",
+        "get_financial_macro_interest_rates_snapshot",
+        "get_financial_macro_interest_rates"
+      ],
+      "when_to_use": "Use when asked to assemble financial statements, metrics or filings for a US-listed company. 研究美股公司基本面，整理财务报表、估值指标和监管披露。",
+      "arguments": [
+        {
+          "name": "company",
+          "description": "The company as the user named it — a ticker (NVDA), a full name (NVIDIA), or a CIK. Step 1 settles which.\n",
+          "required": true
+        },
+        {
+          "name": "period",
+          "description": "Reporting basis for anything drawn from statements: annual, quarterly, or ttm. Not optional on those tools — pick one deliberately, because annual and quarterly figures for the same company are not comparable.\n",
+          "required": false,
+          "default": "annual"
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-compare-event-odds",
+      "description": "Look up what prediction markets currently imply about an event, checking Polymarket against Kalshi so a single venue's pricing is never the only evidence. Handles the two venues' incompatible identifiers and filters, and says plainly when only one side has a market. Use when asked to compare the market-implied odds of the same event across prediction markets. 对比同一事件在不同预测市场上的概率、赔率和成交情况。",
+      "uri": "skill://aisa-compare-event-odds/SKILL.md",
+      "path": "skills/aisa-compare-event-odds/SKILL.md",
+      "aliases": [
+        "compare_event_odds",
+        "compare-event-odds",
+        "预测市场",
+        "事件赔率",
+        "概率对比",
+        "prediction odds"
+      ],
+      "tags": [
+        "finance",
+        "prediction",
+        "polymarket",
+        "kalshi"
+      ],
+      "providers": [
+        "polymarket",
+        "kalshi"
+      ],
+      "examples": [
+        "这个事件在两个预测平台上的胜率相差多少？"
+      ],
+      "uses": [
+        "get_polymarket_markets",
+        "get_polymarket_events",
+        "get_kalshi_markets",
+        "get_kalshi_trades"
+      ],
+      "when_to_use": "Use when asked to compare the market-implied odds of the same event across prediction markets. 对比同一事件在不同预测市场上的概率、赔率和成交情况。",
+      "arguments": [
+        {
+          "name": "question",
+          "description": "The event in plain language, e.g. \"Fed cuts rates in December\" or \"Bitcoin above 200k this year\". Keyword-matched against both venues.\n",
+          "required": true
+        },
+        {
+          "name": "include_closed",
+          "description": "`no` to look only at markets still trading, `yes` to also surface settled ones for historical context.\n",
+          "required": false,
+          "default": "no"
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-competitor-teardown",
+      "description": "From one domain to a market map: how big its traffic is, which sites compete for the same audience, where that audience lives, who the search-side rivals are (often a different list — say so), and how the top competitors measure on the same yardstick. Sets the call order, the budget and the data-vintage rules; the judgement stays with the reader. Use when asked to analyze a competitor or map a market starting from a domain. 从域名分析竞争对手的网站流量、受众地域、相似网站和竞争格局。",
+      "uri": "skill://aisa-competitor-teardown/SKILL.md",
+      "path": "skills/aisa-competitor-teardown/SKILL.md",
+      "aliases": [
+        "competitor_teardown",
+        "competitor-teardown",
+        "竞品分析",
+        "竞争对手",
+        "市场分析",
+        "流量对比",
+        "competitor traffic",
+        "market map"
+      ],
+      "tags": [
+        "seo",
+        "competitors",
+        "traffic",
+        "gtm"
+      ],
+      "providers": [
+        "similarweb",
+        "semrush",
+        "dataforseo"
+      ],
+      "examples": [
+        "帮我拆解这个竞品的网站表现，流量来自哪些国家，还有哪些竞争网站？"
+      ],
+      "uses": [
+        "get_similarweb_website_traffic_snapshot",
+        "get_similarweb_similar_sites",
+        "get_similarweb_website_top_geographies",
+        "get_semrush_organic_competitors",
+        "post_dataforseo_labs_google_bulk_traffic_estimation_live",
+        "get_similarweb_technologies"
+      ],
+      "when_to_use": "Use when asked to analyze a competitor or map a market starting from a domain. 从域名分析竞争对手的网站流量、受众地域、相似网站和竞争格局。",
+      "arguments": [
+        {
+          "name": "domain",
+          "description": "The domain to tear down, as a bare host such as `example.com`.",
+          "required": true
+        },
+        {
+          "name": "country",
+          "description": "Country focus. Similarweb product surfaces accept `us` or `ww` (worldwide); leave `ww` unless the market is US-only.\n",
+          "required": false,
+          "default": "ww"
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-creator-profile-snapshot",
+      "description": "Audience, activity and recent content of one person or brand account on X and Instagram, from the compact digests first and the raw feeds only when needed. Sets the order and the page budget; it does not judge brand fit. Use when asked for an audience and recent-content snapshot of a creator or public account. 分析创作者或公开账号的个人资料、受众和最近发布的内容。",
+      "uri": "skill://aisa-creator-profile-snapshot/SKILL.md",
+      "path": "skills/aisa-creator-profile-snapshot/SKILL.md",
+      "aliases": [
+        "creator_profile_snapshot",
+        "creator-profile-snapshot",
+        "创作者画像",
+        "网红分析",
+        "账号画像",
+        "influencer profile"
+      ],
+      "tags": [
+        "social",
+        "creator",
+        "instagram",
+        "twitter"
+      ],
+      "providers": [
+        "twitter",
+        "instagram",
+        "tavily"
+      ],
+      "examples": [
+        "这个博主面向什么人群，近期主要发布哪些内容？"
+      ],
+      "uses": [
+        "get_twitter_user_info",
+        "get_twitter_user_last_tweets",
+        "instagram_profile_digest",
+        "instagram_posts_digest",
+        "get_instagram_user_posts",
+        "post_tavily_search"
+      ],
+      "when_to_use": "Use when asked for an audience and recent-content snapshot of a creator or public account. 分析创作者或公开账号的个人资料、受众和最近发布的内容。",
+      "arguments": [
+        {
+          "name": "handle",
+          "description": "The account handle without @. Used on both platforms; if the two handles differ, give the X one here and the Instagram one in `instagram_handle`.\n",
+          "required": true
+        },
+        {
+          "name": "instagram_handle",
+          "description": "Instagram handle if it differs from `handle`. Leave empty otherwise.",
+          "required": false,
+          "default": ""
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-crypto-market-health",
+      "description": "Market-wide read: the largest coins and their moves, what is trending, which sectors are up, and how Bitcoin traded over the last week. Sets the order and the size of each call; it does not predict. Use when asked for a market-wide crypto overview covering large coins, sectors, attention and Bitcoin history. 查看加密市场整体行情、热门币种、板块表现和比特币历史走势。",
+      "uri": "skill://aisa-crypto-market-health/SKILL.md",
+      "path": "skills/aisa-crypto-market-health/SKILL.md",
+      "aliases": [
+        "crypto_market_health",
+        "crypto-market-health",
+        "加密市场概况",
+        "币市行情",
+        "加密货币大盘",
+        "crypto overview"
+      ],
+      "tags": [
+        "finance",
+        "crypto",
+        "market"
+      ],
+      "providers": [
+        "coingecko"
+      ],
+      "examples": [
+        "今天币圈大盘怎么样，哪些板块和代币比较热门？"
+      ],
+      "uses": [
+        "get_coingecko_coins_markets",
+        "get_coingecko_search_trending",
+        "get_coingecko_coins_categories",
+        "get_coingecko_coins_id_market_chart"
+      ],
+      "when_to_use": "Use when asked for a market-wide crypto overview covering large coins, sectors, attention and Bitcoin history. 查看加密市场整体行情、热门币种、板块表现和比特币历史走势。",
+      "arguments": [
+        {
+          "name": "vs_currency",
+          "description": "Quote currency for every number, e.g. `usd`.",
+          "required": false,
+          "default": "usd"
+        },
+        {
+          "name": "days",
+          "description": "Lookback for the Bitcoin chart in days, e.g. `7`.",
+          "required": false,
+          "default": "7"
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-enrich-lead-list",
+      "description": "Turn a list of emails or names into people with titles, companies and verified contact details, plus the company facts behind them — using the bulk endpoints so one call does ten. Sets the batch size and the credit rules; it does not write anything back to Apollo. Use when given a list of leads to enrich with contact and company details in bulk. 批量补全销售线索的联系人、工作邮箱和公司资料。",
+      "uri": "skill://aisa-enrich-lead-list/SKILL.md",
+      "path": "skills/aisa-enrich-lead-list/SKILL.md",
+      "aliases": [
+        "enrich_lead_list",
+        "enrich-lead-list",
+        "线索补全",
+        "批量联系人",
+        "客户资料补全",
+        "lead enrichment"
+      ],
+      "tags": [
+        "sales",
+        "apollo",
+        "leads",
+        "bulk"
+      ],
+      "providers": [
+        "apollo"
+      ],
+      "examples": [
+        "把这批客户名单补齐职位、邮箱和企业信息。"
+      ],
+      "uses": [
+        "post_apollo_people_bulk_match",
+        "post_apollo_organizations_bulk_enrich"
+      ],
+      "when_to_use": "Use when given a list of leads to enrich with contact and company details in bulk. 批量补全销售线索的联系人、工作邮箱和公司资料。",
+      "arguments": [
+        {
+          "name": "leads",
+          "description": "The leads, one per line: an email, or `first last @ company`. Up to a few hundred; they are sent in batches of ten.\n",
+          "required": true
+        },
+        {
+          "name": "reveal_phones",
+          "description": "`yes` to also ask for phone numbers. Leave `no`: the phone option is a top-level flag the gateway currently rejects (see step 1), so `yes` only makes the workflow say phones are unavailable.\n",
+          "required": false,
+          "default": "no"
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-finance",
+      "description": "Market and company data: prices, fundamentals, filings, insider trades, crypto markets, prediction markets, and a scene agent that aligns what X is saying about tickers with how they are trading.",
+      "uri": "skill://aisa-finance/SKILL.md",
+      "path": "skills/aisa-finance/SKILL.md",
+      "aliases": [
+        "finance",
+        "AIsa Finance"
+      ],
+      "tags": [
+        "finance"
+      ],
+      "providers": [
+        "marketpulse",
+        "crypto-market-data",
+        "prediction-market-data",
+        "stock-pulse"
+      ],
+      "examples": [],
+      "uses": [
+        "edinet_filings_digest",
+        "get_coingecko_coins_categories",
+        "get_coingecko_coins_categories_list",
+        "get_coingecko_coins_id",
+        "get_coingecko_coins_id_history",
+        "get_coingecko_coins_id_market_chart",
+        "get_coingecko_coins_id_market_chart_range",
+        "get_coingecko_coins_id_ohlc",
+        "get_coingecko_coins_id_tickers",
+        "get_coingecko_coins_list",
+        "get_coingecko_coins_markets",
+        "get_coingecko_exchanges",
+        "get_coingecko_exchanges_id",
+        "get_coingecko_exchanges_id_tickers",
+        "get_coingecko_exchanges_list",
+        "get_coingecko_search_trending",
+        "get_coingecko_simple_price",
+        "get_coingecko_simple_supported_vs_currencies",
+        "get_coingecko_simple_token_price_id",
+        "get_coingecko_token_data",
+        "get_coingecko_token_market_chart",
+        "get_coingecko_token_market_chart_range",
+        "get_edinet_documents",
+        "get_financial_analyst_estimates",
+        "get_financial_company_facts",
+        "get_financial_earnings",
+        "get_financial_filings",
+        "get_financial_filings_items",
+        "get_financial_financial_metrics",
+        "get_financial_financial_metrics_snapshot",
+        "get_financial_financials",
+        "get_financial_financials_balance_sheets",
+        "get_financial_financials_cash_flow_statements",
+        "get_financial_financials_income_statements",
+        "get_financial_insider_trades",
+        "get_financial_macro_interest_rates",
+        "get_financial_macro_interest_rates_snapshot",
+        "get_financial_news",
+        "get_financial_prices",
+        "get_financial_prices_snapshot",
+        "get_kalshi_markets",
+        "get_kalshi_trades",
+        "get_polymarket_activity",
+        "get_polymarket_events",
+        "get_polymarket_markets",
+        "get_twitter_tweet_advanced_search",
+        "post_financial_financials_search_line_items",
+        "post_financial_financials_search_screener",
+        "twitter_stock_pulse"
+      ],
+      "kind": "category",
+      "arguments": [
+        {
+          "name": "task",
+          "description": "What you want to find out.",
+          "required": false,
+          "default": ""
+        }
+      ]
+    },
+    {
+      "name": "aisa-find-people-at-company",
+      "description": "From a company domain to a shortlist of named people with verified work emails: enrich the company, search people by title, then match each shortlisted person for contact details. Sets the order and the credit budget; it does not write to Apollo (no contacts, no sequences). Use when asked to find people in specific roles at a company and retrieve their work contact details. 按公司和职位寻找决策人、高管及其工作联系方式。",
+      "uri": "skill://aisa-find-people-at-company/SKILL.md",
+      "path": "skills/aisa-find-people-at-company/SKILL.md",
+      "aliases": [
+        "find_people_at_company",
+        "find-people-at-company",
+        "找联系人",
+        "公司高管",
+        "寻找CTO",
+        "销售线索",
+        "find decision makers"
+      ],
+      "tags": [
+        "sales",
+        "apollo",
+        "people",
+        "gtm"
+      ],
+      "providers": [
+        "apollo"
+      ],
+      "examples": [
+        "找到这家公司的技术负责人和工程团队主管，获取联系邮箱。"
+      ],
+      "uses": [
+        "get_apollo_organizations_enrich",
+        "post_apollo_mixed_people_api_search",
+        "post_apollo_people_bulk_match"
+      ],
+      "when_to_use": "Use when asked to find people in specific roles at a company and retrieve their work contact details. 按公司和职位寻找决策人、高管及其工作联系方式。",
+      "arguments": [
+        {
+          "name": "domain",
+          "description": "The company's website domain, e.g. `example.com`.",
+          "required": true
+        },
+        {
+          "name": "titles",
+          "description": "Comma-separated job titles to look for, e.g. `CTO, VP Engineering, Head of Growth`. Similar titles are included automatically.\n",
+          "required": true
+        },
+        {
+          "name": "max_people",
+          "description": "How many people to match for emails at most. Each match spends Apollo credits.",
+          "required": false,
+          "default": "5"
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-gtm",
+      "description": "Go-to-market data in one set: people and company search (Apollo), creator discovery, X/Twitter, Instagram, Reddit, Pinterest and YouTube, Similarweb market intelligence, plus the Semrush, Ahrefs, Oxylabs and DataForSEO YouTube operations. Mirrors the Hive GTM Growth subscription: every operation here is subscription-only on the gateway, so a key without the plan gets 402 on all of them.",
+      "uri": "skill://aisa-gtm/SKILL.md",
+      "path": "skills/aisa-gtm/SKILL.md",
+      "aliases": [
+        "gtm",
+        "AIsa GTM"
+      ],
+      "tags": [
+        "gtm"
+      ],
+      "providers": [
+        "apollo",
+        "creator-discovery",
+        "similarweb",
+        "twitter-api",
+        "instagram",
+        "reddit",
+        "pinterest",
+        "youtube-search"
+      ],
+      "examples": [],
+      "uses": [
+        "get_ahrefs_domain_rating",
+        "get_ahrefs_site_metrics",
+        "get_apollo_account_stages",
+        "get_apollo_accounts_id",
+        "get_apollo_contact_stages",
+        "get_apollo_contacts_contact_id",
+        "get_apollo_email_accounts",
+        "get_apollo_emailer_messages_id_activities",
+        "get_apollo_emailer_messages_search",
+        "get_apollo_fields",
+        "get_apollo_labels",
+        "get_apollo_notes",
+        "get_apollo_opportunities_opportunity_id",
+        "get_apollo_opportunities_search",
+        "get_apollo_opportunity_stages",
+        "get_apollo_organizations_enrich",
+        "get_apollo_organizations_id",
+        "get_apollo_organizations_organization_id_job_postings",
+        "get_apollo_phone_calls_search",
+        "get_apollo_typed_custom_fields",
+        "get_apollo_users_search",
+        "get_dataforseo_serp_youtube_languages",
+        "get_dataforseo_serp_youtube_locations",
+        "get_instagram_basic_profile",
+        "get_instagram_media_transcript",
+        "get_instagram_post",
+        "get_instagram_post_comments",
+        "get_instagram_profile",
+        "get_instagram_reels_search",
+        "get_instagram_reels_trending",
+        "get_instagram_search_hashtag",
+        "get_instagram_search_profiles",
+        "get_instagram_song_reels",
+        "get_instagram_user_embed",
+        "get_instagram_user_highlight_detail",
+        "get_instagram_user_highlights",
+        "get_instagram_user_posts",
+        "get_instagram_user_reels",
+        "get_pinterest_board",
+        "get_pinterest_pin",
+        "get_pinterest_search",
+        "get_pinterest_user_boards",
+        "get_reddit_post_comments",
+        "get_reddit_search",
+        "get_reddit_subreddit",
+        "get_reddit_subreddit_details",
+        "get_reddit_subreddit_search",
+        "get_semrush_backlink_anchors",
+        "get_semrush_backlink_competitors",
+        "get_semrush_backlinks",
+        "get_semrush_backlinks_overview",
+        "get_semrush_broad_match_keywords",
+        "get_semrush_domain_organic_keywords",
+        "get_semrush_domain_overview",
+        "get_semrush_domain_paid_keywords",
+        "get_semrush_domain_rank_history",
+        "get_semrush_domain_vs_domain",
+        "get_semrush_indexed_pages",
+        "get_semrush_keyword_difficulty",
+        "get_semrush_keyword_overview",
+        "get_semrush_organic_competitors",
+        "get_semrush_organic_results",
+        "get_semrush_paid_results",
+        "get_semrush_question_keywords",
+        "get_semrush_referring_domains",
+        "get_semrush_url_organic_keywords",
+        "get_similarweb_ad_networks",
+        "get_similarweb_audience_interest",
+        "get_similarweb_audience_overlap",
+        "get_similarweb_deduplicated_audience",
+        "get_similarweb_demographics",
+        "get_similarweb_keyword_competitors",
+        "get_similarweb_keywords",
+        "get_similarweb_landing_pages",
+        "get_similarweb_marketing_channel_sources_legacy",
+        "get_similarweb_popular_pages",
+        "get_similarweb_ppc_spend",
+        "get_similarweb_ranking",
+        "get_similarweb_referrals",
+        "get_similarweb_serp_players_aggregated",
+        "get_similarweb_serp_players_timeseries",
+        "get_similarweb_similar_sites",
+        "get_similarweb_subdomains",
+        "get_similarweb_technologies",
+        "get_similarweb_top_sites_ranking",
+        "get_similarweb_traffic_engagement",
+        "get_similarweb_website_top_geographies",
+        "get_similarweb_website_traffic_snapshot",
+        "get_similarweb_website_traffic_trend",
+        "get_twitter_article",
+        "get_twitter_community_info",
+        "get_twitter_community_members",
+        "get_twitter_community_moderators",
+        "get_twitter_community_tweets",
+        "get_twitter_community_tweets_all",
+        "get_twitter_list_followers",
+        "get_twitter_list_members",
+        "get_twitter_list_tweets_timeline",
+        "get_twitter_spaces_detail",
+        "get_twitter_trends",
+        "get_twitter_tweet_advanced_search",
+        "get_twitter_tweet_quotes",
+        "get_twitter_tweet_replies",
+        "get_twitter_tweet_replies_v2",
+        "get_twitter_tweet_retweeters",
+        "get_twitter_tweet_thread_context",
+        "get_twitter_tweets",
+        "get_twitter_user_about",
+        "get_twitter_user_batch_info_by_ids",
+        "get_twitter_user_check_follow_relationship",
+        "get_twitter_user_followers",
+        "get_twitter_user_followings",
+        "get_twitter_user_info",
+        "get_twitter_user_last_tweets",
+        "get_twitter_user_mentions",
+        "get_twitter_user_search",
+        "get_twitter_user_tweet_timeline",
+        "get_twitter_user_verified_followers",
+        "get_youtube_search",
+        "instagram_posts_digest",
+        "instagram_profile_digest",
+        "patch_apollo_accounts_account_id",
+        "patch_apollo_contacts_contact_id",
+        "patch_apollo_opportunities_opportunity_id",
+        "post_apollo_accounts",
+        "post_apollo_accounts_bulk_create",
+        "post_apollo_accounts_bulk_update",
+        "post_apollo_accounts_search",
+        "post_apollo_accounts_update_owners",
+        "post_apollo_contacts",
+        "post_apollo_contacts_bulk_create",
+        "post_apollo_contacts_bulk_update",
+        "post_apollo_contacts_search",
+        "post_apollo_contacts_update_owners",
+        "post_apollo_contacts_update_stages",
+        "post_apollo_emailer_campaigns_add_contact_ids",
+        "post_apollo_emailer_campaigns_remove_or_stop_contact_ids",
+        "post_apollo_emailer_campaigns_search",
+        "post_apollo_emailer_campaigns_sequence_id_abort",
+        "post_apollo_emailer_campaigns_sequence_id_approve",
+        "post_apollo_emailer_campaigns_sequence_id_archive",
+        "post_apollo_fields",
+        "post_apollo_mixed_companies_search",
+        "post_apollo_mixed_people_api_search",
+        "post_apollo_news_articles_search",
+        "post_apollo_opportunities",
+        "post_apollo_organizations_bulk_enrich",
+        "post_apollo_people_bulk_match",
+        "post_apollo_people_match",
+        "post_apollo_phone_calls",
+        "post_apollo_reports_sync_report",
+        "post_apollo_tasks",
+        "post_apollo_tasks_bulk_create",
+        "post_apollo_tasks_search",
+        "post_apollo_usage_stats_api_usage_stats",
+        "post_dataforseo_serp_youtube_organic_live",
+        "post_dataforseo_serp_youtube_video_comments_live",
+        "post_dataforseo_serp_youtube_video_info_live",
+        "post_dataforseo_serp_youtube_video_subtitles_live",
+        "post_oxylabs_ai_search",
+        "post_waveinflu_email_lookup",
+        "post_waveinflu_similar_creators",
+        "put_apollo_phone_calls_id"
+      ],
+      "kind": "category",
+      "arguments": [
+        {
+          "name": "task",
+          "description": "What you want to find out.",
+          "required": false,
+          "default": ""
+        }
+      ]
+    },
+    {
+      "name": "aisa-look-up-token-market",
+      "description": "Resolve an ambiguous ticker, name or contract address into a single CoinGecko asset, then pull its current numbers and — only if asked — history and venue liquidity. Handles the two traps that make CoinGecko answers wrong rather than merely incomplete: ticker symbols are not unique, and half the endpoints want a CoinGecko id while the other half want a chain plus a contract address. Use when asked to identify a coin or token and retrieve its price, market history or venue liquidity. 通过币名或合约地址识别代币，查询价格、历史走势和交易所流动性。",
+      "uri": "skill://aisa-look-up-token-market/SKILL.md",
+      "path": "skills/aisa-look-up-token-market/SKILL.md",
+      "aliases": [
+        "look_up_token_market",
+        "look-up-token-market",
+        "代币行情",
+        "币价查询",
+        "加密货币价格",
+        "token price",
+        "coin lookup"
+      ],
+      "tags": [
+        "finance",
+        "crypto",
+        "token"
+      ],
+      "providers": [
+        "coingecko"
+      ],
+      "examples": [
+        "查一下这个合约对应的币价、交易量和过去一个月走势。"
+      ],
+      "uses": [
+        "get_coingecko_coins_list",
+        "get_coingecko_token_data",
+        "get_coingecko_simple_token_price_id",
+        "get_coingecko_simple_price",
+        "get_coingecko_coins_markets",
+        "get_coingecko_coins_id",
+        "get_coingecko_coins_id_market_chart",
+        "get_coingecko_coins_id_market_chart_range",
+        "get_coingecko_coins_id_ohlc",
+        "get_coingecko_coins_id_tickers",
+        "get_coingecko_search_trending"
+      ],
+      "when_to_use": "Use when asked to identify a coin or token and retrieve its price, market history or venue liquidity. 通过币名或合约地址识别代币，查询价格、历史走势和交易所流动性。",
+      "arguments": [
+        {
+          "name": "asset",
+          "description": "What the user named: a ticker (BTC), a full name (Bitcoin), a CoinGecko id (bitcoin), or an on-chain contract address (0x...). Do not assume which one it is — step 1 decides.\n",
+          "required": true
+        },
+        {
+          "name": "lookback_days",
+          "description": "How far back to pull history, in days. Use 0 when the user only asked about the present, and skip the history step entirely.\n",
+          "required": false,
+          "default": "0"
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-mail",
+      "description": "Inboxes, threads, drafts and sending for agents through AgentMail.",
+      "uri": "skill://aisa-mail/SKILL.md",
+      "path": "skills/aisa-mail/SKILL.md",
+      "aliases": [
+        "mail",
+        "AIsa Agent Mail"
+      ],
+      "tags": [
+        "mail"
+      ],
+      "providers": [
+        "agentmail"
+      ],
+      "examples": [],
+      "uses": [
+        "delete_agentmail_inbox",
+        "delete_agentmail_inbox_draft",
+        "delete_agentmail_inbox_list_entry",
+        "delete_agentmail_inbox_message",
+        "delete_agentmail_inbox_thread",
+        "delete_agentmail_list_entry",
+        "delete_agentmail_thread",
+        "get_agentmail_draft",
+        "get_agentmail_draft_attachment",
+        "get_agentmail_drafts",
+        "get_agentmail_inbox",
+        "get_agentmail_inbox_draft",
+        "get_agentmail_inbox_draft_attachment",
+        "get_agentmail_inbox_drafts",
+        "get_agentmail_inbox_events",
+        "get_agentmail_inbox_list_entries",
+        "get_agentmail_inbox_list_entry",
+        "get_agentmail_inbox_message",
+        "get_agentmail_inbox_message_attachment",
+        "get_agentmail_inbox_message_raw",
+        "get_agentmail_inbox_messages",
+        "get_agentmail_inbox_messages_search",
+        "get_agentmail_inbox_metrics",
+        "get_agentmail_inbox_thread",
+        "get_agentmail_inbox_thread_attachment",
+        "get_agentmail_inbox_threads",
+        "get_agentmail_inbox_threads_search",
+        "get_agentmail_inboxes",
+        "get_agentmail_list_entries",
+        "get_agentmail_list_entry",
+        "get_agentmail_metrics",
+        "get_agentmail_thread",
+        "get_agentmail_thread_attachment",
+        "get_agentmail_threads",
+        "get_agentmail_threads_search",
+        "patch_agentmail_inbox",
+        "patch_agentmail_inbox_draft",
+        "patch_agentmail_inbox_message",
+        "patch_agentmail_inbox_thread",
+        "patch_agentmail_thread",
+        "post_agentmail_inbox",
+        "post_agentmail_inbox_draft",
+        "post_agentmail_inbox_draft_send",
+        "post_agentmail_inbox_list_entry",
+        "post_agentmail_inbox_message_forward",
+        "post_agentmail_inbox_message_reply",
+        "post_agentmail_inbox_message_reply_all",
+        "post_agentmail_inbox_message_send",
+        "post_agentmail_list_entry"
+      ],
+      "kind": "category",
+      "arguments": [
+        {
+          "name": "task",
+          "description": "What you want to find out.",
+          "required": false,
+          "default": ""
+        }
+      ]
+    },
+    {
+      "name": "aisa-research-brief",
+      "description": "A sourced answer to one question: two complementary searches, the full text of the few pages that matter, and a short brief with citations. Sets the order, the page budget and when a synthesis model is worth its price; it does not replace reading the sources. Use when asked to research one question on the open web and produce a short sourced brief. 围绕一个问题进行公开网页研究，交叉核实资料，撰写带引用的简报。",
+      "uri": "skill://aisa-research-brief/SKILL.md",
+      "path": "skills/aisa-research-brief/SKILL.md",
+      "aliases": [
+        "research_brief",
+        "research-brief",
+        "网络研究",
+        "资料搜索",
+        "研究简报",
+        "网页调研",
+        "web research"
+      ],
+      "tags": [
+        "search",
+        "research",
+        "sources"
+      ],
+      "providers": [
+        "tavily",
+        "exa",
+        "perplexity"
+      ],
+      "examples": [
+        "查找可靠网页资料回答这个问题，整理主要结论并附上来源。"
+      ],
+      "uses": [
+        "post_tavily_search",
+        "post_exa_search",
+        "post_tavily_extract",
+        "post_perplexity_sonar"
+      ],
+      "when_to_use": "Use when asked to research one question on the open web and produce a short sourced brief. 围绕一个问题进行公开网页研究，交叉核实资料，撰写带引用的简报。",
+      "arguments": [
+        {
+          "name": "question",
+          "description": "The question, as you would ask a careful analyst.",
+          "required": true
+        },
+        {
+          "name": "recency",
+          "description": "How recent the sources must be — `week`, `month`, `year`, or empty for no limit. Passed to the search tools as the nearest option their schema offers.\n",
+          "required": false,
+          "default": ""
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-sales",
+      "description": "People and company search, enrichment, sequences and CRM objects through Apollo, creator discovery, and Similarweb market intelligence: any domain's traffic, audience, rankings and search rivals.",
+      "uri": "skill://aisa-sales/SKILL.md",
+      "path": "skills/aisa-sales/SKILL.md",
+      "aliases": [
+        "sales",
+        "AIsa Sales"
+      ],
+      "tags": [
+        "sales"
+      ],
+      "providers": [
+        "apollo",
+        "creator-discovery",
+        "similarweb"
+      ],
+      "examples": [],
+      "uses": [
+        "get_apollo_account_stages",
+        "get_apollo_accounts_id",
+        "get_apollo_contact_stages",
+        "get_apollo_contacts_contact_id",
+        "get_apollo_email_accounts",
+        "get_apollo_emailer_messages_id_activities",
+        "get_apollo_emailer_messages_search",
+        "get_apollo_fields",
+        "get_apollo_labels",
+        "get_apollo_notes",
+        "get_apollo_opportunities_opportunity_id",
+        "get_apollo_opportunities_search",
+        "get_apollo_opportunity_stages",
+        "get_apollo_organizations_enrich",
+        "get_apollo_organizations_id",
+        "get_apollo_organizations_organization_id_job_postings",
+        "get_apollo_phone_calls_search",
+        "get_apollo_typed_custom_fields",
+        "get_apollo_users_search",
+        "get_similarweb_ad_networks",
+        "get_similarweb_audience_interest",
+        "get_similarweb_audience_overlap",
+        "get_similarweb_deduplicated_audience",
+        "get_similarweb_demographics",
+        "get_similarweb_keyword_competitors",
+        "get_similarweb_keywords",
+        "get_similarweb_landing_pages",
+        "get_similarweb_marketing_channel_sources_legacy",
+        "get_similarweb_popular_pages",
+        "get_similarweb_ppc_spend",
+        "get_similarweb_ranking",
+        "get_similarweb_referrals",
+        "get_similarweb_serp_players_aggregated",
+        "get_similarweb_serp_players_timeseries",
+        "get_similarweb_similar_sites",
+        "get_similarweb_subdomains",
+        "get_similarweb_technologies",
+        "get_similarweb_top_sites_ranking",
+        "get_similarweb_traffic_engagement",
+        "get_similarweb_website_top_geographies",
+        "get_similarweb_website_traffic_snapshot",
+        "get_similarweb_website_traffic_trend",
+        "patch_apollo_accounts_account_id",
+        "patch_apollo_contacts_contact_id",
+        "patch_apollo_opportunities_opportunity_id",
+        "post_apollo_accounts",
+        "post_apollo_accounts_bulk_create",
+        "post_apollo_accounts_bulk_update",
+        "post_apollo_accounts_search",
+        "post_apollo_accounts_update_owners",
+        "post_apollo_contacts",
+        "post_apollo_contacts_bulk_create",
+        "post_apollo_contacts_bulk_update",
+        "post_apollo_contacts_search",
+        "post_apollo_contacts_update_owners",
+        "post_apollo_contacts_update_stages",
+        "post_apollo_emailer_campaigns_add_contact_ids",
+        "post_apollo_emailer_campaigns_remove_or_stop_contact_ids",
+        "post_apollo_emailer_campaigns_search",
+        "post_apollo_emailer_campaigns_sequence_id_abort",
+        "post_apollo_emailer_campaigns_sequence_id_approve",
+        "post_apollo_emailer_campaigns_sequence_id_archive",
+        "post_apollo_fields",
+        "post_apollo_mixed_companies_search",
+        "post_apollo_mixed_people_api_search",
+        "post_apollo_news_articles_search",
+        "post_apollo_opportunities",
+        "post_apollo_organizations_bulk_enrich",
+        "post_apollo_people_bulk_match",
+        "post_apollo_people_match",
+        "post_apollo_phone_calls",
+        "post_apollo_reports_sync_report",
+        "post_apollo_tasks",
+        "post_apollo_tasks_bulk_create",
+        "post_apollo_tasks_search",
+        "post_apollo_usage_stats_api_usage_stats",
+        "post_waveinflu_email_lookup",
+        "post_waveinflu_similar_creators",
+        "put_apollo_phone_calls_id"
+      ],
+      "kind": "category",
+      "arguments": [
+        {
+          "name": "task",
+          "description": "What you want to find out.",
+          "required": false,
+          "default": ""
+        }
+      ]
+    },
+    {
+      "name": "aisa-search",
+      "description": "Web search, page extraction, crawling and grounded research through Tavily, Firecrawl, Exa, Perplexity, Oxylabs, txyz, and Anthropic/OpenAI grounded search.",
+      "uri": "skill://aisa-search/SKILL.md",
+      "path": "skills/aisa-search/SKILL.md",
+      "aliases": [
+        "search",
+        "AIsa Web Search & Research"
+      ],
+      "tags": [
+        "search"
+      ],
+      "providers": [
+        "web-search"
+      ],
+      "examples": [],
+      "uses": [
+        "get_exa_agent_run",
+        "get_firecrawl_batch_scrape_job",
+        "get_firecrawl_crawl_job",
+        "post_anthropic_websearch_search",
+        "post_exa_agent_runs",
+        "post_exa_answer",
+        "post_exa_contents",
+        "post_exa_search",
+        "post_firecrawl_batch_scrape",
+        "post_firecrawl_crawl",
+        "post_firecrawl_map",
+        "post_firecrawl_scrape",
+        "post_firecrawl_search",
+        "post_openai_websearch_search",
+        "post_oxylabs_ai_search",
+        "post_perplexity_sonar",
+        "post_perplexity_sonar_deep_research",
+        "post_perplexity_sonar_pro",
+        "post_perplexity_sonar_reasoning_pro",
+        "post_scholar_search_explain",
+        "post_scholar_search_mixed",
+        "post_scholar_search_scholar",
+        "post_scholar_search_web",
+        "post_tavily_crawl",
+        "post_tavily_extract",
+        "post_tavily_map",
+        "post_tavily_search"
+      ],
+      "kind": "category",
+      "arguments": [
+        {
+          "name": "task",
+          "description": "What you want to find out.",
+          "required": false,
+          "default": ""
+        }
+      ]
+    },
+    {
+      "name": "aisa-search-youtube-deliberately",
+      "description": "Run a YouTube search where the locale and the filter token are chosen on purpose rather than left to chance, and report the result set in a way the reader can audit. Covers the two parameters that quietly change what comes back. Use when asked to search YouTube with deliberate locale or filter choices and report the returned results. 按语言、地区和筛选条件搜索 YouTube 视频，整理搜索结果。",
+      "uri": "skill://aisa-search-youtube-deliberately/SKILL.md",
+      "path": "skills/aisa-search-youtube-deliberately/SKILL.md",
+      "aliases": [
+        "search_youtube_deliberately",
+        "search-youtube-deliberately",
+        "YouTube搜索",
+        "视频搜索",
+        "油管搜索",
+        "youtube search"
+      ],
+      "tags": [
+        "search",
+        "youtube",
+        "video"
+      ],
+      "providers": [
+        "youtube"
+      ],
+      "examples": [
+        "找最近发布的中文教程视频，按相关度排列。"
+      ],
+      "uses": [
+        "get_youtube_search"
+      ],
+      "when_to_use": "Use when asked to search YouTube with deliberate locale or filter choices and report the returned results. 按语言、地区和筛选条件搜索 YouTube 视频，整理搜索结果。",
+      "arguments": [
+        {
+          "name": "query",
+          "description": "What to search for. YouTube's own search syntax, not a natural-language question — it is matched, not understood.\n",
+          "required": true
+        },
+        {
+          "name": "audience",
+          "description": "Whose YouTube you want to see, e.g. \"us\", \"jp\", \"global\". Decides the country and interface language. Leave empty to search unlocalised and say so in the output.\n",
+          "required": false,
+          "default": ""
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-seo",
+      "description": "Search and AI-answer visibility: rankings, keywords, backlinks, site health, app and marketplace listings, local business data, and how a brand shows up in ChatGPT, Claude, Gemini and Perplexity answers. DataForSEO, Semrush and Ahrefs together.",
+      "uri": "skill://aisa-seo/SKILL.md",
+      "path": "skills/aisa-seo/SKILL.md",
+      "aliases": [
+        "seo",
+        "AIsa SEO & AI Visibility"
+      ],
+      "tags": [
+        "seo"
+      ],
+      "providers": [
+        "seo-ai-visibility",
+        "seo-apps",
+        "seo-backlinks",
+        "seo-business",
+        "seo-content",
+        "seo-domains",
+        "seo-keywords",
+        "seo-labs",
+        "seo-merchant",
+        "seo-onpage",
+        "seo-serp",
+        "seo-serp-other-engines"
+      ],
+      "examples": [],
+      "uses": [
+        "get_ahrefs_domain_rating",
+        "get_ahrefs_site_metrics",
+        "get_dataforseo_ai_chat_gpt_llm_responses_models",
+        "get_dataforseo_ai_claude_llm_responses_models",
+        "get_dataforseo_ai_gemini_llm_responses_models",
+        "get_dataforseo_ai_gemini_llm_scraper_languages",
+        "get_dataforseo_ai_gemini_llm_scraper_locations",
+        "get_dataforseo_ai_keyword_locales",
+        "get_dataforseo_ai_llm_mentions_available_filters",
+        "get_dataforseo_ai_llm_mentions_locales",
+        "get_dataforseo_ai_perplexity_llm_responses_models",
+        "get_dataforseo_app_apple_app_info_fetch",
+        "get_dataforseo_app_apple_app_list_fetch",
+        "get_dataforseo_app_apple_app_listings_categories",
+        "get_dataforseo_app_apple_app_reviews_fetch",
+        "get_dataforseo_app_apple_app_searches_fetch",
+        "get_dataforseo_app_apple_categories",
+        "get_dataforseo_app_apple_languages",
+        "get_dataforseo_app_apple_locations",
+        "get_dataforseo_app_google_app_info_fetch",
+        "get_dataforseo_app_google_app_info_fetch_html",
+        "get_dataforseo_app_google_app_list_fetch",
+        "get_dataforseo_app_google_app_list_fetch_html",
+        "get_dataforseo_app_google_app_listings_categories",
+        "get_dataforseo_app_google_app_reviews_fetch",
+        "get_dataforseo_app_google_app_searches_fetch",
+        "get_dataforseo_app_google_app_searches_fetch_html",
+        "get_dataforseo_app_google_categories",
+        "get_dataforseo_app_google_languages",
+        "get_dataforseo_app_google_locations",
+        "get_dataforseo_backlinks_index",
+        "get_dataforseo_business_google_extended_reviews_fetch",
+        "get_dataforseo_business_google_gmb_updates_fetch",
+        "get_dataforseo_business_google_reviews_fetch",
+        "get_dataforseo_business_tripadvisor_reviews_fetch",
+        "get_dataforseo_business_tripadvisor_search_fetch",
+        "get_dataforseo_business_trustpilot_reviews_fetch",
+        "get_dataforseo_business_trustpilot_search_fetch",
+        "get_dataforseo_content_available_filters",
+        "get_dataforseo_content_categories",
+        "get_dataforseo_content_languages",
+        "get_dataforseo_content_locations",
+        "get_dataforseo_domains_tech_available_filters",
+        "get_dataforseo_domains_tech_languages",
+        "get_dataforseo_domains_tech_list",
+        "get_dataforseo_domains_tech_locations",
+        "get_dataforseo_domains_whois_available_filters",
+        "get_dataforseo_keywords_bing_audience_industries",
+        "get_dataforseo_keywords_bing_audience_job_functions",
+        "get_dataforseo_keywords_bing_kw_for_url_languages",
+        "get_dataforseo_keywords_bing_kw_performance_locales",
+        "get_dataforseo_keywords_bing_languages",
+        "get_dataforseo_keywords_bing_locations",
+        "get_dataforseo_keywords_bing_volume_history_locales",
+        "get_dataforseo_keywords_clickstream_locales",
+        "get_dataforseo_keywords_gads_ad_traffic_fetch",
+        "get_dataforseo_keywords_gads_status",
+        "get_dataforseo_keywords_google_trends_categories",
+        "get_dataforseo_keywords_trends_locations",
+        "get_dataforseo_labs_available_filters",
+        "get_dataforseo_labs_google_available_history",
+        "get_dataforseo_labs_google_categories_for_kw_languages",
+        "get_dataforseo_labs_status",
+        "get_dataforseo_merchant_amazon_asin_fetch",
+        "get_dataforseo_merchant_amazon_asin_fetch_html",
+        "get_dataforseo_merchant_amazon_languages",
+        "get_dataforseo_merchant_amazon_locations",
+        "get_dataforseo_merchant_amazon_products_fetch",
+        "get_dataforseo_merchant_amazon_products_fetch_html",
+        "get_dataforseo_merchant_amazon_sellers_fetch",
+        "get_dataforseo_merchant_amazon_sellers_fetch_html",
+        "get_dataforseo_merchant_google_languages",
+        "get_dataforseo_merchant_google_locations",
+        "get_dataforseo_merchant_google_product_info_fetch",
+        "get_dataforseo_merchant_google_products_fetch",
+        "get_dataforseo_merchant_google_products_fetch_html",
+        "get_dataforseo_merchant_google_reviews_fetch",
+        "get_dataforseo_merchant_google_sellers_fetch",
+        "get_dataforseo_on_page_available_filters",
+        "get_dataforseo_on_page_lighthouse_audits",
+        "get_dataforseo_on_page_lighthouse_languages",
+        "get_dataforseo_on_page_lighthouse_versions",
+        "get_dataforseo_on_page_summary",
+        "get_dataforseo_serp_baidu_languages",
+        "get_dataforseo_serp_baidu_locations",
+        "get_dataforseo_serp_baidu_organic_fetch",
+        "get_dataforseo_serp_baidu_organic_fetch_html",
+        "get_dataforseo_serp_baidu_organic_fetch_regular",
+        "get_dataforseo_serp_bing_languages",
+        "get_dataforseo_serp_bing_locations",
+        "get_dataforseo_serp_gads_advertisers_locations",
+        "get_dataforseo_serp_gads_search_locations",
+        "get_dataforseo_serp_google_ai_mode_languages",
+        "get_dataforseo_serp_google_events_locations",
+        "get_dataforseo_serp_google_jobs_fetch",
+        "get_dataforseo_serp_google_jobs_fetch_html",
+        "get_dataforseo_serp_google_jobs_locations",
+        "get_dataforseo_serp_google_search_by_image_fetch",
+        "get_dataforseo_serp_google_search_by_image_fetch_html",
+        "get_dataforseo_serp_naver_organic_fetch",
+        "get_dataforseo_serp_naver_organic_fetch_html",
+        "get_dataforseo_serp_naver_organic_fetch_regular",
+        "get_dataforseo_serp_seznam_languages",
+        "get_dataforseo_serp_seznam_locations",
+        "get_dataforseo_serp_seznam_organic_fetch",
+        "get_dataforseo_serp_seznam_organic_fetch_html",
+        "get_dataforseo_serp_seznam_organic_fetch_regular",
+        "get_dataforseo_serp_yahoo_languages",
+        "get_dataforseo_serp_yahoo_locations",
+        "get_dataforseo_serp_youtube_languages",
+        "get_dataforseo_serp_youtube_locations",
+        "get_semrush_backlink_anchors",
+        "get_semrush_backlink_competitors",
+        "get_semrush_backlinks",
+        "get_semrush_backlinks_overview",
+        "get_semrush_broad_match_keywords",
+        "get_semrush_domain_organic_keywords",
+        "get_semrush_domain_overview",
+        "get_semrush_domain_paid_keywords",
+        "get_semrush_domain_rank_history",
+        "get_semrush_domain_vs_domain",
+        "get_semrush_indexed_pages",
+        "get_semrush_keyword_difficulty",
+        "get_semrush_keyword_overview",
+        "get_semrush_organic_competitors",
+        "get_semrush_organic_results",
+        "get_semrush_paid_results",
+        "get_semrush_question_keywords",
+        "get_semrush_referring_domains",
+        "get_semrush_url_organic_keywords",
+        "post_dataforseo_ai_chat_gpt_llm_responses_live",
+        "post_dataforseo_ai_chat_gpt_llm_scraper_live",
+        "post_dataforseo_ai_chat_gpt_llm_scraper_live_html",
+        "post_dataforseo_ai_claude_llm_responses_live",
+        "post_dataforseo_ai_gemini_llm_responses_live",
+        "post_dataforseo_ai_gemini_llm_scraper_live",
+        "post_dataforseo_ai_gemini_llm_scraper_live_html",
+        "post_dataforseo_ai_keyword_volume_live",
+        "post_dataforseo_ai_llm_mentions_aggregated_metrics_live",
+        "post_dataforseo_ai_llm_mentions_cross_metrics_live",
+        "post_dataforseo_ai_llm_mentions_search_live",
+        "post_dataforseo_ai_llm_mentions_top_domains_live",
+        "post_dataforseo_ai_llm_mentions_top_pages_live",
+        "post_dataforseo_ai_perplexity_llm_responses_live",
+        "post_dataforseo_app_apple_app_info_submit",
+        "post_dataforseo_app_apple_app_list_submit",
+        "post_dataforseo_app_apple_app_listings_search_live",
+        "post_dataforseo_app_apple_app_reviews_submit",
+        "post_dataforseo_app_apple_app_searches_submit",
+        "post_dataforseo_app_google_app_info_submit",
+        "post_dataforseo_app_google_app_list_submit",
+        "post_dataforseo_app_google_app_listings_search_live",
+        "post_dataforseo_app_google_app_reviews_submit",
+        "post_dataforseo_app_google_app_searches_submit",
+        "post_dataforseo_backlinks_anchors_live",
+        "post_dataforseo_backlinks_backlinks_live",
+        "post_dataforseo_backlinks_bulk_backlinks_live",
+        "post_dataforseo_backlinks_bulk_new_lost_backlinks_live",
+        "post_dataforseo_backlinks_bulk_new_lost_ref_domains_live",
+        "post_dataforseo_backlinks_bulk_pages_summary_live",
+        "post_dataforseo_backlinks_bulk_ranks_live",
+        "post_dataforseo_backlinks_bulk_referring_domains_live",
+        "post_dataforseo_backlinks_bulk_spam_score_live",
+        "post_dataforseo_backlinks_competitors_live",
+        "post_dataforseo_backlinks_domain_intersection_live",
+        "post_dataforseo_backlinks_domain_pages_live",
+        "post_dataforseo_backlinks_domain_pages_summary_live",
+        "post_dataforseo_backlinks_history_live",
+        "post_dataforseo_backlinks_page_intersection_live",
+        "post_dataforseo_backlinks_referring_domains_live",
+        "post_dataforseo_backlinks_referring_networks_live",
+        "post_dataforseo_backlinks_summary_live",
+        "post_dataforseo_backlinks_timeseries_new_lost_live",
+        "post_dataforseo_backlinks_timeseries_summary_live",
+        "post_dataforseo_business_google_extended_reviews_submit",
+        "post_dataforseo_business_google_gmb_info_live",
+        "post_dataforseo_business_google_gmb_updates_submit",
+        "post_dataforseo_business_google_hotel_info_live",
+        "post_dataforseo_business_google_hotel_info_live_html",
+        "post_dataforseo_business_google_hotel_searches_live",
+        "post_dataforseo_business_google_qa_live",
+        "post_dataforseo_business_google_reviews_submit",
+        "post_dataforseo_business_listings_search_live",
+        "post_dataforseo_business_social_media_pinterest_live",
+        "post_dataforseo_business_social_media_reddit_live",
+        "post_dataforseo_business_tripadvisor_reviews_submit",
+        "post_dataforseo_business_tripadvisor_search_submit",
+        "post_dataforseo_business_trustpilot_reviews_submit",
+        "post_dataforseo_business_trustpilot_search_submit",
+        "post_dataforseo_content_category_trends_live",
+        "post_dataforseo_content_phrase_trends_live",
+        "post_dataforseo_content_rating_distribution_live",
+        "post_dataforseo_content_search_live",
+        "post_dataforseo_content_sentiment_analysis_live",
+        "post_dataforseo_content_summary_live",
+        "post_dataforseo_domains_tech_aggregation_live",
+        "post_dataforseo_domains_tech_domains_by_html_terms_live",
+        "post_dataforseo_domains_tech_domains_by_technology_live",
+        "post_dataforseo_domains_tech_for_domain_live",
+        "post_dataforseo_domains_tech_summary_live",
+        "post_dataforseo_domains_tech_technology_stats_live",
+        "post_dataforseo_domains_whois_overview_live",
+        "post_dataforseo_keywords_bing_audience_live",
+        "post_dataforseo_keywords_bing_kw_for_keywords_live",
+        "post_dataforseo_keywords_bing_kw_for_site_live",
+        "post_dataforseo_keywords_bing_kw_for_url_live",
+        "post_dataforseo_keywords_bing_kw_performance_live",
+        "post_dataforseo_keywords_bing_search_volume_live",
+        "post_dataforseo_keywords_clickstream_bulk_volume_live",
+        "post_dataforseo_keywords_clickstream_global_volume_live",
+        "post_dataforseo_keywords_clickstream_search_volume_live",
+        "post_dataforseo_keywords_gads_ad_traffic_submit",
+        "post_dataforseo_keywords_gads_kw_for_keywords_live",
+        "post_dataforseo_keywords_gads_kw_for_site_live",
+        "post_dataforseo_keywords_gads_search_volume_live",
+        "post_dataforseo_keywords_trends_demography_live",
+        "post_dataforseo_keywords_trends_explore_live",
+        "post_dataforseo_keywords_trends_merged_data_live",
+        "post_dataforseo_keywords_trends_subregion_interests_live",
+        "post_dataforseo_labs_amazon_bulk_volume_live",
+        "post_dataforseo_labs_amazon_product_competitors_live",
+        "post_dataforseo_labs_amazon_product_kw_overlap_live",
+        "post_dataforseo_labs_amazon_product_rank_overview_live",
+        "post_dataforseo_labs_amazon_ranked_keywords_live",
+        "post_dataforseo_labs_amazon_related_keywords_live",
+        "post_dataforseo_labs_apple_app_competitors_live",
+        "post_dataforseo_labs_apple_app_intersection_live",
+        "post_dataforseo_labs_apple_bulk_app_metrics_live",
+        "post_dataforseo_labs_apple_keywords_for_app_live",
+        "post_dataforseo_labs_google_app_competitors_live",
+        "post_dataforseo_labs_google_app_intersection_live",
+        "post_dataforseo_labs_google_bulk_app_metrics_live",
+        "post_dataforseo_labs_google_bulk_keyword_difficulty_live",
+        "post_dataforseo_labs_google_bulk_traffic_estimation_live",
+        "post_dataforseo_labs_google_categories_for_domain_live",
+        "post_dataforseo_labs_google_categories_for_kw_live",
+        "post_dataforseo_labs_google_domain_rank_overview_live",
+        "post_dataforseo_labs_google_historical_bulk_traffic_live",
+        "post_dataforseo_labs_google_historical_keyword_data_live",
+        "post_dataforseo_labs_google_historical_rank_live",
+        "post_dataforseo_labs_google_keyword_ideas_live",
+        "post_dataforseo_labs_google_keyword_overview_live",
+        "post_dataforseo_labs_google_keyword_suggestions_live",
+        "post_dataforseo_labs_google_keywords_for_app_live",
+        "post_dataforseo_labs_google_keywords_for_categories_live",
+        "post_dataforseo_labs_google_kw_for_site_live",
+        "post_dataforseo_labs_google_related_keywords_live",
+        "post_dataforseo_labs_google_relevant_pages_live",
+        "post_dataforseo_labs_google_search_intent_live",
+        "post_dataforseo_labs_google_serp_competitors_live",
+        "post_dataforseo_labs_google_subdomains_live",
+        "post_dataforseo_labs_google_top_searches_live",
+        "post_dataforseo_merchant_amazon_asin_submit",
+        "post_dataforseo_merchant_amazon_products_submit",
+        "post_dataforseo_merchant_amazon_sellers_submit",
+        "post_dataforseo_merchant_google_product_info_submit",
+        "post_dataforseo_merchant_google_products_submit",
+        "post_dataforseo_merchant_google_reviews_submit",
+        "post_dataforseo_merchant_google_sellers_submit",
+        "post_dataforseo_on_page_content_parsing",
+        "post_dataforseo_on_page_duplicate_content",
+        "post_dataforseo_on_page_duplicate_tags",
+        "post_dataforseo_on_page_force_stop",
+        "post_dataforseo_on_page_keyword_density",
+        "post_dataforseo_on_page_lighthouse_live_json",
+        "post_dataforseo_on_page_links",
+        "post_dataforseo_on_page_microdata",
+        "post_dataforseo_on_page_non_indexable",
+        "post_dataforseo_on_page_page_screenshot",
+        "post_dataforseo_on_page_raw_html",
+        "post_dataforseo_on_page_resources",
+        "post_dataforseo_on_page_submit",
+        "post_dataforseo_on_page_uncrawlable_resources",
+        "post_dataforseo_on_page_waterfall",
+        "post_dataforseo_serp_ai_summary",
+        "post_dataforseo_serp_baidu_organic_submit",
+        "post_dataforseo_serp_bing_organic_live",
+        "post_dataforseo_serp_bing_organic_live_html",
+        "post_dataforseo_serp_bing_organic_live_regular",
+        "post_dataforseo_serp_gads_advertisers_live",
+        "post_dataforseo_serp_gads_search_live",
+        "post_dataforseo_serp_google_ai_mode_live",
+        "post_dataforseo_serp_google_ai_mode_live_html",
+        "post_dataforseo_serp_google_autocomplete_live",
+        "post_dataforseo_serp_google_dataset_info_live",
+        "post_dataforseo_serp_google_dataset_search_live",
+        "post_dataforseo_serp_google_events_live",
+        "post_dataforseo_serp_google_finance_explore_live",
+        "post_dataforseo_serp_google_finance_explore_live_html",
+        "post_dataforseo_serp_google_finance_markets_live",
+        "post_dataforseo_serp_google_finance_markets_live_html",
+        "post_dataforseo_serp_google_finance_quote_live",
+        "post_dataforseo_serp_google_finance_quote_live_html",
+        "post_dataforseo_serp_google_finance_ticker_search_live",
+        "post_dataforseo_serp_google_images_live",
+        "post_dataforseo_serp_google_images_live_html",
+        "post_dataforseo_serp_google_jobs_submit",
+        "post_dataforseo_serp_google_local_finder_live",
+        "post_dataforseo_serp_google_local_finder_live_html",
+        "post_dataforseo_serp_google_maps_live",
+        "post_dataforseo_serp_google_news_live",
+        "post_dataforseo_serp_google_news_live_html",
+        "post_dataforseo_serp_google_organic_live",
+        "post_dataforseo_serp_google_organic_live_html",
+        "post_dataforseo_serp_google_organic_live_regular",
+        "post_dataforseo_serp_google_search_by_image_submit",
+        "post_dataforseo_serp_naver_organic_submit",
+        "post_dataforseo_serp_screenshot",
+        "post_dataforseo_serp_seznam_organic_submit",
+        "post_dataforseo_serp_yahoo_organic_live",
+        "post_dataforseo_serp_yahoo_organic_live_html",
+        "post_dataforseo_serp_yahoo_organic_live_regular",
+        "post_dataforseo_serp_youtube_organic_live",
+        "post_dataforseo_serp_youtube_video_comments_live",
+        "post_dataforseo_serp_youtube_video_info_live",
+        "post_dataforseo_serp_youtube_video_subtitles_live"
+      ],
+      "kind": "category",
+      "arguments": [
+        {
+          "name": "task",
+          "description": "What you want to find out.",
+          "required": false,
+          "default": ""
+        }
+      ]
+    },
+    {
+      "name": "aisa-seo-ai-visibility",
+      "description": "Measure a brand or domain's presence in ChatGPT, Gemini and Perplexity answers: how often it is mentioned, on which prompts, which sources the models cite instead, and what the models say today when asked directly. Sets the call order and the budget; it does not write the positioning. Use when asked how a brand appears in AI answers or which sources those answers cite. 检查品牌在 AI 回答中的可见度、提及情况和引用来源。",
+      "uri": "skill://aisa-seo-ai-visibility/SKILL.md",
+      "path": "skills/aisa-seo-ai-visibility/SKILL.md",
+      "aliases": [
+        "seo_ai_visibility",
+        "seo-ai-visibility",
+        "AI可见度",
+        "品牌提及",
+        "生成式搜索优化",
+        "GEO",
+        "AI visibility"
+      ],
+      "tags": [
+        "seo",
+        "ai",
+        "geo"
+      ],
+      "providers": [
+        "dataforseo"
+      ],
+      "examples": [
+        "看看各家大模型回答相关问题时会不会推荐这个品牌，引用了哪些网站？"
+      ],
+      "uses": [
+        "post_dataforseo_ai_llm_mentions_aggregated_metrics_live",
+        "post_dataforseo_ai_llm_mentions_search_live",
+        "post_dataforseo_ai_llm_mentions_top_domains_live",
+        "post_dataforseo_ai_chat_gpt_llm_responses_live",
+        "post_dataforseo_ai_gemini_llm_responses_live",
+        "post_dataforseo_ai_perplexity_llm_responses_live"
+      ],
+      "when_to_use": "Use when asked how a brand appears in AI answers or which sources those answers cite. 检查品牌在 AI 回答中的可见度、提及情况和引用来源。",
+      "arguments": [
+        {
+          "name": "target",
+          "description": "The brand's domain, as a bare host such as `example.com`. Used for mention metrics; also used as the brand name in the direct prompts unless `brand` is given.\n",
+          "required": true
+        },
+        {
+          "name": "brand",
+          "description": "The brand name as people say it, if different from the domain.",
+          "required": false,
+          "default": ""
+        },
+        {
+          "name": "question",
+          "description": "One question a customer would ask an assistant, e.g. \"best tools for X\". Leave empty to skip the direct-ask step.\n",
+          "required": false,
+          "default": ""
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-seo-keyword-opportunity",
+      "description": "Decide whether a keyword is worth going after: volume and difficulty, the related terms that are easier, and what is actually on page one now. Sets the call order and the stopping rules; it does not write the content. Use when asked to assess a keyword opportunity or find easier related search terms. 研究关键词搜索量、竞争难度和相关长尾词，寻找自然搜索机会。",
+      "uri": "skill://aisa-seo-keyword-opportunity/SKILL.md",
+      "path": "skills/aisa-seo-keyword-opportunity/SKILL.md",
+      "aliases": [
+        "seo_keyword_opportunity",
+        "seo-keyword-opportunity",
+        "关键词机会",
+        "关键词研究",
+        "搜索量",
+        "难度",
+        "keyword research"
+      ],
+      "tags": [
+        "seo",
+        "keywords",
+        "serp"
+      ],
+      "providers": [
+        "semrush",
+        "dataforseo"
+      ],
+      "examples": [
+        "有哪些搜索需求不错但竞争较低的关键词值得做？"
+      ],
+      "uses": [
+        "get_semrush_keyword_overview",
+        "get_semrush_keyword_difficulty",
+        "post_dataforseo_labs_google_keyword_ideas_live",
+        "post_dataforseo_serp_google_organic_live"
+      ],
+      "when_to_use": "Use when asked to assess a keyword opportunity or find easier related search terms. 研究关键词搜索量、竞争难度和相关长尾词，寻找自然搜索机会。",
+      "arguments": [
+        {
+          "name": "keyword",
+          "description": "The seed keyword or phrase, as a user would type it.",
+          "required": true
+        },
+        {
+          "name": "location",
+          "description": "Country for volume and SERP data, as DataForSEO spells it, e.g. `United States`, `United Kingdom`, `Germany`.\n",
+          "required": false,
+          "default": "United States"
+        },
+        {
+          "name": "database",
+          "description": "Semrush regional database code matching the location, e.g. `us`.",
+          "required": false,
+          "default": "us"
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-seo-site-audit",
+      "description": "A defensible first-pass SEO health check of one domain: authority, organic footprint, backlink profile, top competitors and page speed. Sets the call order, when to cross-check two providers and when to stop; it does not decide what to fix first. Use when asked to audit the SEO health of a website, including authority, backlinks and page speed. 审计网站 SEO 健康情况，检查权威度、外链、关键词排名和页面速度。",
+      "uri": "skill://aisa-seo-site-audit/SKILL.md",
+      "path": "skills/aisa-seo-site-audit/SKILL.md",
+      "aliases": [
+        "seo_site_audit",
+        "seo-site-audit",
+        "SEO审计",
+        "网站诊断",
+        "网站体检",
+        "外链检查",
+        "site health",
+        "SEO audit"
+      ],
+      "tags": [
+        "seo",
+        "audit",
+        "backlinks"
+      ],
+      "providers": [
+        "semrush",
+        "ahrefs",
+        "dataforseo"
+      ],
+      "examples": [
+        "帮我检查网站的搜索优化问题和加载性能，列出改进建议。"
+      ],
+      "uses": [
+        "get_semrush_domain_overview",
+        "get_ahrefs_domain_rating",
+        "post_dataforseo_backlinks_summary_live",
+        "get_semrush_domain_organic_keywords",
+        "get_semrush_organic_competitors",
+        "post_dataforseo_backlinks_referring_domains_live",
+        "post_dataforseo_on_page_lighthouse_live_json",
+        "post_dataforseo_labs_google_domain_rank_overview_live"
+      ],
+      "when_to_use": "Use when asked to audit the SEO health of a website, including authority, backlinks and page speed. 审计网站 SEO 健康情况，检查权威度、外链、关键词排名和页面速度。",
+      "arguments": [
+        {
+          "name": "domain",
+          "description": "The site to audit, as a bare host such as `example.com` — no scheme, no path. Passed to every tool as written.\n",
+          "required": true
+        },
+        {
+          "name": "database",
+          "description": "Semrush regional database code, for example `us`, `uk`, `de`. Leave empty for the default.\n",
+          "required": false,
+          "default": "us"
+        },
+        {
+          "name": "depth",
+          "description": "`quick` for authority + organic + backlink summary only, `standard` to add competitors and referring domains, `deep` to also run a Lighthouse audit of the home page.\n",
+          "required": false,
+          "default": "standard"
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-social",
+      "description": "Public social data: X/Twitter users, posts, search and trends; Instagram, Reddit and Pinterest profiles and content; YouTube search.",
+      "uri": "skill://aisa-social/SKILL.md",
+      "path": "skills/aisa-social/SKILL.md",
+      "aliases": [
+        "social",
+        "AIsa Social"
+      ],
+      "tags": [
+        "social"
+      ],
+      "providers": [
+        "twitter-api",
+        "instagram",
+        "reddit",
+        "pinterest",
+        "youtube-search"
+      ],
+      "examples": [],
+      "uses": [
+        "get_instagram_basic_profile",
+        "get_instagram_media_transcript",
+        "get_instagram_post",
+        "get_instagram_post_comments",
+        "get_instagram_profile",
+        "get_instagram_reels_search",
+        "get_instagram_reels_trending",
+        "get_instagram_search_hashtag",
+        "get_instagram_search_profiles",
+        "get_instagram_song_reels",
+        "get_instagram_user_embed",
+        "get_instagram_user_highlight_detail",
+        "get_instagram_user_highlights",
+        "get_instagram_user_posts",
+        "get_instagram_user_reels",
+        "get_pinterest_board",
+        "get_pinterest_pin",
+        "get_pinterest_search",
+        "get_pinterest_user_boards",
+        "get_reddit_post_comments",
+        "get_reddit_search",
+        "get_reddit_subreddit",
+        "get_reddit_subreddit_details",
+        "get_reddit_subreddit_search",
+        "get_twitter_article",
+        "get_twitter_community_info",
+        "get_twitter_community_members",
+        "get_twitter_community_moderators",
+        "get_twitter_community_tweets",
+        "get_twitter_community_tweets_all",
+        "get_twitter_list_followers",
+        "get_twitter_list_members",
+        "get_twitter_list_tweets_timeline",
+        "get_twitter_spaces_detail",
+        "get_twitter_trends",
+        "get_twitter_tweet_advanced_search",
+        "get_twitter_tweet_quotes",
+        "get_twitter_tweet_replies",
+        "get_twitter_tweet_replies_v2",
+        "get_twitter_tweet_retweeters",
+        "get_twitter_tweet_thread_context",
+        "get_twitter_tweets",
+        "get_twitter_user_about",
+        "get_twitter_user_batch_info_by_ids",
+        "get_twitter_user_check_follow_relationship",
+        "get_twitter_user_followers",
+        "get_twitter_user_followings",
+        "get_twitter_user_info",
+        "get_twitter_user_last_tweets",
+        "get_twitter_user_mentions",
+        "get_twitter_user_search",
+        "get_twitter_user_tweet_timeline",
+        "get_twitter_user_verified_followers",
+        "get_youtube_search",
+        "instagram_posts_digest",
+        "instagram_profile_digest"
+      ],
+      "kind": "category",
+      "arguments": [
+        {
+          "name": "task",
+          "description": "What you want to find out.",
+          "required": false,
+          "default": ""
+        }
+      ]
+    },
+    {
+      "name": "aisa-stock-chatter-workflow",
+      "description": "Decide between the one-call bundle and the underlying atomic tools when looking at what X/Twitter is saying about stocks, then read the result honestly — including which sources failed and what the mention counts do and do not mean. Use when asked what X is saying about stocks together with the market data behind those mentions. 分析股票相关社交舆情，结合行情和新闻核对热门股票讨论。",
+      "uri": "skill://aisa-stock-chatter-workflow/SKILL.md",
+      "path": "skills/aisa-stock-chatter-workflow/SKILL.md",
+      "aliases": [
+        "stock_chatter_workflow",
+        "stock-chatter-workflow",
+        "股票舆情",
+        "股市讨论",
+        "股票热议",
+        "stock chatter"
+      ],
+      "tags": [
+        "finance",
+        "social",
+        "stocks",
+        "twitter"
+      ],
+      "providers": [
+        "twitter",
+        "financial-datasets"
+      ],
+      "examples": [
+        "美股投资者最近热议哪些股票，股价和相关新闻有什么变化？"
+      ],
+      "uses": [
+        "twitter_stock_pulse",
+        "get_twitter_tweet_advanced_search",
+        "get_financial_prices_snapshot",
+        "get_financial_news"
+      ],
+      "when_to_use": "Use when asked what X is saying about stocks together with the market data behind those mentions. 分析股票相关社交舆情，结合行情和新闻核对热门股票讨论。",
+      "arguments": [
+        {
+          "name": "topic",
+          "description": "What to look at, e.g. \"AI chip stocks\", \"$NVDA earnings\", or a sector.\n",
+          "required": true
+        },
+        {
+          "name": "known_tickers",
+          "description": "Tickers you already know you care about, comma-separated, e.g. \"NVDA,AMD\". Leave empty to discover them from the conversation.\n",
+          "required": false,
+          "default": ""
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-stock-snapshot-brief",
+      "description": "Price, valuation, latest earnings, what analysts expect, who inside is buying or selling, and the news behind it — six calls, one page. Sets the order and where to stop; it does not give investment advice. Use when asked for a concise current company brief covering price, valuation, earnings, insiders and news. 汇总单只股票的最新股价、估值、财报预期、内部交易和新闻。",
+      "uri": "skill://aisa-stock-snapshot-brief/SKILL.md",
+      "path": "skills/aisa-stock-snapshot-brief/SKILL.md",
+      "aliases": [
+        "stock_snapshot_brief",
+        "stock-snapshot-brief",
+        "股票简报",
+        "个股快照",
+        "股票概况",
+        "stock brief"
+      ],
+      "tags": [
+        "finance",
+        "stocks",
+        "snapshot"
+      ],
+      "providers": [
+        "financial-datasets"
+      ],
+      "examples": [
+        "给我一份这家上市公司的最新股票快照。"
+      ],
+      "uses": [
+        "get_financial_prices_snapshot",
+        "get_financial_financial_metrics_snapshot",
+        "get_financial_earnings",
+        "get_financial_analyst_estimates",
+        "get_financial_insider_trades",
+        "get_financial_news"
+      ],
+      "when_to_use": "Use when asked for a concise current company brief covering price, valuation, earnings, insiders and news. 汇总单只股票的最新股价、估值、财报预期、内部交易和新闻。",
+      "arguments": [
+        {
+          "name": "ticker",
+          "description": "The ticker symbol, e.g. `AAPL`.",
+          "required": true
+        }
+      ],
+      "kind": "workflow"
+    },
+    {
+      "name": "aisa-track-topic-on-x",
+      "description": "Assemble a defensible picture of what X/Twitter is saying about a topic: which posts, from whom, how the conversation is shaped, and what is missing. Sets the call order and the stopping conditions; it does not decide what the chatter means. Use when asked to investigate posts, authors or discussions about a topic on X/Twitter. 追踪 X、Twitter、推特上的话题讨论，分析发帖作者、关注点和回复，整理带来源的报告。",
+      "uri": "skill://aisa-track-topic-on-x/SKILL.md",
+      "path": "skills/aisa-track-topic-on-x/SKILL.md",
+      "aliases": [
+        "track_topic_on_x",
+        "track-topic-on-x",
+        "推特话题",
+        "X话题",
+        "推文搜索",
+        "话题追踪",
+        "twitter topic"
+      ],
+      "tags": [
+        "social",
+        "twitter",
+        "topic"
+      ],
+      "providers": [
+        "twitter"
+      ],
+      "examples": [
+        "调查推特用户对某款产品的看法，找出主要发帖者和讨论焦点，附上帖子链接。"
+      ],
+      "uses": [
+        "get_twitter_tweet_advanced_search",
+        "get_twitter_user_info",
+        "get_twitter_tweet_thread_context",
+        "get_twitter_tweet_replies",
+        "get_twitter_trends"
+      ],
+      "when_to_use": "Use when asked to investigate posts, authors or discussions about a topic on X/Twitter. 追踪 X、Twitter、推特上的话题讨论，分析发帖作者、关注点和回复，整理带来源的报告。",
+      "arguments": [
+        {
+          "name": "topic",
+          "description": "What to track. A plain phrase, a $CASHTAG, a #hashtag, or an X search query. Passed through to the search tool as written.\n",
+          "required": true
+        },
+        {
+          "name": "since",
+          "description": "How far back to look, as an X search operator fragment such as `7d` or an ISO date. Leave empty to search without a time bound.\n",
+          "required": false,
+          "default": "7d"
+        },
+        {
+          "name": "depth",
+          "description": "`scan` for one page of results, `standard` for a few pages plus author context, `deep` to also pull the reply threads under the top posts.\n",
+          "required": false,
+          "default": "standard"
+        }
+      ],
+      "kind": "workflow"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "aisa://prediction-market-data/venue-field-map",
+      "name": "venue_field_map",
+      "description": "Field-by-field mapping between Polymarket and Kalshi for the concepts that do not translate cleanly: identifiers, pagination, time filters, and status. Read this before querying both venues for the same question — three of the differences (boolean vs enum status, ISO vs Unix timestamps, offset vs cursor paging) produce wrong results rather than errors.",
+      "mimeType": "text/markdown",
+      "path": "skills/aisa-api/references/prediction-market-data/aisa-venue-field-map.md"
+    },
+    {
+      "uri": "aisa://stock-pulse/reading-the-bundle",
+      "name": "reading_the_bundle",
+      "description": "What each field in the twitter_stock_pulse response actually means, and the three ways it is commonly misread: treating `mentions` as a ranking, missing a partial failure recorded in `coverage`, and not noticing that one tool call billed several upstream calls. Read once before interpreting the bundle; it does not change between calls.",
+      "mimeType": "text/markdown",
+      "path": "skills/aisa-api/references/stock-pulse/aisa-reading-the-bundle.md"
+    },
+    {
+      "uri": "aisa://twitter-api/topic-report-template",
+      "name": "topic_report_template",
+      "description": "A section-by-section skeleton for writing up X/Twitter topic research so a reader can audit it: what was searched, what came back, who said it, and what is missing. Read this when the deliverable is a written report rather than raw posts. Pairs with the track_topic_on_x prompt, which covers how to gather the material.",
+      "mimeType": "text/markdown",
+      "path": "skills/aisa-api/references/twitter-api/aisa-topic-report-template.md"
+    }
+  ],
+  "generatedFiles": {
+    "skills/aisa-api/references/prediction-market-data/aisa-venue-field-map.md": "88b1d4ed788bc10df52a607bb9ae46f81e944be4d5646dbff2a145e9826f9392",
+    "skills/aisa-api/references/stock-pulse/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
+    "skills/aisa-api/references/twitter-api/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
+    "skills/aisa-api/SKILL.md": "2d0896886d68424a83209407779c0ef64c0136a91cd6f9105f7f341444f39148",
+    "skills/aisa-brand-mentions-across-social/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
+    "skills/aisa-brand-mentions-across-social/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
+    "skills/aisa-brand-mentions-across-social/SKILL.md": "52b8c41977eb56626258618f6c5938b10fbf713e8fd425a1cf62026c9846760f",
+    "skills/aisa-company-fundamentals/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
+    "skills/aisa-company-fundamentals/SKILL.md": "ef2879e1df0e0e55a8d1eba1684ccc4da074526d9a9316a05d47f79d3654b129",
+    "skills/aisa-compare-event-odds/references/aisa-venue-field-map.md": "88b1d4ed788bc10df52a607bb9ae46f81e944be4d5646dbff2a145e9826f9392",
+    "skills/aisa-compare-event-odds/SKILL.md": "f0f3993f45b7d0450121900faf5cdf77c52265c2ae20ba4285994be52f3ce696",
+    "skills/aisa-competitor-teardown/SKILL.md": "b43415260c54356cdd6563f3536c66e102a90c3bf9498bc866a3f2258a672648",
+    "skills/aisa-creator-profile-snapshot/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
+    "skills/aisa-creator-profile-snapshot/SKILL.md": "cc75cea29c8750696908a31e27866bfb7e1ef9b96298d87ad7c332f8077c29c6",
+    "skills/aisa-crypto-market-health/SKILL.md": "d72f11138e50fe431b5180a9084d2bb48aeb31e1581ac7075f48cdcda942da02",
+    "skills/aisa-enrich-lead-list/SKILL.md": "f3ee2c4c3529517af86d252d5fde0fadd429544336877c1bf810068de1ea21ba",
+    "skills/aisa-finance/references/operations.md": "39005eda01c864e5a9f436d274c79f071bc1479283961b96c5402a043b1b5ada",
+    "skills/aisa-finance/SKILL.md": "5de91e5b3f298a809457b5c8f08cb60ed8809d45d12d47d3d3489d12c5b14894",
+    "skills/aisa-find-people-at-company/SKILL.md": "cd2c44481bcd5b32c0f1028cc93322ef71423a93c7a6f6cfe8214981c966e8a9",
+    "skills/aisa-gtm/references/operations.md": "532fca73c634ac71320613c00ae1a29285eeae1460a09f83c75eaba532275d71",
+    "skills/aisa-gtm/SKILL.md": "f407c1f53c2fc781e52ed1af2187784014acb37b31429bf8f5af6ff3219206e2",
+    "skills/aisa-look-up-token-market/SKILL.md": "f52e0be61a2950cbb0abceea73b6b503573b8590e89453aa585c488f7694d806",
+    "skills/aisa-mail/references/operations.md": "cfbd03b4bf33972b13a69bea18d08c1209c6ece34f02d9f723fc8b919183f277",
+    "skills/aisa-mail/SKILL.md": "ef836ce7ef03c133c374f53da03a127c6ee4e5c1e3e8c555c2df74b9c81586c4",
+    "skills/aisa-research-brief/SKILL.md": "651d292e4895cb2eaba8ad26f8550c2b8c1e0d5203196621e3a200ecb4e9d329",
+    "skills/aisa-sales/references/operations.md": "91d51facf67d33383d3a97e17adf1762b21baab7154e17b2b5fc8f3ea56da5fe",
+    "skills/aisa-sales/SKILL.md": "48312b3dc0d8f6b7b3e1bd8f7a6ff7d5c3f36dfc1358e42328e835824c2c3cd7",
+    "skills/aisa-search-youtube-deliberately/SKILL.md": "eb5627adc5e6455c32088a6f4abb4e0017ba70a7adc1c46049a4bf3a74d221c2",
+    "skills/aisa-search/references/operations.md": "b7bec56dd76df1ca12d46794d9a8127c0ba656e8f125d60cb3e8db1877e57a7b",
+    "skills/aisa-search/SKILL.md": "64a82d180693df43ea13716ca65356df80a474e13dcd0a8f6dea3f04ab81ff93",
+    "skills/aisa-seo-ai-visibility/SKILL.md": "0835f61473ab44a0f5c77442497f258aea4c02b7f9f8c047ace6b93a32c9d6f9",
+    "skills/aisa-seo-keyword-opportunity/SKILL.md": "74f38a9069a4946f6ef410611d1cc04e6dd0dc4e34f46190afc26c3dce3a3061",
+    "skills/aisa-seo-site-audit/SKILL.md": "a9219e7d09492d866bac06ce893b47fb7b6bbe7aedb08a800a0adfbbd0129274",
+    "skills/aisa-seo/references/operations.md": "1ba5b591c1cd6ec927617967b4e2a22ba75a7d65545acb6216044573c6cb8c51",
+    "skills/aisa-seo/SKILL.md": "0902dac9406440af5cb590468cf1c012134a3acddf2687ce72ed28fbdab15c92",
+    "skills/aisa-social/references/operations.md": "65346b1907349a3a694487bee6e7d54a1f8e7744990c9deec9f1426a7ce939f1",
+    "skills/aisa-social/SKILL.md": "0bed9630e912905c01763c924da8438bacce7e9419c2dcc957c87b1a8e2ba986",
+    "skills/aisa-stock-chatter-workflow/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
+    "skills/aisa-stock-chatter-workflow/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
+    "skills/aisa-stock-chatter-workflow/SKILL.md": "b77ea252a6c841a742676424b8541505dadbdede4f53cd384d5254fb18b27e53",
+    "skills/aisa-stock-snapshot-brief/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
+    "skills/aisa-stock-snapshot-brief/SKILL.md": "633bcb685eaecbeb9fb3ecc37ae0974d2484cb97dd7495fec1a0245d1ad538ab",
+    "skills/aisa-track-topic-on-x/references/aisa-reading-the-bundle.md": "d32b5675d8c40ec78d1da620e75934ecd488bd93dd67dd0d16c137c94571bb17",
+    "skills/aisa-track-topic-on-x/references/aisa-topic-report-template.md": "cf97e717c60326fdbd5edccb8f63728f79808e921032a3afe1587b1bdc381cc3",
+    "skills/aisa-track-topic-on-x/SKILL.md": "51cb94c7140323319a986cf4e0b6559333811e6503e5969bc51f575df691ffd4"
+  }
+}

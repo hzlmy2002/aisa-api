@@ -1,0 +1,71 @@
+# L1: 1 digest tool + the 20 atomic tools beside it (the instagram shape:
+# composed tools beside their raw dependencies). scene- prefix and L1 follow
+# from the CI rule that a server carrying composed tools is L1; the file was
+# api-marketpulse.yaml until 2026-08-18, renamed when EDINET joined — the slug
+# and URL are unchanged (the prefix only serves directory browsing).
+#
+# Financial Datasets is one upstream that the docs repo happens to split across
+# three spec files, which is why all three are included here. Each declares its
+# server as /apis/v1/financial — one segment more than the other specs — and
+# the loader restores each spec's own base (see loader.base_prefix).
+#
+# EDINET (Japan's statutory disclosure system) joined 2026-08-18: one raw list
+# tool plus a digest twin, because the list measured 612 KB for one business
+# day and upstream offers no filter parameters (composed/edinet_digest.py).
+# The download endpoint is deliberately NOT included: it answers binary — ZIP
+# at type=1, PDF at type=2, measured — and a tool result cannot usefully carry
+# that (the F1 class, same reasoning as firecrawl/parse). Agents stop at docID.
+id:    aisa-marketpulse          # always "aisa-" + slug, checked in CI
+slug:  marketpulse               # decides the public URL; matches the published manifest; frozen
+tier:  L1
+kind:  composed
+owner: jony
+name:  AIsa MarketPulse
+category: Finance
+description: >
+  US equity market data from Financial Datasets — live and historical prices,
+  the three financial statements and the ratios computed off them, reported
+  earnings against estimates, forward analyst consensus, insider transactions,
+  SEC filings down to the item text, a numeric screener, central-bank policy
+  rates — plus Japan's EDINET statutory filing list, raw or as a filterable
+  digest.
+
+include:
+  # Ordered the way they get used: identify the company, then prices, then
+  # fundamentals, then insiders and filings, then macro. Not alphabetical —
+  # this list is also read by people.
+  - spec: openapi-financial.json
+    operations:
+      # Company identity: get the cik, confirm the industry classification
+      - get_financial_company_facts
+      # Prices
+      - get_financial_prices_snapshot
+      - get_financial_prices
+      # Fundamentals: the three statements
+      - get_financial_financials
+      - get_financial_financials_income_statements
+      - get_financial_financials_balance_sheets
+      - get_financial_financials_cash_flow_statements
+      - post_financial_financials_search_line_items
+      # Fundamentals: ratios already computed
+      - get_financial_financial_metrics
+      - get_financial_financial_metrics_snapshot
+      # Earnings and news
+      - get_financial_earnings
+      - get_financial_news
+      # Insiders and regulatory filings
+      - get_financial_insider_trades
+      - get_financial_filings
+      - get_financial_filings_items
+      # Screening: the only tool that does not need a ticker up front
+      - post_financial_financials_search_screener
+  - spec: analyst-estimates.json
+    operations: "*"               # one: forward analyst consensus
+  - spec: macro_snapshot.json
+    operations: "*"               # two: central-bank policy rates, current and historical
+  - spec: edinet.json
+    operations: [get_edinet_documents]   # list only; the download is binary (F1), REST-only
+
+composed:
+  - module: composed.edinet_digest
+    tools:  [edinet_filings_digest]

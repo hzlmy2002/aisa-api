@@ -1,0 +1,15 @@
+# The uri is frozen once published: callers reference it inside a conversation.
+uri: aisa://prediction-market-data/venue-field-map
+name: venue_field_map
+title: Field-by-field map between Polymarket and Kalshi
+description: >
+  Field-by-field mapping between Polymarket and Kalshi for the concepts that do
+  not translate cleanly: identifiers, pagination, time filters, and status.
+  Read this before querying both venues for the same question — three of the
+  differences (boolean vs enum status, ISO vs Unix timestamps, offset vs cursor
+  paging) produce wrong results rather than errors.
+mime_type: text/markdown
+
+# Generated from the spec, never typed by hand: a spec change is picked up on
+# the next build.
+generator: src.aisa_mcp.resource_gen:venue_field_map

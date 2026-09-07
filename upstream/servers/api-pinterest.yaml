@@ -1,0 +1,39 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# Pinterest was the last name on the D1 blocked list ("117 KB for one search").
+# Measured per endpoint on 2026-08-18 — the whole lesson of that list — it
+# never reaches the class that forced instagram's digest twins:
+#
+#     search        109.7 KB   trim=true ->  27.9 KB
+#     board         104.3 KB   trim=true ->  27.7 KB
+#     user/boards    59.1 KB   trim=true ->   3.3 KB
+#     pin            12.5 KB   trim=true ->   1.6 KB
+#
+# No digest tools here on purpose: upstream's own trim parameter genuinely
+# works on this API (unlike instagram's, measured at 0.4%), it is already a
+# per-call caller choice, and every description states exactly which fields
+# trim keeps and drops. A digest twin would duplicate a switch that exists.
+id:    aisa-pinterest           # always "aisa-" + slug, checked in CI
+slug:  pinterest                # decides the public URL mcp.aisa.one/pinterest/mcp; frozen once published
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Pinterest
+category: Social
+description: >
+  Read public Pinterest through AIsa: search pins by keyword, fetch one pin's
+  details and engagement counts, page through a board's pins, and list a
+  user's boards. Every tool accepts trim=true, which measurably shrinks
+  responses (up to 18x) and is documented per tool.
+
+# pin measured 5.3s and search 4.3s — inside the 15s default but with little
+# headroom on a slow day; same reasoning as reddit's and instagram's 45s.
+timeout_seconds: 45
+
+include:
+  - spec: pinterest.json
+    operations: "*"      # four: search / pin / board / user boards
+
+# No read_only block: all four are GET, which the annotator already treats as
+# read-only.

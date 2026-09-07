@@ -1,0 +1,76 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# One of twelve servers splitting DataForSEO's 445 operations by the question
+# they answer. A single server was never an option - CASEBOOK D4: 445 tools in
+# one endpoint is a menu no agent can choose from.
+#
+# ⚠️ Two conventions apply across all twelve, decided 2026-08-25:
+#
+# 1. ASYNC IS COLLAPSED. DataForSEO offers most operations as a three-call
+#    dance: task_post queues, tasks_ready lists what finished, task_get
+#    retrieves. Where a `_live` variant exists the async twin is dropped
+#    entirely; where it does not, the pair is submit + fetch and `tasks_ready`
+#    is withheld. A caller that submitted a job holds its own id, so listing
+#    everyone's finished jobs answers a question no single caller is asking.
+#    This mirrors the firecrawl and exa job pairs already in `web-search`.
+#    445 operations become 317 tools this way.
+#
+# 2. VENDORS ARE MIXED BY QUESTION. Semrush and Ahrefs used to sit together in
+#    a server called `seo`; their 21 tools are redistributed here by what they
+#    answer, so an agent asking about domain authority sees that DataForSEO,
+#    Semrush and Ahrefs all have a number for it and can cross-refer between
+#    them. Same reasoning that put Semrush and Ahrefs together in the first
+#    place, carried one step further.
+
+id:    aisa-seo-keywords
+slug:  seo-keywords
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Keyword Volume & Ads
+category: SEO & Search Data
+description: >
+  Search volume and advertising data through AIsa: Google Ads and Bing
+  volumes, keyword suggestions and ideas, clickstream volumes, Google
+  Trends, plus Semrush's keyword overview, difficulty, broad-match and
+  question keywords.
+
+include:
+  - spec: dataforseo.json
+    operations:
+      - get_dataforseo_keywords_bing_audience_industries
+      - get_dataforseo_keywords_bing_audience_job_functions
+      - get_dataforseo_keywords_bing_kw_for_url_languages
+      - get_dataforseo_keywords_bing_kw_performance_locales
+      - get_dataforseo_keywords_bing_languages
+      - get_dataforseo_keywords_bing_locations
+      - get_dataforseo_keywords_bing_volume_history_locales
+      - get_dataforseo_keywords_clickstream_locales
+      - get_dataforseo_keywords_gads_ad_traffic_fetch
+      - get_dataforseo_keywords_gads_status
+      - get_dataforseo_keywords_google_trends_categories
+      - get_dataforseo_keywords_trends_locations
+      - post_dataforseo_keywords_bing_audience_live
+      - post_dataforseo_keywords_bing_kw_for_keywords_live
+      - post_dataforseo_keywords_bing_kw_for_site_live
+      - post_dataforseo_keywords_bing_kw_for_url_live
+      - post_dataforseo_keywords_bing_kw_performance_live
+      - post_dataforseo_keywords_bing_search_volume_live
+      - post_dataforseo_keywords_clickstream_bulk_volume_live
+      - post_dataforseo_keywords_clickstream_global_volume_live
+      - post_dataforseo_keywords_clickstream_search_volume_live
+      - post_dataforseo_keywords_gads_ad_traffic_submit
+      - post_dataforseo_keywords_gads_kw_for_keywords_live
+      - post_dataforseo_keywords_gads_kw_for_site_live
+      - post_dataforseo_keywords_gads_search_volume_live
+      - post_dataforseo_keywords_trends_demography_live
+      - post_dataforseo_keywords_trends_explore_live
+      - post_dataforseo_keywords_trends_merged_data_live
+      - post_dataforseo_keywords_trends_subregion_interests_live
+  - spec: semrush.json
+    operations:
+      - get_semrush_broad_match_keywords
+      - get_semrush_keyword_difficulty
+      - get_semrush_keyword_overview
+      - get_semrush_question_keywords

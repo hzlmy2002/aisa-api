@@ -1,0 +1,95 @@
+# Root-level workflow: spans seo-keywords, seo-labs and seo-serp.
+# The name is frozen once published.
+name: seo_keyword_opportunity
+title: Size a keyword and find the openings around it
+description: >
+  Decide whether a keyword is worth going after: volume and difficulty,
+  the related terms that are easier, and what is actually on page one now.
+  Sets the call order and the stopping rules; it does not write the content.
+
+arguments:
+  - name: keyword
+    description: The seed keyword or phrase, as a user would type it.
+    required: true
+  - name: location
+    description: >
+      Country for volume and SERP data, as DataForSEO spells it, e.g.
+      `United States`, `United Kingdom`, `Germany`.
+    required: false
+    default: "United States"
+  - name: database
+    description: Semrush regional database code matching the location, e.g. `us`.
+    required: false
+    default: "us"
+
+uses:
+  - get_semrush_keyword_overview
+  - get_semrush_keyword_difficulty
+  - post_dataforseo_labs_google_keyword_ideas_live
+  - post_dataforseo_serp_google_organic_live
+
+skill:
+  when_to_use: Use when asked to assess a keyword opportunity or find easier related
+    search terms.
+    研究关键词搜索量、竞争难度和相关长尾词，寻找自然搜索机会。
+  providers:
+  - semrush
+  - dataforseo
+  examples:
+  - 有哪些搜索需求不错但竞争较低的关键词值得做？
+  aliases:
+  - 关键词机会
+  - 关键词研究
+  - 搜索量
+  - 难度
+  - keyword research
+  tags:
+  - seo
+  - keywords
+  - serp
+
+template: |
+  Size the opportunity around: {keyword}
+  Location: {location} · Semrush database: {database}
+
+  DataForSEO `post_*_live` tools take `body` as a LIST with one task
+  object; read the body's own `status_code` (20000 is success).
+
+  1. Is it worth it. Call `get_semrush_keyword_overview` with
+     phrase={keyword} and database={database} for volume, CPC and
+     intent, then `get_semrush_keyword_difficulty` with the same
+     arguments. Volume under a few hundred with difficulty above 70 is
+     usually not worth a new page — say so and still finish step 2, the
+     openings are often next door.
+
+  2. The openings. Call `post_dataforseo_labs_google_keyword_ideas_live`
+     with a task of keywords=[{keyword}], location_name={location},
+     language_name=English and limit=30. Shortlist the ideas whose volume
+     is meaningful and whose difficulty is below the seed's; keep the
+     question-shaped ones separately, they map to different content.
+
+  3. What page one looks like. Call `post_dataforseo_serp_google_organic_live`
+     with a task of keyword={keyword}, location_name={location},
+     language_name=English and depth=10. Note the domain types (brands,
+     publishers, forums, marketplaces), whether there are AI overviews or
+     featured snippets, and how many results are older than two years.
+
+  Stop after step 3; do not fetch the SERP for every idea — pick at most
+  two shortlisted ideas and repeat step 3 for them only if the seed's
+  page one looks unbeatable.
+
+  Report: a go / no-go on the seed with the numbers, a shortlist of up to
+  ten easier terms with volume and difficulty, and what kind of page wins
+  today. Name the provider next to every number.
+
+  Typical call budget: 4 calls; at most 6 if you re-check two shortlisted ideas.
+
+  ## Fallbacks
+
+  - Semrush is subscription-only. If `get_semrush_keyword_overview` answers 402,
+    skip `get_semrush_keyword_difficulty` too and take the seed's volume and
+    difficulty from `post_dataforseo_labs_google_keyword_ideas_live` — include
+    the seed itself in `keywords` so it comes back with the ideas.
+  - If the SERP call fails, say page one was not inspected; do not guess the
+    domain types.
+  - Say in the report which fallback was used and why.

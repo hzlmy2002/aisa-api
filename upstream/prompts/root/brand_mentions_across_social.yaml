@@ -1,0 +1,96 @@
+# Root-level workflow: spans twitter-api, reddit and instagram.
+# The name is frozen once published.
+name: brand_mentions_across_social
+title: What people are saying about a brand across X, Reddit and Instagram
+description: >
+  One pass over the three public social sources for a brand, product or
+  topic: the recent posts, where the conversation is, and what is missing.
+  Sets the source order, the page budget and when to stop; it does not
+  score sentiment for you.
+
+arguments:
+  - name: brand
+    description: >
+      The brand, product or topic as people write it. Used as the search
+      phrase on every platform; add a second spelling in the query yourself
+      if the brand has one.
+    required: true
+  - name: window
+    description: >
+      How far back to look, e.g. `7d` or `30d`. X gets it as a search
+      operator; Reddit and Instagram get the nearest option their schema
+      offers.
+    required: false
+    default: "7d"
+
+uses:
+  - get_twitter_tweet_advanced_search
+  - get_reddit_search
+  - get_instagram_search_hashtag
+  - get_reddit_post_comments
+  - post_tavily_search
+
+skill:
+  when_to_use: Use when asked to collect brand or product mentions across X, Reddit
+    and Instagram.
+    跨多个社交平台收集品牌或产品提及，对比各平台反馈。
+  providers:
+  - twitter
+  - reddit
+  - instagram
+  - tavily
+  examples:
+  - 汇总 Reddit、Instagram 和推特上对这个品牌的评价。
+  aliases:
+  - 品牌舆情
+  - 社交平台提及
+  - 跨平台舆情
+  - brand monitoring
+  tags:
+  - social
+  - brand
+  - mentions
+
+template: |
+  Collect what is being said about: {brand}
+  Window: {window}
+
+  Budget: one page per source first, a second page only where the first
+  was full of relevant posts. Every call here is pay-per-call; X/Twitter
+  tools are on the Hive GTM subscription — if the first X call answers
+  402, say so, skip X, and finish with the other two.
+
+  1. X/Twitter. Call `get_twitter_tweet_advanced_search` with
+     query="{brand} since:{window}" and queryType=Latest. Note volume,
+     the accounts posting most, and any post with unusual engagement.
+
+  2. Reddit. Call `get_reddit_search` with query={brand}, sorted by the
+     newest option the schema lists and the timeframe closest to
+     {window}. For the two most-commented threads call
+     `get_reddit_post_comments` with the thread url — Reddit's substance
+     is in the comments, not the titles.
+
+  3. Instagram. Call `get_instagram_search_hashtag` with hashtag={brand}
+     (no spaces, no #). One page; note post count and whether the top
+     posts are from the brand itself or from customers.
+
+  Stop after the three sources; do not pull author profiles unless one
+  account dominates the conversation.
+
+  Report per platform: volume in the window, the three most representative
+  posts with links, who is driving it, and what is absent (no complaints,
+  no reviews, no mentions at all is a finding too). Name the platform next
+  to every count.
+
+  Typical call budget: 3–5 calls (one page per source, plus two comment threads).
+
+  ## Fallbacks
+
+  - X, Reddit and Instagram are all subscription-only. When a source answers
+    402, replace it with one `post_tavily_search` scoped to that platform —
+    query="{brand} site:reddit.com" (or site:instagram.com, site:x.com),
+    max_results=8 — and label the result as "web index of <platform>", which
+    is thinner and older than the platform's own API.
+  - If all three answer 402, run the three Tavily searches and say the whole
+    picture is from the web index.
+  - Say in the report which fallback was used and why.

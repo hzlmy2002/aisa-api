@@ -1,0 +1,113 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# Vendor-shaped like `apollo`, not question-shaped like `seo`: an agent
+# arriving here wants an inbox of its own, and AgentMail is that product
+# category rather than one of several vendors answering the same question.
+#
+# 🔴 ONE SHARED ACCOUNT. AIsa forwards every caller with a single platform
+# credential, so all callers land in one AgentMail organization: inboxes one
+# agent creates are listed, read, and deletable by the next. Twenty-one of
+# these 49 tools write, and six of those send real mail that cannot be
+# recalled. Two mitigations, and they only work together (mcp.md R1):
+#   1. every write says in its description that the workspace is shared, and
+#      each of the six senders says the mail cannot be recalled;
+#   2. no `read_only:` block here — every non-GET is genuinely a write, so the
+#      annotator's default gives all 21 destructiveHint=true. That is the
+#      correct outcome, not an oversight. Do not add a `read_only:` block
+#      without checking the endpoint truly creates nothing (mcp.md section 3.11:
+#      marking a real write "safe" is the failure that costs, and marking reads
+#      destructive turns the confirmation prompt into noise).
+#
+# ⚠️ Upstream has a native tenancy primitive we do not expose: `/v0/pods/...`,
+# with per-pod and per-inbox API keys. Mapping aisa_user_id -> pod_id is the
+# real fix and it is a gateway change, not an MCP one. Recorded with the
+# evidence in dev/api.md ("2026-08-24 复查") and CASEBOOK G1.
+#
+# ⚠️ EXCLUDED: get_agentmail_api_keys and get_agentmail_domains. They are the
+# account-administration surface, disabled in SQL on 2026-06-04 for exactly the
+# shared-account reason above and silently re-enabled on 2026-06-16 by a console
+# save that flipped disabled to enabled. They stay in the docs, they do not
+# become tools. Same mechanism as get_coingecko_news and post_firecrawl_parse.
+id:    aisa-agentmail           # always "aisa-" + slug, checked in CI
+slug:  agentmail                # decides the public URL mcp.aisa.one/agentmail/mcp; frozen once published
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa AgentMail
+category: Communication
+description: >
+  Email inboxes for agents through AIsa: create a real sending and receiving
+  address, read messages and conversation threads, search them, stage drafts
+  and send them, forward, reply and reply-all, manage labels and allow/block
+  lists, and read delivery events. Inboxes are shared across callers on this
+  deployment — every write tool says so, and the six that send mail say it
+  cannot be recalled.
+
+# Not measured. Testing these would mean sending real mail from, or reading,
+# a shared workspace holding other callers' inboxes, so nothing here was
+# exercised live. 30s is a conservative guess over the 15s default for the
+# send paths; replace it with a measurement once per-caller isolation lands.
+timeout_seconds: 30
+
+include:
+  - spec: agentmail.json
+    operations:
+      # Inboxes
+      - get_agentmail_inboxes
+      - post_agentmail_inbox
+      - get_agentmail_inbox
+      - patch_agentmail_inbox
+      - delete_agentmail_inbox
+      # Messages in one inbox
+      - get_agentmail_inbox_messages
+      - get_agentmail_inbox_messages_search
+      - get_agentmail_inbox_message
+      - get_agentmail_inbox_message_raw
+      - get_agentmail_inbox_message_attachment
+      - patch_agentmail_inbox_message
+      - delete_agentmail_inbox_message
+      # Sending. All four leave the building and cannot be recalled.
+      - post_agentmail_inbox_message_send
+      - post_agentmail_inbox_message_reply
+      - post_agentmail_inbox_message_reply_all
+      - post_agentmail_inbox_message_forward
+      # Threads in one inbox
+      - get_agentmail_inbox_threads
+      - get_agentmail_inbox_threads_search
+      - get_agentmail_inbox_thread
+      - get_agentmail_inbox_thread_attachment
+      - patch_agentmail_inbox_thread
+      - delete_agentmail_inbox_thread
+      # Drafts in one inbox. post_agentmail_inbox_draft_send is the fifth sender.
+      - get_agentmail_inbox_drafts
+      - post_agentmail_inbox_draft
+      - get_agentmail_inbox_draft
+      - get_agentmail_inbox_draft_attachment
+      - patch_agentmail_inbox_draft
+      - delete_agentmail_inbox_draft
+      - post_agentmail_inbox_draft_send
+      # Delivery events and counters
+      - get_agentmail_inbox_events
+      - get_agentmail_inbox_metrics
+      # Allow/block lists on one inbox
+      - get_agentmail_inbox_list_entries
+      - post_agentmail_inbox_list_entry
+      - get_agentmail_inbox_list_entry
+      - delete_agentmail_inbox_list_entry
+      # Account-wide twins. These span every inbox in the shared organization,
+      # which is why each description names its inbox-scoped alternative.
+      - get_agentmail_threads
+      - get_agentmail_threads_search
+      - get_agentmail_thread
+      - get_agentmail_thread_attachment
+      - patch_agentmail_thread
+      - delete_agentmail_thread
+      - get_agentmail_drafts
+      - get_agentmail_draft
+      - get_agentmail_draft_attachment
+      - get_agentmail_list_entries
+      - post_agentmail_list_entry
+      - get_agentmail_list_entry
+      - delete_agentmail_list_entry
+      - get_agentmail_metrics

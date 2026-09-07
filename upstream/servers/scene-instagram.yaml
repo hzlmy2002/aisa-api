@@ -1,0 +1,51 @@
+# L1: 2 digest tools + the 15 atomic tools they build on (the stock-pulse
+# shape: composed tools beside their raw dependencies). The scene- prefix
+# follows from the CI rule that a server carrying composed tools is L1; most
+# of what this server exposes is still a plain API mapping.
+#
+# Instagram sat on the blocked list from 2026-08-12 ("617 KB for one profile")
+# until the endpoints were actually measured one by one on 2026-08-17
+# (mcp/node.md §26.2). The measurements split the catalogue in two:
+#
+#   8 endpoints answer in 1–87 KB        -> fine as raw L0 pass-through
+#   7 endpoints answer in 177–632 KB     -> unusable raw in a context window
+#
+# All 15 are exposed raw anyway, for the same reason all 54 Apollo endpoints
+# are (CASEBOOK G1): they are open on /apis/v1, and a quieter second capability
+# boundary that disagrees with the first helps nobody. Each heavy tool's spec
+# description carries its measured size and names a smaller sibling. On top of
+# that, the two heaviest get digest twins (composed/instagram_digest.py):
+# same upstream, ~3% of the payload, chosen by tool choice — never by a layer
+# rewriting responses. Full reasoning: CASEBOOK D1.
+id:    aisa-instagram           # always "aisa-" + slug, checked in CI
+slug:  instagram                # decides the public URL mcp.aisa.one/instagram/mcp; frozen once published
+tier:  L1
+kind:  composed
+owner: jony
+name:  AIsa Instagram
+category: Social
+description: >
+  Read public Instagram through AIsa: profiles, timelines, reels, highlights,
+  comments, video transcripts, and Google-backed search for posts, reels and
+  people. The two heaviest endpoints also come as digest twins that return
+  the same page at roughly 3% of the size, for callers reading rather than
+  downloading.
+
+# search/profiles measured 12.6s and media/transcript 13.1s — both inside the
+# 15-second default with no headroom, so a slow day turns into a timeout on a
+# call that was about to succeed (the same reasoning as reddit's 45s).
+timeout_seconds: 45
+
+include:
+  - spec: instagram.json
+    operations: "*"      # fifteen: profile ×2, posts/reels/highlights ×5,
+                         # post + comments + transcript ×3, search ×3,
+                         # trending + song reels ×2
+
+composed:
+  - module: composed.instagram_digest
+    tools:  [instagram_posts_digest, instagram_profile_digest]
+
+# No read_only block: all fifteen raw operations are GET, which the annotator
+# already treats as read-only, and the two digests declare their own
+# annotations in the module.

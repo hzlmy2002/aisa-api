@@ -1,0 +1,9 @@
+{
+  "node": "v22.16.0",
+  "package_root": "/private/tmp/aisa-api-package-check/node_modules/@hzlmy2002/aisa-api",
+  "skills_installed": 25,
+  "default_tool_count": 8,
+  "all_tool_count": 583,
+  "resource_read": true,
+  "uninstall_clean": true
+}

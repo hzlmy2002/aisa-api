@@ -1,0 +1,46 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# Named for the question, not the vendor — the same rule that put Semrush and
+# Ahrefs together under `seo`. An agent arrives with "find me creators like
+# this one" or "how do I contact this creator", never with "I want WaveInflu",
+# which is not a brand agents know. WaveInflu is the only vendor answering
+# today; modash, upfluence and influencer-club are already on the site's
+# coming-soon list and belong here when they land, which is exactly why this
+# is not called `waveinflu`.
+#
+# Measured on 2026-08-24 against the live gateway — both responses are small,
+# nowhere near the class that forced instagram's digest twins:
+#
+#     email-lookup    533 B    1.9s   one Instagram creator
+#     similar          4.2 KB  7.7s   5 YouTube matches
+#     similar          2.5 KB  4.6s   3 TikTok matches
+#
+# ⚠️ The two endpoints are POST but neither writes anything: one is a lookup,
+# the other a search. Both are listed under read_only so the annotator does not
+# mark them destructive — see mcp.md section 3.11 on why over-marking reads
+# costs more than it protects.
+id:    aisa-creator-discovery   # always "aisa-" + slug, checked in CI
+slug:  creator-discovery        # decides the public URL mcp.aisa.one/creator-discovery/mcp; frozen once published
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Creator Discovery
+category: Creators
+description: >
+  Find and contact social creators through AIsa: match YouTube or TikTok
+  creators from a seed profile or a natural-language content direction with
+  similarity scores and follower/view filters, and look up contact emails for
+  a TikTok, Instagram or YouTube creator from their profile URL.
+
+# similar measured 7.7s on 5 matches and scales with `limit` (up to 100),
+# so the 15s default has no headroom on a large request.
+timeout_seconds: 60
+
+include:
+  - spec: waveinflu.json
+    operations: "*"      # two: email lookup / similar creators
+
+read_only:
+  - post_waveinflu_email_lookup      # a lookup; creates nothing upstream
+  - post_waveinflu_similar_creators  # a search; reserves then charges quota, writes no state

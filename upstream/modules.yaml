@@ -1,0 +1,372 @@
+# Modules: how the root entry point (mcp.aisa.one/mcp) groups tools.
+#
+# A module is a named set of servers. Two kinds exist and both resolve through
+# `?modules=<a>,<b>` on the root entry point:
+#
+#   * every server slug is implicitly a module of its own (`seo-backlinks`,
+#     `twitter-api`, ...) — nothing to declare here;
+#   * the categories below are coarse modules spanning several servers, and each
+#     of them is also served at its own path alias, `mcp.aisa.one/<category>/mcp`,
+#     which is the same thing as `mcp.aisa.one/mcp?modules=<category>`.
+#
+# Modules decide what is PRELOADED into a client's tools/list. They never
+# decide what is REACHABLE: the root's search_tools / call_tool pair reaches
+# every tool on every server regardless of what was pinned. And they never
+# touch billing — that is decided per call, per key, by /apis/v1.
+#
+# Keep a server in exactly one category. Overlap makes "which module owns this
+# tool" unanswerable, and the catalogue entries, the telemetry and the package
+# definitions all key on that answer.
+# The `seo` category preloads `default_tools` — a curated set of about sixty —
+# rather than all 316; `?modules=seo-all` pins everything. The fine `seo-*`
+# modules below regroup DataForSEO Labs operations by the question they
+# answer: App Store keyword research joins seo-apps, Amazon joins
+# seo-marketplace, and the rest of Labs is keywords or competitors.
+version: 1
+categories:
+  seo:
+    name: AIsa SEO & AI Visibility
+    description: 'Search and AI-answer visibility: rankings, keywords, backlinks, site health, app and
+      marketplace listings, local business data, and how a brand shows up in ChatGPT, Claude, Gemini and
+      Perplexity answers. DataForSEO, Semrush and Ahrefs together.
+
+      '
+    servers:
+    - seo-ai-visibility
+    - seo-apps
+    - seo-backlinks
+    - seo-business
+    - seo-content
+    - seo-domains
+    - seo-keywords
+    - seo-labs
+    - seo-merchant
+    - seo-onpage
+    - seo-serp
+    - seo-serp-other-engines
+    default_tools:
+    - get_ahrefs_domain_rating
+    - get_ahrefs_site_metrics
+    - get_dataforseo_on_page_summary
+    - get_semrush_backlinks_overview
+    - get_semrush_domain_organic_keywords
+    - get_semrush_domain_overview
+    - get_semrush_keyword_difficulty
+    - get_semrush_keyword_overview
+    - get_semrush_organic_competitors
+    - get_semrush_organic_results
+    - get_semrush_referring_domains
+    - post_dataforseo_ai_chat_gpt_llm_responses_live
+    - post_dataforseo_ai_claude_llm_responses_live
+    - post_dataforseo_ai_gemini_llm_responses_live
+    - post_dataforseo_ai_keyword_volume_live
+    - post_dataforseo_ai_llm_mentions_aggregated_metrics_live
+    - post_dataforseo_ai_llm_mentions_search_live
+    - post_dataforseo_ai_llm_mentions_top_domains_live
+    - post_dataforseo_ai_perplexity_llm_responses_live
+    - post_dataforseo_backlinks_anchors_live
+    - post_dataforseo_backlinks_backlinks_live
+    - post_dataforseo_backlinks_competitors_live
+    - post_dataforseo_backlinks_history_live
+    - post_dataforseo_backlinks_referring_domains_live
+    - post_dataforseo_backlinks_summary_live
+    - post_dataforseo_content_search_live
+    - post_dataforseo_content_sentiment_analysis_live
+    - post_dataforseo_content_summary_live
+    - post_dataforseo_domains_tech_for_domain_live
+    - post_dataforseo_domains_whois_overview_live
+    - post_dataforseo_keywords_gads_kw_for_keywords_live
+    - post_dataforseo_keywords_gads_search_volume_live
+    - post_dataforseo_keywords_trends_explore_live
+    - post_dataforseo_labs_google_bulk_keyword_difficulty_live
+    - post_dataforseo_labs_google_bulk_traffic_estimation_live
+    - post_dataforseo_labs_google_domain_rank_overview_live
+    - post_dataforseo_labs_google_historical_keyword_data_live
+    - post_dataforseo_labs_google_historical_rank_live
+    - post_dataforseo_labs_google_keyword_ideas_live
+    - post_dataforseo_labs_google_keyword_overview_live
+    - post_dataforseo_labs_google_keyword_suggestions_live
+    - post_dataforseo_labs_google_related_keywords_live
+    - post_dataforseo_labs_google_relevant_pages_live
+    - post_dataforseo_labs_google_search_intent_live
+    - post_dataforseo_labs_google_serp_competitors_live
+    - post_dataforseo_labs_google_subdomains_live
+    - post_dataforseo_on_page_duplicate_content
+    - post_dataforseo_on_page_lighthouse_live_json
+    - post_dataforseo_on_page_links
+    - post_dataforseo_on_page_non_indexable
+    - post_dataforseo_on_page_submit
+    - post_dataforseo_serp_ai_summary
+    - post_dataforseo_serp_bing_organic_live
+    - post_dataforseo_serp_google_ai_mode_live
+    - post_dataforseo_serp_google_autocomplete_live
+    - post_dataforseo_serp_google_local_finder_live
+    - post_dataforseo_serp_google_maps_live
+    - post_dataforseo_serp_google_news_live
+    - post_dataforseo_serp_google_organic_live
+    - post_dataforseo_serp_youtube_organic_live
+  finance:
+    name: AIsa Finance
+    description: 'Market and company data: prices, fundamentals, filings, insider trades, crypto markets,
+      prediction markets, and a scene agent that aligns what X is saying about tickers with how they are
+      trading.
+
+      '
+    servers:
+    - marketpulse
+    - crypto-market-data
+    - prediction-market-data
+    - stock-pulse
+  social:
+    name: AIsa Social
+    description: 'Public social data: X/Twitter users, posts, search and trends; Instagram, Reddit and
+      Pinterest profiles and content; YouTube search.
+
+      '
+    servers:
+    - twitter-api
+    - instagram
+    - reddit
+    - pinterest
+    - youtube-search
+  search:
+    name: AIsa Web Search & Research
+    description: 'Web search, page extraction, crawling and grounded research through Tavily, Firecrawl,
+      Exa, Perplexity, Oxylabs, txyz, and Anthropic/OpenAI grounded search.
+
+      '
+    servers:
+    - web-search
+  sales:
+    name: AIsa Sales
+    description: 'People and company search, enrichment, sequences and CRM objects through Apollo, creator
+      discovery, and Similarweb market intelligence: any domain''s traffic, audience, rankings and search rivals.
+
+      '
+    servers:
+    - apollo
+    - creator-discovery
+    - similarweb
+  mail:
+    name: AIsa Agent Mail
+    description: 'Inboxes, threads, drafts and sending for agents through AgentMail.
+
+      '
+    servers:
+    - agentmail
+modules:
+  seo-geo:
+    name: AIsa SEO GEO
+    description: 'AI-answer visibility: what ChatGPT, Claude, Gemini and Perplexity say, and brand mentions
+      across LLM answers.'
+    servers:
+    - seo-ai-visibility
+  seo-apps:
+    name: AIsa SEO Apps
+    description: Apple App Store and Google Play listings, reviews, searches and ASO keyword research
+      (including the Labs app-keyword tools).
+    servers:
+    - seo-apps
+    tools:
+    - post_dataforseo_labs_apple_app_competitors_live
+    - post_dataforseo_labs_apple_app_intersection_live
+    - post_dataforseo_labs_apple_bulk_app_metrics_live
+    - post_dataforseo_labs_apple_keywords_for_app_live
+    - post_dataforseo_labs_google_app_competitors_live
+    - post_dataforseo_labs_google_app_intersection_live
+    - post_dataforseo_labs_google_bulk_app_metrics_live
+    - post_dataforseo_labs_google_keywords_for_app_live
+  seo-backlinks:
+    name: AIsa SEO Backlinks
+    description: Backlink profiles, referring domains, anchors, new/lost links and competitor intersections
+      from DataForSEO and Semrush.
+    servers:
+    - seo-backlinks
+  seo-local:
+    name: AIsa SEO Local
+    description: Google Business Profile, hotels, Trustpilot and Tripadvisor listings and reviews.
+    servers:
+    - seo-business
+  seo-content:
+    name: AIsa SEO Content
+    description: Brand and keyword citations across the web with sentiment and trends.
+    servers:
+    - seo-content
+  seo-competitors:
+    name: AIsa SEO Competitors
+    description: Domain authority, rank history, traffic estimates, competitors, subdomains, technology
+      stack and whois from DataForSEO Labs, Semrush and Ahrefs, with Similarweb's panel-based competitor view for cross-checking.
+    servers:
+    - seo-domains
+    tools:
+    - get_similarweb_similar_sites
+    - get_similarweb_keyword_competitors
+    - get_similarweb_ranking
+    - get_similarweb_top_sites_ranking
+    - get_similarweb_popular_pages
+    - get_similarweb_subdomains
+    - get_similarweb_technologies
+    - get_ahrefs_domain_rating
+    - get_ahrefs_site_metrics
+    - get_dataforseo_labs_available_filters
+    - get_dataforseo_labs_google_available_history
+    - get_dataforseo_labs_status
+    - get_semrush_domain_overview
+    - get_semrush_domain_rank_history
+    - get_semrush_domain_vs_domain
+    - get_semrush_organic_competitors
+    - post_dataforseo_labs_google_bulk_traffic_estimation_live
+    - post_dataforseo_labs_google_categories_for_domain_live
+    - post_dataforseo_labs_google_domain_rank_overview_live
+    - post_dataforseo_labs_google_historical_bulk_traffic_live
+    - post_dataforseo_labs_google_historical_rank_live
+    - post_dataforseo_labs_google_kw_for_site_live
+    - post_dataforseo_labs_google_relevant_pages_live
+    - post_dataforseo_labs_google_serp_competitors_live
+    - post_dataforseo_labs_google_subdomains_live
+  seo-keywords:
+    name: AIsa SEO Keywords
+    description: Search volume, difficulty, intent, ideas and related terms from DataForSEO Labs, Google
+      Ads, Bing, Trends, Clickstream and Semrush, plus Similarweb's search-clicks view of a domain's keywords.
+    servers:
+    - seo-keywords
+    tools:
+    - get_similarweb_keywords
+    - get_similarweb_landing_pages
+    - get_dataforseo_labs_google_categories_for_kw_languages
+    - get_semrush_domain_organic_keywords
+    - get_semrush_domain_paid_keywords
+    - get_semrush_url_organic_keywords
+    - post_dataforseo_labs_google_bulk_keyword_difficulty_live
+    - post_dataforseo_labs_google_categories_for_kw_live
+    - post_dataforseo_labs_google_historical_keyword_data_live
+    - post_dataforseo_labs_google_keyword_ideas_live
+    - post_dataforseo_labs_google_keyword_overview_live
+    - post_dataforseo_labs_google_keyword_suggestions_live
+    - post_dataforseo_labs_google_keywords_for_categories_live
+    - post_dataforseo_labs_google_related_keywords_live
+    - post_dataforseo_labs_google_search_intent_live
+    - post_dataforseo_labs_google_top_searches_live
+  seo-marketplace:
+    name: AIsa SEO Marketplace
+    description: Google Shopping and Amazon products, sellers, prices and Amazon keyword rankings (including
+      the Labs Amazon tools).
+    servers:
+    - seo-merchant
+    tools:
+    - post_dataforseo_labs_amazon_bulk_volume_live
+    - post_dataforseo_labs_amazon_product_competitors_live
+    - post_dataforseo_labs_amazon_product_kw_overlap_live
+    - post_dataforseo_labs_amazon_product_rank_overview_live
+    - post_dataforseo_labs_amazon_ranked_keywords_live
+    - post_dataforseo_labs_amazon_related_keywords_live
+  seo-site-audit:
+    name: AIsa SEO Site Audit
+    description: 'Site crawling and page health: summary, Lighthouse, links, duplicates, non-indexable
+      pages.'
+    servers:
+    - seo-onpage
+  seo-rankings:
+    name: AIsa SEO Rankings
+    description: 'Who ranks where: Google, Bing, Yahoo, YouTube and Google-surface SERPs (maps, news,
+      images, AI mode) plus Semrush organic/paid results and Similarweb''s SERP-players share.'
+    servers:
+    - seo-serp
+    - seo-serp-other-engines
+    tools:
+    - get_similarweb_serp_players_aggregated
+    - get_similarweb_serp_players_timeseries
+  gtm:
+    name: AIsa GTM
+    prompt: true
+    alias: true    # /gtm/mcp — a path worth printing on the plan's page; slices keep ?modules=
+    # The curated set the bare `gtm` (and /gtm/mcp) pins — the everyday GTM
+    # asks, ~3 per server plus the cross-picked SEO-intel heads. Everything
+    # else stays reachable via search or ?modules=gtm-all. Same idea as the
+    # seo category's sixty.
+    default_tools:
+    - get_apollo_organizations_enrich
+    - post_apollo_mixed_people_api_search
+    - post_apollo_people_match
+    - post_apollo_mixed_companies_search
+    - post_apollo_organizations_bulk_enrich
+    - post_apollo_people_bulk_match
+    - get_apollo_organizations_organization_id_job_postings
+    - post_apollo_news_articles_search
+    - get_twitter_user_info
+    - get_twitter_user_last_tweets
+    - get_twitter_tweet_advanced_search
+    - get_twitter_user_followers
+    - get_twitter_tweet_replies
+    - get_twitter_trends
+    - get_twitter_user_mentions
+    - get_twitter_user_search
+    - instagram_profile_digest
+    - instagram_posts_digest
+    - get_instagram_search_profiles
+    - get_instagram_search_hashtag
+    - get_reddit_search
+    - get_reddit_subreddit
+    - get_reddit_post_comments
+    - get_pinterest_search
+    - get_pinterest_board
+    - get_youtube_search
+    - post_waveinflu_similar_creators
+    - post_waveinflu_email_lookup
+    - get_similarweb_website_traffic_snapshot
+    - get_similarweb_website_traffic_trend
+    - get_similarweb_website_top_geographies
+    - get_similarweb_traffic_engagement
+    - get_similarweb_similar_sites
+    - get_similarweb_ranking
+    - get_similarweb_keywords
+    - get_similarweb_keyword_competitors
+    - get_semrush_domain_overview
+    - get_semrush_keyword_overview
+    - get_semrush_organic_competitors
+    - get_semrush_backlinks_overview
+    - get_ahrefs_domain_rating
+    - post_oxylabs_ai_search
+    - post_dataforseo_serp_youtube_organic_live   # gets an entry prompt (/aisa:gtm) like a category; fine seo-* modules do not
+    description: 'Go-to-market data in one set: people and company search (Apollo), creator discovery,
+      X/Twitter, Instagram, Reddit, Pinterest and YouTube, Similarweb market intelligence, plus the Semrush, Ahrefs, Oxylabs and
+      DataForSEO YouTube operations. Mirrors the Hive GTM Growth subscription: every operation here is
+      subscription-only on the gateway, so a key without the plan gets 402 on all of them.'
+    servers:
+    - apollo
+    - creator-discovery
+    - similarweb
+    - twitter-api
+    - instagram
+    - reddit
+    - pinterest
+    - youtube-search
+    tools:
+    - get_ahrefs_domain_rating
+    - get_ahrefs_site_metrics
+    - get_semrush_backlink_anchors
+    - get_semrush_backlink_competitors
+    - get_semrush_backlinks
+    - get_semrush_backlinks_overview
+    - get_semrush_broad_match_keywords
+    - get_semrush_domain_organic_keywords
+    - get_semrush_domain_overview
+    - get_semrush_domain_paid_keywords
+    - get_semrush_domain_rank_history
+    - get_semrush_domain_vs_domain
+    - get_semrush_indexed_pages
+    - get_semrush_keyword_difficulty
+    - get_semrush_keyword_overview
+    - get_semrush_organic_competitors
+    - get_semrush_organic_results
+    - get_semrush_paid_results
+    - get_semrush_question_keywords
+    - get_semrush_referring_domains
+    - get_semrush_url_organic_keywords
+    - post_oxylabs_ai_search
+    - get_dataforseo_serp_youtube_languages
+    - get_dataforseo_serp_youtube_locations
+    - post_dataforseo_serp_youtube_organic_live
+    - post_dataforseo_serp_youtube_video_comments_live
+    - post_dataforseo_serp_youtube_video_info_live
+    - post_dataforseo_serp_youtube_video_subtitles_live

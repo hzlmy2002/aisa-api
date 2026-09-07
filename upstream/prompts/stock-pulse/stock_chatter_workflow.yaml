@@ -1,0 +1,116 @@
+# The name is frozen once published.
+name: stock_chatter_workflow
+title: Work through stock chatter on X, with the market data behind it
+description: >
+  Decide between the one-call bundle and the underlying atomic tools when
+  looking at what X/Twitter is saying about stocks, then read the result
+  honestly — including which sources failed and what the mention counts do
+  and do not mean.
+
+arguments:
+  - name: topic
+    description: >
+      What to look at, e.g. "AI chip stocks", "$NVDA earnings", or a sector.
+    required: true
+  - name: known_tickers
+    description: >
+      Tickers you already know you care about, comma-separated, e.g.
+      "NVDA,AMD". Leave empty to discover them from the conversation.
+    required: false
+    default: ""
+
+uses:
+  - twitter_stock_pulse
+  - get_twitter_tweet_advanced_search
+  - get_financial_prices_snapshot
+  - get_financial_news
+
+skill:
+  when_to_use: Use when asked what X is saying about stocks together with the market
+    data behind those mentions.
+    分析股票相关社交舆情，结合行情和新闻核对热门股票讨论。
+  providers:
+  - twitter
+  - financial-datasets
+  examples:
+  - 美股投资者最近热议哪些股票，股价和相关新闻有什么变化？
+  aliases:
+  - 股票舆情
+  - 股市讨论
+  - 股票热议
+  - stock chatter
+  tags:
+  - finance
+  - social
+  - stocks
+  - twitter
+
+template: |
+  Work through stock chatter on X for: {topic}
+  Tickers already known: {known_tickers}
+
+  ## Pick the right entry point first
+
+  - **Tickers are unknown** (the empty case above): use `twitter_stock_pulse`.
+    One call searches X, extracts every $CASHTAG from the results, and pulls a
+    price snapshot for the most-mentioned symbols. Doing it by hand means one
+    search, parsing cashtags, then one price call per symbol, then joining —
+    four steps that every agent otherwise reimplements the same way.
+
+  - **Tickers are already known**: skip the bundle. Call `get_financial_prices_snapshot`
+    directly for each one, and `get_twitter_tweet_advanced_search` only if you
+    also need the posts. The bundle's discovery step is wasted work here, and
+    it costs an extra upstream call.
+
+  - **You need posts but no market data at all**: use
+    `get_twitter_tweet_advanced_search` on its own.
+
+  Set `include_news` on the bundle only when the user asked why something is
+  moving. It costs one extra call per symbol and returns nothing useful when
+  the question is just "what are people talking about".
+
+  Reach for `get_financial_news` directly when you already have the symbols and the
+  question is specifically about news — the bundle would re-run discovery you
+  do not need. Headlines explain moves; they do not confirm them. A story
+  published after a price move is not evidence it caused the move.
+
+  ## Read the response honestly
+
+  The bundle returns `coverage` and `billing` alongside the data. Both matter:
+
+  - `coverage.failed` lists the upstream calls that did not succeed. If it is
+    non-empty, say which symbols are missing price data **before** presenting
+    the rest. A ticker with `quote: null` was not quiet — it failed.
+  - `billing.count` is how many upstream calls were actually made. Report it
+    when the user is cost-sensitive.
+
+  ## What `mentions` is not
+
+  `mentions` is a raw count of posts containing that cashtag in the sample
+  that was retrieved. It is **not** a heat ranking, not a sentiment score, and
+  not weighted by author reach. A ticker mentioned 40 times by one bot ranks
+  above one mentioned 12 times across 12 established accounts.
+
+  `max_tickers` is a sampling cap for cost control. Symbols beyond the cap were
+  cut by mention count, not by importance — say so if the cap was hit.
+
+  Cashtag extraction only matches an explicit `$TICKER` form. Posts that
+  discuss a company by name without the cashtag are absent from the counts.
+  This is deliberate — loose matching would turn "$USD" and ordinary uppercase
+  words into fake tickers — but it means the counts undercount.
+
+  ## Out of scope
+
+  Do not rank the tickers by attractiveness, infer sentiment direction, or
+  suggest a position. Present the posts, the counts, the prices, and what was
+  missing. A value investor, a momentum trader and a short seller should each
+  be able to use this same output and reach different conclusions — if only one
+  conclusion is available from what you wrote, you have overstepped.
+
+  ## Fallbacks
+
+  - X is subscription-only. If `twitter_stock_pulse` or
+    `get_twitter_tweet_advanced_search` answers 402, the chatter half is
+    unavailable: still run `get_financial_prices_snapshot` and
+    `get_financial_news` for the tickers the user named, and say the social
+    signal is missing rather than inferring silence.

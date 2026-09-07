@@ -1,0 +1,35 @@
+{
+  "tested_at": "2026-09-07T04:04:18.447Z",
+  "tests": {
+    "node": "22.16.0",
+    "passed": 109,
+    "failed": 0,
+    "skipped": 0
+  },
+  "coverage": {
+    "servers": 26,
+    "atomic_operations": 571,
+    "composed_operations": 4,
+    "skills": 25,
+    "resources": 3,
+    "credential_adaptations": 49
+  },
+  "package": {
+    "file": "artifacts/hzlmy2002-aisa-api-0.1.0.tgz",
+    "sha256": "70e6872c3dd44d7228aa2ab3098924d2b53bc618b5c0f7348307e17d6d6f71af",
+    "bytes": 394211,
+    "published": false
+  },
+  "live": {
+    "successful_operations": [
+      "get_coingecko_simple_price",
+      "post_tavily_search",
+      "get_financial_prices_snapshot"
+    ],
+    "verified_cost_limit_error": true,
+    "similarweb_calls": 0,
+    "all_apis_live_tested": false
+  },
+  "real_client_configs_modified": false,
+  "reference_projects_modified": false
+}

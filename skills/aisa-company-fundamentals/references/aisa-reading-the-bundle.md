@@ -1,0 +1,64 @@
+# Reading the stock_pulse bundle
+
+`twitter_stock_pulse` returns four blocks. Three of them are routinely
+misread, and each misreading produces a confident-sounding wrong answer
+rather than an error.
+
+## `mentions` is a count, not a ranking
+
+It is the number of posts in **the retrieved sample** that contained that
+cashtag. It is not weighted by author reach, not adjusted for bots, and not a
+sentiment measure. A ticker mentioned 40 times by one account outranks one
+mentioned 12 times across 12 established accounts.
+
+The list is ordered by this count because something has to be first. **Order
+is not importance.** If you present it as a ranking, you have added a
+judgement the data does not support.
+
+### What is missing from the count
+
+Extraction matches only the explicit `$TICKER` cashtag form. A post that
+discusses a company by name, or by ticker without the `$`, is invisible to
+the count. This is deliberate — loose matching turns `$USD` and ordinary
+uppercase words into fake tickers — but it means counts **undercount**, and
+they undercount unevenly: retail-heavy conversations use cashtags far more
+than institutional ones.
+
+## `coverage` is where partial failure is recorded
+
+```
+coverage: { requested: 6, succeeded: 4, failed: [{op: ..., reason: ...}] }
+```
+
+A symbol whose price call failed comes back with `quote: null`. **That is not
+the same as a quiet market — it is a failure.** If `coverage.failed` is
+non-empty, say which symbols lack data before presenting anything else.
+Silently narrowing the answer to whatever succeeded is the single most
+misleading thing you can do with this response.
+
+`reason` is classified, not raw. `payment_required_or_bad_key` is the one to
+read carefully: the upstream returns 402 for a missing or invalid key, not
+401, so it means "check the key" more often than "add funds".
+
+## `billing` is why one tool call is not one charge
+
+```
+billing: { calls: [...], count: 6 }
+```
+
+A single `twitter_stock_pulse` call fans out to one search plus one price
+call per symbol, plus one news call per symbol when news was requested — six
+to eleven billed upstream calls. `count` is the real number. Report it when
+the user is cost-sensitive; they may reasonably have assumed one call meant
+one charge.
+
+`max_tickers` caps the fan-out for cost, not for relevance. Symbols beyond
+the cap were cut by mention count. If the cap was hit, say so — otherwise the
+reader assumes they are seeing everything the conversation mentioned.
+
+## The sample is a sample
+
+Everything above describes one search result set: one query, one time window,
+one page depth. It is not the corpus. Two runs minutes apart can differ, and
+neither is wrong. State the query and window alongside the numbers so the
+reader can judge what the sample covers.

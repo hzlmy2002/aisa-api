@@ -1,0 +1,26 @@
+# L1: a scene agent. It orchestrates across APIs and returns packaged context;
+# it makes no judgements.
+# The scene- filename prefix is for browsing this directory. The slug is what
+# decides the URL, and CI checks the two against each other.
+id:    aisa-stock-pulse
+slug:  stock-pulse               # → mcp.aisa.one/stock-pulse/mcp
+tier:  L1
+kind:  composed
+owner: tom
+name:  Stock Pulse
+category: Finance
+description: >
+  What X/Twitter is saying about stocks right now, joined with the market data
+  behind the tickers mentioned — one call instead of four.
+
+# The underlying atomic tools stay exposed too, so an agent can dig further
+# when the packaged result is not enough
+include:
+  - spec: twitter-tweet-batch_02.json
+    operations: [get_twitter_tweet_advanced_search]
+  - spec: openapi-financial.json
+    operations: [get_financial_prices_snapshot, get_financial_news]
+
+composed:
+  - module: composed.stock_pulse
+    tools:  [twitter_stock_pulse]

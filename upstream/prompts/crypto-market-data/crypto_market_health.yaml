@@ -1,0 +1,76 @@
+# The name is frozen once published.
+name: crypto_market_health
+title: Where the crypto market is today, in four calls
+description: >
+  Market-wide read: the largest coins and their moves, what is trending,
+  which sectors are up, and how Bitcoin traded over the last week. Sets
+  the order and the size of each call; it does not predict.
+
+arguments:
+  - name: vs_currency
+    description: Quote currency for every number, e.g. `usd`.
+    required: false
+    default: "usd"
+  - name: days
+    description: Lookback for the Bitcoin chart in days, e.g. `7`.
+    required: false
+    default: "7"
+
+uses:
+  - get_coingecko_coins_markets
+  - get_coingecko_search_trending
+  - get_coingecko_coins_categories
+  - get_coingecko_coins_id_market_chart
+
+skill:
+  when_to_use: Use when asked for a market-wide crypto overview covering large coins,
+    sectors, attention and Bitcoin history.
+    查看加密市场整体行情、热门币种、板块表现和比特币历史走势。
+  providers:
+  - coingecko
+  examples:
+  - 今天币圈大盘怎么样，哪些板块和代币比较热门？
+  aliases:
+  - 加密市场概况
+  - 币市行情
+  - 加密货币大盘
+  - crypto overview
+  tags:
+  - finance
+  - crypto
+  - market
+
+template: |
+  Crypto market health · quote currency {vs_currency} · Bitcoin lookback {days} days
+
+  1. The big picture. Call `get_coingecko_coins_markets` with
+     vs_currency={vs_currency}, per_page=20, page=1 and sparkline=false.
+     Keep it to one page: this is the largest response in the set.
+     Note total dominance of the top three and the 24h movers among the 20.
+
+  2. What people are looking at. Call `get_coingecko_search_trending` —
+     no arguments. Trending is attention, not price; say so.
+
+  3. Which sectors. Call `get_coingecko_coins_categories` once. Report the
+     top and bottom three by 24h change with their market caps.
+
+  4. Bitcoin's week. Call `get_coingecko_coins_id_market_chart` with
+     id=bitcoin, vs_currency={vs_currency} and days={days}. Summarise the
+     range and where today sits in it; do not request a smaller interval,
+     the daily series is enough here.
+
+  Stop after four calls. Individual coin deep-dives are the
+  `look_up_token_market` workflow.
+
+  Report: three lines on the top coins, three on sectors, one on
+  trending, one on Bitcoin's week — every number with its timestamp.
+
+  Typical call budget: 4 calls, no paging.
+
+  ## Fallbacks
+
+  - If `get_coingecko_coins_markets` fails, skip the market table and keep
+    the other three; do not page through `get_coingecko_coins_categories`
+    to reconstruct it.
+  - If the Bitcoin chart fails, report the range as "not available".
+  - Say in the report which fallback was used and why.

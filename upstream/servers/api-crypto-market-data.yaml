@@ -1,0 +1,54 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# get_coingecko_news is left out on purpose: upstream answers 401 ("exclusive
+# to Analyst plan or above subscribers"), so the current CoinGecko subscription
+# cannot call it. A tool that always fails is worse than an absent one — an
+# agent retries it and then blames its own arguments. Put it back in operations
+# when the plan is upgraded; the documentation page has been there all along.
+id:    aisa-crypto-market-data      # always "aisa-" + slug, checked in CI
+slug:  crypto-market-data           # decides the public URL; matches the published manifest; frozen
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Crypto Market Data
+category: Finance
+description: >
+  Crypto market data from CoinGecko: spot prices by coin id or contract
+  address, ranked market tables, historical series and OHLC candles, per-venue
+  tickers and liquidity, exchange profiles, sector categories, and the current
+  trending board.
+
+include:
+  - spec: coingecko.json
+    # 21 of them, ordered the way they get used — resolve an id, then price,
+    # then history, then venues — rather than alphabetically. This list is
+    # also read by people.
+    operations:
+      # Resolving identifiers
+      - get_coingecko_coins_list
+      - get_coingecko_simple_supported_vs_currencies
+      - get_coingecko_coins_categories_list
+      - get_coingecko_exchanges_list
+      # Current prices
+      - get_coingecko_simple_price
+      - get_coingecko_simple_token_price_id
+      - get_coingecko_coins_markets
+      # Detail on a single asset
+      - get_coingecko_coins_id
+      - get_coingecko_token_data
+      # Historical series
+      - get_coingecko_coins_id_market_chart
+      - get_coingecko_coins_id_market_chart_range
+      - get_coingecko_coins_id_ohlc
+      - get_coingecko_coins_id_history
+      - get_coingecko_token_market_chart
+      - get_coingecko_token_market_chart_range
+      # Venues and liquidity
+      - get_coingecko_coins_id_tickers
+      - get_coingecko_exchanges
+      - get_coingecko_exchanges_id
+      - get_coingecko_exchanges_id_tickers
+      # Categories and what is trending
+      - get_coingecko_coins_categories
+      - get_coingecko_search_trending

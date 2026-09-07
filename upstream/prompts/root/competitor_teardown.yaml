@@ -1,0 +1,110 @@
+# Root-level workflow: spans similarweb, seo-labs and seo-domains.
+# Mirrors the field-tested GTM playbook ("tear down X"): size the traffic,
+# find the competitive set, see where the audience lives, compare the
+# search-side rivals against the traffic-side ones, then measure the top
+# competitors the same way. The name is frozen once published.
+name: competitor_teardown
+title: Tear down a competitor or market from one domain
+description: >
+  From one domain to a market map: how big its traffic is, which sites
+  compete for the same audience, where that audience lives, who the
+  search-side rivals are (often a different list — say so), and how the
+  top competitors measure on the same yardstick. Sets the call order,
+  the budget and the data-vintage rules; the judgement stays with the
+  reader.
+
+arguments:
+  - name: domain
+    description: The domain to tear down, as a bare host such as `example.com`.
+    required: true
+  - name: country
+    description: >
+      Country focus. Similarweb product surfaces accept `us` or `ww`
+      (worldwide); leave `ww` unless the market is US-only.
+    required: false
+    default: "ww"
+
+uses:
+  - get_similarweb_website_traffic_snapshot
+  - get_similarweb_similar_sites
+  - get_similarweb_website_top_geographies
+  - get_semrush_organic_competitors
+  - post_dataforseo_labs_google_bulk_traffic_estimation_live
+  - get_similarweb_technologies
+
+skill:
+  when_to_use: Use when asked to analyze a competitor or map a market starting from
+    a domain.
+    从域名分析竞争对手的网站流量、受众地域、相似网站和竞争格局。
+  providers:
+  - similarweb
+  - semrush
+  - dataforseo
+  examples:
+  - 帮我拆解这个竞品的网站表现，流量来自哪些国家，还有哪些竞争网站？
+  aliases:
+  - 竞品分析
+  - 竞争对手
+  - 市场分析
+  - 流量对比
+  - competitor traffic
+  - market map
+  tags:
+  - seo
+  - competitors
+  - traffic
+  - gtm
+
+template: |
+  Tear down: {domain}
+  Country focus: {country}
+
+  Typical call budget: 5–8 calls. Plan the set before you start; the
+  per-competitor loop in step 5 is where budgets die, so cap it at the
+  top 2–3.
+
+  Data vintage: Similarweb reports complete months only — a month becomes
+  queryable after it closes. Say which months every number covers; do not
+  present last month's traffic as "current". Social and SERP data are
+  live; label them "as of today".
+
+  1. Size it. `get_similarweb_website_traffic_snapshot` with
+     domain={domain}, country={country}: visits, engagement, rank for the
+     latest complete month.
+
+  2. The competitive set. `get_similarweb_similar_sites` with
+     domain={domain} — note its date window must span exactly three
+     complete months. Keep the top 5–8 by affinity.
+
+  3. Where the audience lives. `get_similarweb_website_top_geographies`
+     with domain={domain}.
+
+  4. Search rivals vs traffic rivals. `get_semrush_organic_competitors`
+     with domain={domain}. The two lists often differ — a site can share
+     your keywords without sharing your audience. Report both lists and
+     point out the overlap and the differences; do not merge them.
+
+  5. Measure the top competitors. For the top 2–3 from step 2, repeat
+     `get_similarweb_website_traffic_snapshot` — same yardstick, same
+     months, or the comparison is meaningless.
+
+  6. Optional depth, one call each at most: `get_similarweb_technologies`
+     for the stack behind a rival.
+
+  ## Fallbacks
+
+  - Similarweb and Semrush are subscription-only (Hive GTM Growth). On the
+    first 402, the pay-per-call route is
+    `post_dataforseo_labs_google_bulk_traffic_estimation_live` (one task,
+    targets=[{domain} and the rivals you know]) for comparable traffic
+    estimates — label them "clickstream estimate", a different measurement
+    from Similarweb's panel, and never mix the two in one column.
+  - If a needed source is unavailable, say so and label any substitute;
+    never pass one source off as another silently.
+  - If step 2 returns nothing for a small domain, say the panel has no
+    coverage rather than inventing rivals; the Labs estimation route
+    above still works.
+
+  Report: market map (who, how big, where), search-vs-traffic rival
+  comparison, and one "so what" line per competitor. Name the provider
+  and the months next to every number.

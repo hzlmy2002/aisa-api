@@ -1,0 +1,49 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# One of twelve servers splitting DataForSEO's 445 operations by the question
+# they answer. A single server was never an option - CASEBOOK D4: 445 tools in
+# one endpoint is a menu no agent can choose from.
+#
+# ⚠️ Two conventions apply across all twelve, decided 2026-08-25:
+#
+# 1. ASYNC IS COLLAPSED. DataForSEO offers most operations as a three-call
+#    dance: task_post queues, tasks_ready lists what finished, task_get
+#    retrieves. Where a `_live` variant exists the async twin is dropped
+#    entirely; where it does not, the pair is submit + fetch and `tasks_ready`
+#    is withheld. A caller that submitted a job holds its own id, so listing
+#    everyone's finished jobs answers a question no single caller is asking.
+#    This mirrors the firecrawl and exa job pairs already in `web-search`.
+#    445 operations become 317 tools this way.
+#
+# 2. VENDORS ARE MIXED BY QUESTION. Semrush and Ahrefs used to sit together in
+#    a server called `seo`; their 21 tools are redistributed here by what they
+#    answer, so an agent asking about domain authority sees that DataForSEO,
+#    Semrush and Ahrefs all have a number for it and can cross-refer between
+#    them. Same reasoning that put Semrush and Ahrefs together in the first
+#    place, carried one step further.
+
+id:    aisa-seo-content
+slug:  seo-content
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Content & Sentiment
+category: SEO & Search Data
+description: >
+  Citations of a brand or phrase across the web: search and summary,
+  category and phrase trends, sentiment analysis and rating distribution.
+
+include:
+  - spec: dataforseo.json
+    operations:
+      - get_dataforseo_content_available_filters
+      - get_dataforseo_content_categories
+      - get_dataforseo_content_languages
+      - get_dataforseo_content_locations
+      - post_dataforseo_content_category_trends_live
+      - post_dataforseo_content_phrase_trends_live
+      - post_dataforseo_content_rating_distribution_live
+      - post_dataforseo_content_search_live
+      - post_dataforseo_content_sentiment_analysis_live
+      - post_dataforseo_content_summary_live

@@ -1,0 +1,107 @@
+# The name is frozen once published.
+#
+# This server has exactly one tool, so there is no orchestration to describe.
+# What the prompt is for is parameter craft: `sp` is an opaque token and
+# `gl`/`hl` materially change the results. Neither appears in a schema enum,
+# and the trade-offs do not fit in a tool description.
+name: search_youtube_deliberately
+title: Search YouTube without silently getting the wrong slice
+description: >
+  Run a YouTube search where the locale and the filter token are chosen on
+  purpose rather than left to chance, and report the result set in a way the
+  reader can audit. Covers the two parameters that quietly change what comes
+  back.
+
+arguments:
+  - name: query
+    description: >
+      What to search for. YouTube's own search syntax, not a natural-language
+      question — it is matched, not understood.
+    required: true
+  - name: audience
+    description: >
+      Whose YouTube you want to see, e.g. "us", "jp", "global". Decides the
+      country and interface language. Leave empty to search unlocalised and
+      say so in the output.
+    required: false
+    default: ""
+
+uses:
+  - get_youtube_search
+
+skill:
+  when_to_use: Use when asked to search YouTube with deliberate locale or filter choices
+    and report the returned results.
+    按语言、地区和筛选条件搜索 YouTube 视频，整理搜索结果。
+  providers:
+  - youtube
+  examples:
+  - 找最近发布的中文教程视频，按相关度排列。
+  aliases:
+  - YouTube搜索
+  - 视频搜索
+  - 油管搜索
+  - youtube search
+  tags:
+  - search
+  - youtube
+  - video
+
+template: |
+  Search YouTube for: {query}
+  Intended audience: {audience}
+
+  Use `get_youtube_search`. It is the only tool here, so the work is entirely
+  in choosing its parameters well.
+
+  ## Parameters that need a decision
+
+  `engine` has exactly one legal value and is required. Set engine="youtube".
+
+  `q` is matched, not interpreted. A natural-language question performs worse
+  than the keywords a person would actually type. Rewrite before searching, and
+  report the query you actually sent — not the user's original phrasing.
+
+  `gl` (country) and `hl` (interface language) materially change the result
+  set. The same query run for `us` and for `jp` returns different videos in a
+  different order; this is YouTube behaving normally, not an error.
+  - When the audience above names a market, set both, and state them in the
+    output.
+  - When it is empty, search without them and say the results are unlocalised.
+    Do not guess a country from the query language — a query in English does
+    not mean the user wants US results.
+
+  `sp` is an opaque YouTube filter token that encodes things like upload date,
+  duration, and result type. **Do not invent one.** These tokens are not
+  guessable, and an invalid token is typically ignored rather than rejected —
+  so a fabricated value produces results that look fine but were never
+  filtered. Pass `sp` only when:
+  - it came back from a previous response as a pagination token, or
+  - the user supplied it.
+
+  If the user wants a filter you have no token for, say the filter could not be
+  applied and search without it. That is a smaller error than silently
+  returning unfiltered results while claiming they were filtered.
+
+  ## Reading the response
+
+  Results mix videos, channels and playlists. Separate them before presenting;
+  a playlist is not evidence that a video exists, and a channel hit is not
+  coverage of the topic.
+
+  Report the number of results you actually received. YouTube search returns a
+  page, not a census — "no results" means this query, this locale, this page.
+
+  ## Out of scope
+
+  View counts and upload dates are facts; "most popular", "best explanation"
+  and "authoritative" are judgements. Report the former, leave the latter to
+  whoever asked. Do not infer that a topic is unimportant because YouTube
+  coverage is thin — plenty of subjects live entirely outside video.
+
+  ## Fallbacks
+
+  - `get_youtube_search` is subscription-only. On 402, the pay-per-call route
+    is a web search (post_tavily_search on the web-search server) with the
+    query and site:youtube.com — titles and channels come back, view counts
+    and dates do not; say so.

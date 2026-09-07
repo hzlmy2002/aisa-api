@@ -1,0 +1,68 @@
+{
+  "runs": [
+    {
+      "tested_at": "2026-09-07T03:56:36.758Z",
+      "max_price_usd_per_request": 0.01,
+      "automatic_retries": false,
+      "similarweb_calls": 0,
+      "results": [
+        {
+          "operation_id": "get_coingecko_simple_price",
+          "successful": true,
+          "elapsed_ms": 1771,
+          "response_type": "object",
+          "top_level_keys": [
+            "bitcoin"
+          ]
+        },
+        {
+          "operation_id": "post_tavily_search",
+          "successful": false,
+          "elapsed_ms": 366,
+          "code": "cost_limit_exceeded",
+          "http_status": 402
+        },
+        {
+          "operation_id": "get_financial_prices_snapshot",
+          "successful": false,
+          "elapsed_ms": 309,
+          "code": "cost_limit_exceeded",
+          "http_status": 402
+        }
+      ]
+    },
+    {
+      "tested_at": "2026-09-07T03:57:53.507Z",
+      "max_price_usd_per_request": 0.05,
+      "automatic_retries": false,
+      "similarweb_calls": 0,
+      "results": [
+        {
+          "operation_id": "post_tavily_search",
+          "successful": true,
+          "elapsed_ms": 2889,
+          "response_type": "object",
+          "top_level_keys": [
+            "query",
+            "follow_up_questions",
+            "answer",
+            "images",
+            "results",
+            "response_time",
+            "usage",
+            "request_id"
+          ]
+        },
+        {
+          "operation_id": "get_financial_prices_snapshot",
+          "successful": true,
+          "elapsed_ms": 1133,
+          "response_type": "object",
+          "top_level_keys": [
+            "snapshot"
+          ]
+        }
+      ]
+    }
+  ]
+}

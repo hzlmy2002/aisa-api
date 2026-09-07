@@ -1,0 +1,92 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# One of twelve servers splitting DataForSEO's 445 operations by the question
+# they answer. A single server was never an option - CASEBOOK D4: 445 tools in
+# one endpoint is a menu no agent can choose from.
+#
+# ⚠️ Two conventions apply across all twelve, decided 2026-08-25:
+#
+# 1. ASYNC IS COLLAPSED. DataForSEO offers most operations as a three-call
+#    dance: task_post queues, tasks_ready lists what finished, task_get
+#    retrieves. Where a `_live` variant exists the async twin is dropped
+#    entirely; where it does not, the pair is submit + fetch and `tasks_ready`
+#    is withheld. A caller that submitted a job holds its own id, so listing
+#    everyone's finished jobs answers a question no single caller is asking.
+#    This mirrors the firecrawl and exa job pairs already in `web-search`.
+#    445 operations become 317 tools this way.
+#
+# 2. VENDORS ARE MIXED BY QUESTION. Semrush and Ahrefs used to sit together in
+#    a server called `seo`; their 21 tools are redistributed here by what they
+#    answer, so an agent asking about domain authority sees that DataForSEO,
+#    Semrush and Ahrefs all have a number for it and can cross-refer between
+#    them. Same reasoning that put Semrush and Ahrefs together in the first
+#    place, carried one step further.
+
+id:    aisa-seo-labs
+slug:  seo-labs
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Domain & Keyword Research
+category: SEO & Search Data
+description: >
+  Domain and keyword research through AIsa: domain authority and rank
+  history, ranked and related keywords, keyword ideas and difficulty, search
+  intent, SERP and organic competitors, subdomains and relevant pages, and
+  the Amazon and app store equivalents - from DataForSEO Labs, Semrush and
+  Ahrefs together.
+
+include:
+  - spec: ahrefs.json
+    operations:
+      - get_ahrefs_domain_rating
+      - get_ahrefs_site_metrics
+  - spec: dataforseo.json
+    operations:
+      - get_dataforseo_labs_available_filters
+      - get_dataforseo_labs_google_available_history
+      - get_dataforseo_labs_google_categories_for_kw_languages
+      - get_dataforseo_labs_status
+      - post_dataforseo_labs_amazon_bulk_volume_live
+      - post_dataforseo_labs_amazon_product_competitors_live
+      - post_dataforseo_labs_amazon_product_kw_overlap_live
+      - post_dataforseo_labs_amazon_product_rank_overview_live
+      - post_dataforseo_labs_amazon_ranked_keywords_live
+      - post_dataforseo_labs_amazon_related_keywords_live
+      - post_dataforseo_labs_apple_app_competitors_live
+      - post_dataforseo_labs_apple_app_intersection_live
+      - post_dataforseo_labs_apple_bulk_app_metrics_live
+      - post_dataforseo_labs_apple_keywords_for_app_live
+      - post_dataforseo_labs_google_app_competitors_live
+      - post_dataforseo_labs_google_app_intersection_live
+      - post_dataforseo_labs_google_bulk_app_metrics_live
+      - post_dataforseo_labs_google_bulk_keyword_difficulty_live
+      - post_dataforseo_labs_google_bulk_traffic_estimation_live
+      - post_dataforseo_labs_google_categories_for_domain_live
+      - post_dataforseo_labs_google_categories_for_kw_live
+      - post_dataforseo_labs_google_domain_rank_overview_live
+      - post_dataforseo_labs_google_historical_bulk_traffic_live
+      - post_dataforseo_labs_google_historical_keyword_data_live
+      - post_dataforseo_labs_google_historical_rank_live
+      - post_dataforseo_labs_google_keyword_ideas_live
+      - post_dataforseo_labs_google_keyword_overview_live
+      - post_dataforseo_labs_google_keyword_suggestions_live
+      - post_dataforseo_labs_google_keywords_for_app_live
+      - post_dataforseo_labs_google_keywords_for_categories_live
+      - post_dataforseo_labs_google_kw_for_site_live
+      - post_dataforseo_labs_google_related_keywords_live
+      - post_dataforseo_labs_google_relevant_pages_live
+      - post_dataforseo_labs_google_search_intent_live
+      - post_dataforseo_labs_google_serp_competitors_live
+      - post_dataforseo_labs_google_subdomains_live
+      - post_dataforseo_labs_google_top_searches_live
+  - spec: semrush.json
+    operations:
+      - get_semrush_domain_organic_keywords
+      - get_semrush_domain_overview
+      - get_semrush_domain_paid_keywords
+      - get_semrush_domain_rank_history
+      - get_semrush_domain_vs_domain
+      - get_semrush_organic_competitors
+      - get_semrush_url_organic_keywords

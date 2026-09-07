@@ -1,0 +1,122 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# Three providers in one server on purpose. An agent does not arrive thinking
+# "I want Tavily" — it arrives with "I need something from the open web", and
+# the real work is choosing between search that returns extracted page text
+# (tavily), an answer written with citations (perplexity), and a lean list of
+# links including academic ones (scholar). Split across three servers, nothing
+# can tell an agent that the alternative exists. Together, every description
+# names the sibling it loses to and on what; see mcp.md section 3.11.
+#
+# firecrawl and exa joined on 2026-08-14, once their operations had real
+# operationIds. That was the whole blocker: without one, FastMCP names a tool
+# from summary text, which is both truncated and liable to drift with copy edits.
+id:    aisa-web-search           # always "aisa-" + slug, checked in CI
+slug:  web-search                # decides the public URL mcp.aisa.one/web-search/mcp; frozen once published
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Web Search
+category: Search & Research
+description: >
+  Search and read the open web through AIsa: ranked results with page text
+  already extracted, single-page and whole-site content extraction, written
+  answers with citations at four depths, web plus academic search with citation
+  counts, semantic search, background jobs for whole-site crawls and research
+  runs, model-grounded answers from Claude and OpenAI models that search as
+  they write, and GEO/AEO queries against the major AI answer engines.
+
+# The 5-second httpx default could never have run sonar-deep-research, which
+# measured 192 seconds. This raises the read timeout for the whole server rather
+# than per tool: everything here is a search, where slow-but-eventually beats
+# failing, and the connect timeout stays at 10s so a dead host still fails fast.
+# ⚠️ Revisit if a tool is ever added whose failure mode is hanging rather than
+# erroring — 300 seconds of waiting is a bad answer to that.
+timeout_seconds: 300
+
+include:
+  # Ordered the way they get used, not alphabetically: search first, then read
+  # what you found, then site-wide, then answers, then academic.
+  - spec: tavily.json
+    operations: "*"                 # four: search / extract / map / crawl
+  - spec: perplexity-openapi.json
+    operations: "*"                 # four: sonar / pro / reasoning-pro / deep-research
+  - spec: platform-txyz-openapi.json
+    operations: "*"                 # four: scholar search web / scholar / mixed, plus explain
+  # firecrawl: everything except parse. parse is multipart/form-data with a file
+  # upload, and a tool call carries JSON — FastMCP encodes the string as a plain
+  # form field with no filename, which upstream rejects. Verified both ways: the
+  # same request with a real filename returns 200, without one it returns 400.
+  # A tool that can never succeed is worse than an absent one; the description
+  # on the docs page says so and points at post_firecrawl_scrape.
+  - spec: firecrawl.json
+    operations:
+      - post_firecrawl_search
+      - post_firecrawl_scrape
+      - post_firecrawl_map
+      - post_firecrawl_crawl                  # async: submit
+      - get_firecrawl_crawl_job               #        poll
+      - post_firecrawl_batch_scrape           # async: submit
+      - get_firecrawl_batch_scrape_job        #        poll
+  - spec: exa.json
+    operations: "*"                 # five: search / contents / answer, plus agent submit + poll
+  # Model-grounded search: the model searches while writing and returns a cited
+  # answer. Both verified live with a time-sensitive question — Claude issued 2
+  # web_search_requests (43 KB back: the raw result blocks ride along), OpenAI
+  # one web_search_call (3.4 KB: answer + citations only). The asymmetry is in
+  # the descriptions.
+  - spec: websearch.json
+    operations: "*"                 # two: anthropic / openai
+  # GEO/AEO visibility: query the AI answer engines themselves. AI-type sources
+  # (chatgpt/gemini/perplexity) measured 40-60s upstream — inside this server's
+  # 300s timeout, and the reason it cannot join a 15s-default server.
+  - spec: oxylabs.json
+    operations: "*"                 # one: ai-search
+
+# Every one of these twelve is a POST that writes nothing. They are POSTs
+# because a query with a dozen filters, a URL list or a message array does not
+# fit in a URL — not because they change anything. Without this list the
+# method-based default marks all twelve destructive, and a client would confirm
+# with the user before every single web search.
+#
+# ⚠️ Read-only is a claim about side effects, not about cost. Two of these are
+# genuinely expensive in ways the protocol has no field for:
+#   - post_perplexity_sonar_deep_research measured 192 seconds and costs AIsa
+#     about $0.20 more than it charges (risk register R2 in mcp.md)
+#   - post_tavily_crawl bills per page and grows with max_depth / limit
+# Do not answer that by lying about destructiveHint — that would poison the one
+# field clients use for safety decisions. Both say so in their descriptions.
+read_only:
+  - post_tavily_search
+  - post_tavily_extract
+  - post_tavily_map
+  - post_tavily_crawl                     # creates no state; bills per page
+  - post_perplexity_sonar
+  - post_perplexity_sonar_pro
+  - post_perplexity_sonar_reasoning_pro
+  - post_perplexity_sonar_deep_research   # 192s measured; see R2
+  - post_scholar_search_web
+  - post_scholar_search_scholar
+  - post_scholar_search_mixed
+  - post_scholar_search_explain           # explains an existing search, runs none
+  # firecrawl and exa. The three async submits create a job server-side, which is
+  # state — but it is their own job record, not anything of the caller's, and
+  # nothing the caller owns changes. Treating them as destructive would put a
+  # confirmation in front of every crawl and every research run.
+  - post_firecrawl_search
+  - post_firecrawl_scrape
+  - post_firecrawl_map
+  - post_firecrawl_crawl                  # bills by what it finds; see the description
+  - post_firecrawl_batch_scrape
+  - post_exa_search
+  - post_exa_contents
+  - post_exa_answer
+  - post_exa_agent_runs                   # $0.10 flat per run
+  # Model-grounded search and AI-engine queries: POSTs because the request is a
+  # message array or a filter body, but nothing of the caller's changes. Cost
+  # note (not a side effect): the model tokens and searches are billed per use;
+  # both descriptions state the exact billing shape.
+  - post_anthropic_websearch_search
+  - post_openai_websearch_search
+  - post_oxylabs_ai_search                # $0.001 flat per successful result

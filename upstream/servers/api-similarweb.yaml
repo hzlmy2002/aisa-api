@@ -1,0 +1,108 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+#
+# Vendor-shaped like `apollo` and `agentmail`, not question-shaped like `seo`.
+# Similarweb answers "how big is this site, where does its traffic come from,
+# and who else competes for it" from its own panel — a different measurement
+# from DataForSEO's clickstream, which is exactly why the numbers are worth
+# cross-checking rather than interchangeable. The SEO-relevant operations
+# also ride in the seo-keywords / seo-competitors / seo-rankings fine
+# modules (modules.yaml), next to the Labs tools that answer the adjacent
+# question; the whole server rides in `gtm`.
+#
+# 💰 THE EXPENSIVE ONE, and 🔒 PREMIUM. Similarweb bills Data Credits per
+# row or per call, so `limit` is the cost dial. Do NOT state per-endpoint
+# rates anywhere here: docs deliberately removed them (docs #88, 2026-08-28)
+# because the compiled metering contract is the only price authority and
+# every written copy drifted (CASEBOOK E8). The spec's own billing notes
+# ("max 20, billed as 20 if exceeded") are the honest, stable part and come
+# through with the descriptions. CASEBOOK C5 is the general form.
+#
+# 🔒 Every enabled Similarweb endpoint is access_tier=premium since
+# 2026-08-23/26: a key without the Hive GTM Growth subscription gets 402 on
+# all of them (the root's `use` attaches the wallet hint). This server ships
+# when that product decision lands; it also belongs in the `gtm` module.
+#
+# Sources of truth (agreed with Haonan 2026-09-01): docs owns parameters,
+# constraints and descriptions (Ken aligned it to the live contract in docs
+# #79–#91); the DB owns existence, status and access_tier — only endpoints
+# that are BOTH documented and enabled become tools, and validate/smoke
+# should flag drift between the two sets rather than trust either alone.
+#
+# ⚠️ EXCLUDED: two of the twenty-two documented endpoints. website/folders and
+# website/traffic-geography are `disabled` in production and answer "api
+# endpoint not found" - confirmed live on 2026-08-26 against an enabled sibling
+# that returns a contract error from the same call shape. They stay documented,
+# each page saying it is not enabled today, because documentation describes the
+# surface and does not decide it. They do not become tools: a tool that cannot
+# succeed is worse than an absent one, because an agent will spend a turn on it.
+# Same reasoning as the two AgentMail administration endpoints, and CASEBOOK C1.
+#
+# ⚠️ Production routes six endpoints documentation does not carry (keywords
+# overview, two segment-analysis, three website-analysis). Undocumented =
+# not public; they join this file when docs publishes them, not before.
+# (The three GTM product surfaces — traffic snapshot / trend / top
+# geographies — WERE published on 2026-08-27, docs #83, and are included
+# below.)
+
+id:    aisa-similarweb
+slug:  similarweb
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Similarweb
+category: Market Intelligence
+description: >
+  Website and search intelligence from Similarweb through AIsa: monthly
+  traffic and engagement for any domain, its rank, where the traffic comes
+  from by marketing channel, which sites refer it, what it spends on paid
+  search and which ad networks carry its display, who the audience is and
+  what else that audience visits, which sites are similar and how much
+  audience they share, what the site is built with, which of its pages and
+  subdomains earn the traffic, and which keywords and search rivals it has.
+  Calls are billed in Data Credits, per row or per requested metric; use
+  `limit` to bound cost and `max_price_usd` to cap a call. Data vintage:
+  Similarweb reports complete months — a month becomes queryable only after
+  it closes, so say which months a number covers. Every endpoint requires
+  the Hive GTM Growth subscription; without it calls answer 402 —
+  the pay-per-call cross-checks for traffic and authority are DataForSEO
+  Labs' bulk traffic estimation and domain rank overview, one search away.
+
+# Not measured. Calling these spends Data Credits from a shared lot, so
+# nothing here was exercised live for timing. The default 15s stands: these
+# are aggregate reads over a panel, not crawls, and the calibration runs on
+# 2026-08-17 completed well inside it.
+
+include:
+  - spec: similarweb.json
+    operations:
+      # The GTM product surfaces: one-call monthly snapshot, trend, and
+      # top geographies for a domain (published in docs #83)
+      - get_similarweb_website_traffic_snapshot
+      - get_similarweb_website_traffic_trend
+      - get_similarweb_website_top_geographies
+      # Size and standing
+      - get_similarweb_traffic_engagement
+      - get_similarweb_ranking
+      - get_similarweb_top_sites_ranking
+      - get_similarweb_deduplicated_audience
+      # Where the traffic comes from
+      - get_similarweb_marketing_channel_sources_legacy
+      - get_similarweb_referrals
+      - get_similarweb_ppc_spend
+      - get_similarweb_ad_networks
+      # Who the audience is
+      - get_similarweb_demographics
+      - get_similarweb_audience_interest
+      - get_similarweb_audience_overlap
+      - get_similarweb_similar_sites
+      # What the site is made of
+      - get_similarweb_technologies
+      - get_similarweb_popular_pages
+      - get_similarweb_subdomains
+      # Keywords and search rivals
+      - get_similarweb_keywords
+      - get_similarweb_keyword_competitors
+      - get_similarweb_landing_pages
+      - get_similarweb_serp_players_aggregated
+      - get_similarweb_serp_players_timeseries

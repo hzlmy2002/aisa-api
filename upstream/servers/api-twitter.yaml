@@ -1,0 +1,35 @@
+# L0: a plain API mapping, one tool per operation. Adding or dropping an
+# endpoint is an edit here, never a code change.
+id:    aisa-twitter-api          # always "aisa-" + slug, checked in CI
+slug:  twitter-api               # decides the public URL mcp.aisa.one/twitter-api/mcp; frozen once published
+# The published .well-known/mcp.json had the slug as aisa-twitter-api, which
+# made the id aisa-aisa-twitter-api. This file wins: the manifest is generated
+# by gen_manifest.py now, and that entry was never live, so no connected agent
+# breaks. The extra aisa- prefix should never have been there — the publisher
+# is already AIsa.
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa Twitter API
+category: Social
+description: >
+  Read X/Twitter data through AIsa: user profiles, timelines, followers,
+  tweets, replies, quotes, retweeters, communities, lists, trends and Spaces.
+
+include:
+  - spec: twitter-user-batch_01.json
+    operations: "*"
+  - spec: twitter-user-batch_02.json
+    operations: "*"
+  - spec: twitter-tweet-batch_01.json
+    operations: "*"
+  - spec: twitter-tweet-batch_02.json
+    operations: "*"
+  - spec: twitter-tweet-replies-v2.json
+    operations: "*"
+  - spec: twitter-communities.json
+    operations: "*"
+  - spec: twitter-list.json
+    operations: "*"
+  - spec: twitter-trend.json
+    operations: "*"

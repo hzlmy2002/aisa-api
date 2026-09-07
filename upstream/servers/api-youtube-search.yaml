@@ -1,0 +1,18 @@
+# L0: a plain API mapping. Only one operation today. It is its own server
+# because the published .well-known/mcp.json already declares this slug with
+# one tool, and that shape cannot change.
+id:    aisa-youtube-search       # always "aisa-" + slug, checked in CI
+slug:  youtube-search            # decides the public URL; matches the published manifest; frozen
+tier:  L0
+kind:  atomic
+owner: jony
+name:  AIsa YouTube Search
+category: Search
+description: >
+  Search YouTube through AIsa: matching videos, channels and playlists, with
+  optional country/language narrowing and filter tokens for upload date,
+  duration, and result type.
+
+include:
+  - spec: youte-search.json
+    operations: "*"              # one: get_youtube_search

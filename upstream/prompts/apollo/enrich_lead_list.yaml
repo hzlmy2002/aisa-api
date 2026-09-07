@@ -1,0 +1,91 @@
+# The name is frozen once published.
+name: enrich_lead_list
+title: Enrich a list of leads and their companies in bulk
+description: >
+  Turn a list of emails or names into people with titles, companies and
+  verified contact details, plus the company facts behind them — using the
+  bulk endpoints so one call does ten. Sets the batch size and the credit
+  rules; it does not write anything back to Apollo.
+
+arguments:
+  - name: leads
+    description: >
+      The leads, one per line: an email, or `first last @ company`. Up to
+      a few hundred; they are sent in batches of ten.
+    required: true
+  - name: reveal_phones
+    description: >
+      `yes` to also ask for phone numbers. Leave `no`: the phone option is
+      a top-level flag the gateway currently rejects (see step 1), so `yes`
+      only makes the workflow say phones are unavailable.
+    required: false
+    default: "no"
+
+uses:
+  - post_apollo_people_bulk_match
+  - post_apollo_organizations_bulk_enrich
+
+skill:
+  when_to_use: Use when given a list of leads to enrich with contact and company details
+    in bulk.
+    批量补全销售线索的联系人、工作邮箱和公司资料。
+  providers:
+  - apollo
+  examples:
+  - 把这批客户名单补齐职位、邮箱和企业信息。
+  aliases:
+  - 线索补全
+  - 批量联系人
+  - 客户资料补全
+  - lead enrichment
+  tags:
+  - sales
+  - apollo
+  - leads
+  - bulk
+
+template: |
+  Enrich these leads:
+  {leads}
+  Reveal phone numbers: {reveal_phones}
+
+  Every Apollo operation is on the Hive GTM subscription. If the first
+  call answers 402, stop and report it — do not retry with other tools.
+
+  1. People, ten at a time. Split the list into batches of ten and call
+     `post_apollo_people_bulk_match` once per batch with `details` holding
+     one entry per lead: {{"email": "..."}}, or {{"name": "First Last",
+     "organization_name": "Company"}}, or first_name + last_name + domain.
+     Pass `details` and NOTHING else. The top-level options
+     (`reveal_personal_emails`, `reveal_phone_number`, `run_waterfall_email`,
+     `run_waterfall_phone`) are rejected by the gateway today with HTTP 400
+     "request does not match the endpoint contract" — the whole batch fails,
+     not just the option. The same applies to the single-person
+     people/match operation; never use it here. Each match returns
+     `email` and `email_status` (verified / guessed / unavailable) without
+     any option. If phones were requested, report that they cannot be
+     requested through this route right now. One call per batch, no retries
+     on partial results; carry the misses into the report.
+
+  2. Companies, deduplicated. Collect the distinct company domains from
+     step 1 and call `post_apollo_organizations_bulk_enrich` with
+     domains[] holding up to ten per call. Do not enrich a domain twice.
+
+  Stop after the two passes. Creating contacts or accounts from the
+  result is a separate, write-side workflow.
+
+  Report: a table of input lead / matched name / title / company / email
+  status, then the company table (domain / size / industry / HQ), then
+  the misses and how many credits the run used.
+
+  Typical call budget: one bulk call per ten leads plus one per ten distinct domains — never one call per lead.
+
+  ## Fallbacks
+
+  - Every Apollo operation is subscription-only; a 402 on the first batch
+    means every batch will 402 — stop, do not iterate. Without the plan the
+    only pay-per-call route is web search (post_tavily_search on the
+    web-search server) per lead, which recovers company and title but not
+    verified emails; say so before spending on it.
+  - A partial batch (some leads unmatched) is normal: carry the misses into
+    the report, do not resubmit them.
